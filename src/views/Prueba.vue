@@ -1,14 +1,12 @@
 <template>
   <div>
     <img :src="image" />
-    <div class="container" v-on:click="setViewboxCenteredAroundPoint">
+    <div class="container">
       <div id="canvas"></div>
 
       <div id="js-properties-panel" class="panel"></div>
     </div>
     <div>
-      <button v-on:click="zoomOut">zoom out</button>
-      <button v-on:click="zoomIn">zoom in</button>
     </div>
   </div>
 </template>
@@ -23,6 +21,7 @@ import { Buffer } from "buffer";
 import BpmnJS from "bpmn-js";
 import minimapModule from "diagram-js-minimap";
 import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
+import MoveCanvasModule from 'diagram-js/lib/navigation/movecanvas';
 
 export default {
   name: "PruebaImagen",
@@ -110,7 +109,7 @@ export default {
             container: "#canvas",
             position: "absolute",
             display: "flex",
-            additionalModules: [minimapModule, ZoomScrollModule],
+            additionalModules: [minimapModule, ZoomScrollModule, MoveCanvasModule],
           });
           console.log(viewer);
           this.viewer = viewer;
@@ -119,6 +118,9 @@ export default {
               var canvas = viewer.get("canvas");
 
               canvas.zoom("fit-viewport");
+              //canvas.addMarker('task', 'highlight');
+              //var elementRegistry = viewer.get('elementRegistry');
+              
               var eventBus = viewer.get("eventBus");
 
               // you may hook into any of the following events
@@ -137,33 +139,7 @@ export default {
                   // e.gfx = the graphical element
 
                   console.log(event, "on", e.element.id);
-                  viewer.get("minimap").open();
-                  var canvas = document.getElementById("canvas");
-                  console.log(canvas)
-                  var context = canvas.getContext("2d");
-                  var scale = 1;
-                  var originx = 0;
-                  var originy = 0;
-                  canvas.onmousewheel = function (event) {
-                    var mousex = event.clientX - canvas.offsetLeft;
-                    var mousey = event.clientY - canvas.offsetTop;
-                    var wheel = event.wheelDelta / 120; //n or -n
-
-                    var zoom = 1 + wheel / 2;
-
-                    context.translate(originx, originy);
-                    context.scale(zoom, zoom);
-                    context.translate(
-                      -(mousex / scale + originx - mousex / (scale * zoom)),
-                      -(mousey / scale + originy - mousey / (scale * zoom))
-                    );
-
-                    originx =
-                      mousex / scale + originx - mousex / (scale * zoom);
-                    originy =
-                      mousey / scale + originy - mousey / (scale * zoom);
-                    scale *= zoom;
-                  };
+                  //viewer.get("minimap").open();
                 });
               });
             });
@@ -174,52 +150,6 @@ export default {
         .catch((e) => {
           console.log(e);
         });
-    },
-    zoomIn() {
-      this.viewer.get("canvas").zoom(0.5);
-    },
-    setViewboxCenteredAroundPoint(point) {
-      var canvas = this.viewer.get("canvas");
-      // get cached viewbox to preserve zoom
-      var cachedViewbox = canvas.viewbox(),
-        cachedViewboxWidth = cachedViewbox.width,
-        cachedViewboxHeight = cachedViewbox.height;
-
-      canvas.viewbox({
-        x: point.x - cachedViewboxWidth / 2,
-        y: point.y - cachedViewboxHeight / 2,
-        width: cachedViewboxWidth,
-        height: cachedViewboxHeight,
-      });
-    },
-    zoomOut() {
-      var SCALE_FACTOR = 1.01;
-      var canvas = this.viewer.get("canvas");
-
-      canvas.height = canvas.height * (1 / SCALE_FACTOR);
-      canvas.width = canvas.width * (1 / SCALE_FACTOR);
-
-      var objects = canvas.objects;
-      for (var i in objects) {
-        var scaleX = objects[i].scaleX;
-        var scaleY = objects[i].scaleY;
-        var left = objects[i].left;
-        var top = objects[i].top;
-
-        var tempScaleX = scaleX * (1 / SCALE_FACTOR);
-        var tempScaleY = scaleY * (1 / SCALE_FACTOR);
-        var tempLeft = left * (1 / SCALE_FACTOR);
-        var tempTop = top * (1 / SCALE_FACTOR);
-
-        objects[i].scaleX = tempScaleX;
-        objects[i].scaleY = tempScaleY;
-        objects[i].left = tempLeft;
-        objects[i].top = tempTop;
-
-        objects[i].setCoords();
-      }
-
-      //canvas.save();
     },
   },
 };
