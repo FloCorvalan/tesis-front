@@ -1,16 +1,13 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div>
     <img :src="image">
-  <div class="container">
     <div id="bpmn"></div>
-    </div>
   </div>
 </template>
 <style >
 
-#bpmn{
-  overflow: auto;
+#bpmn .djs-container{
+  position: absolute;
 }
 
 </style>
@@ -91,12 +88,13 @@ export default {
           //console.log(this.diagram);
           const xml = this.diagram; // my BPMN 2.0 xml
           const viewer = new BpmnJS({
-            container: '#bpmn'
+            container: '#bpmn', 
+            position: 'absolute'
           });
           console.log(viewer)
           try {
             viewer.importXML(xml);
-
+            viewer._container('#container')
             console.log('rendered');
           } catch (err) {
             console.log('error rendering', err);
@@ -109,4 +107,3 @@ export default {
   },
 };
 </script>
-
