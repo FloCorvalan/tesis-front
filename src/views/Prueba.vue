@@ -6,22 +6,24 @@
 
       <div id="js-properties-panel" class="panel"></div>
     </div>
-    <div>
-    </div>
+    <div></div>
   </div>
 </template>
 <style >
 @import url("diagram-js-minimap/assets/diagram-js-minimap.css");
 @import url("bpmn-js/dist/assets/diagram-js.css");
 @import url("bpmn-js/dist/assets/bpmn-font/css/bpmn.css");
+.highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+  fill: green !important; /* color elements as green */
+}
 </style>
 <script>
 import axios from "axios";
 import { Buffer } from "buffer";
 import BpmnJS from "bpmn-js";
 import minimapModule from "diagram-js-minimap";
-import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
-import MoveCanvasModule from 'diagram-js/lib/navigation/movecanvas';
+import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
+import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
 
 export default {
   name: "PruebaImagen",
@@ -109,18 +111,28 @@ export default {
             container: "#canvas",
             position: "absolute",
             display: "flex",
-            additionalModules: [minimapModule, ZoomScrollModule, MoveCanvasModule],
+            additionalModules: [
+              minimapModule,
+              ZoomScrollModule,
+              MoveCanvasModule,
+            ],
           });
           console.log(viewer);
           this.viewer = viewer;
           try {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(xml, "text/xml");
+            var x = doc.getElementsByName("CONSTRUIR");
+            console.log(x[0].id)
+
             viewer.importXML(xml, function () {
               var canvas = viewer.get("canvas");
+              canvas.addMarker(x[0].id, 'highlight');
 
               canvas.zoom("fit-viewport");
               //canvas.addMarker('task', 'highlight');
               //var elementRegistry = viewer.get('elementRegistry');
-              
+
               var eventBus = viewer.get("eventBus");
 
               // you may hook into any of the following events
