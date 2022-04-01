@@ -102,7 +102,7 @@ export default {
     },
     pruebados() {
       axios
-        .get("http://127.0.0.1:5001/process-model/get-bpmn")
+        .get("http://127.0.0.1:5001/process-model/get-last-bpmn/6241fad36d714f635bafbc9f")
         .then((r) => {
           this.diagram = r.data;
           //console.log(this.diagram);
@@ -123,11 +123,13 @@ export default {
             var parser = new DOMParser();
             var doc = parser.parseFromString(xml, "text/xml");
             var x = doc.getElementsByName("CONSTRUIR");
-            console.log(x[0].id)
+            console.log(x[0].id);
+            var el = doc.getElementById(x[0].id);
+            el.addEventListener("click", this.modifyText(), true);
 
             viewer.importXML(xml, function () {
               var canvas = viewer.get("canvas");
-              canvas.addMarker(x[0].id, 'highlight');
+              canvas.addMarker(x[0].id, "highlight");
 
               canvas.zoom("fit-viewport");
               //canvas.addMarker('task', 'highlight');
@@ -162,6 +164,9 @@ export default {
         .catch((e) => {
           console.log(e);
         });
+    },
+    modifyText() {
+      console.log("HOLAAAAAAAAAAAAA")
     },
   },
 };
