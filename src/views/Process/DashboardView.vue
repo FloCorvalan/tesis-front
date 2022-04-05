@@ -3,17 +3,6 @@
     <div class="dashboard-page">
       <v-row no-gutters class="d-flex justify-space-between mt-10 mb-6">
         <h1 class="page-title">Dashboard</h1>
-        <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              v-bind="attrs"
-              v-on="on"
-              color="secondary"
-              class="text-capitalize button-shadow mr-1"
-              >Latest Reports</v-btn
-            >
-          </template>
-        </v-menu>
       </v-row>
       <v-row>
         <v-col lg="3" sm="6" md="5" cols="12">
@@ -48,13 +37,6 @@
                   >
                 </v-col>
                 <v-col cols="6">
-                  <Trend
-                    :data="getRandomDataForTrends()"
-                    :gradient="mock.trend.gradient"
-                    :height="40"
-                    stroke-width="4"
-                    smooth
-                  />
                 </v-col>
               </v-row>
               <v-row no-gutters class="justify-space-between pb-3">
@@ -267,6 +249,7 @@
             </v-card-text>
           </v-card>
         </v-col>
+        <!-- AQUI EMPIEZA -->
         <v-col cols="12">
           <v-card class="mx-1 mb-1">
             <v-card-title class="pa-6 pb-0">
@@ -328,19 +311,7 @@
             <v-card-text class="pa-6">
               <v-row>
                 <v-col>
-                  <ApexChart
-                    v-if="apexLoading"
-                    height="350"
-                    type="area"
-                    :options="mock.mainApexArea.options"
-                    :series="
-                      mainApexAreaSelect === 'Daily'
-                        ? mock.mainApexArea.series
-                        : mainApexAreaSelect === 'Weekly'
-                        ? mock.mainApexArea.series2
-                        : mock.mainApexArea.series3
-                    "
-                  ></ApexChart>
+                  <div id="canvas"></div>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -605,13 +576,17 @@
 
 <script>
 import mock from "./mock";
-import Trend from "vuetrend";
 import ApexChart from "vue-apexcharts";
+// MODELO
+import axios from "axios";
+import BpmnJS from "bpmn-js";
+import minimapModule from "diagram-js-minimap";
+import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
+import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
 
 export default {
-  name: "Dashboard",
+  name: "DashboardView",
   components: {
-    Trend,
     ApexChart,
   },
   data() {
@@ -623,13 +598,74 @@ export default {
       mainApexAreaSelect: "Daily",
     };
   },
+  created(){
+    this.getBPMN();
+  },
   methods: {
-    getRandomDataForTrends() {
-      const arr = [];
-      for (let i = 0; i < 12; i += 1) {
-        arr.push(Math.random().toFixed(1) * 10);
-      }
-      return arr;
+    getBPMN() {
+      axios
+        .get("http://127.0.0.1:5001/process-model/get-last-bpmn/6241fad36d714f635bafbc9f")
+        .then((r) => {
+          this.diagram = r.data;
+          //console.log(this.diagram);
+          const xml = this.diagram; // my BPMN 2.0 xml
+          const viewer = new BpmnJS({
+            container: "#canvas",
+            //position: "absolute",
+            //display: "flex",
+            additionalModules: [
+              minimapModule,
+              ZoomScrollModule,
+              MoveCanvasModule,
+            ],
+          });
+          console.log(viewer);
+          this.viewer = viewer;
+          try {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(xml, "text/xml");
+            var x = doc.getElementsByName("CONSTRUIR");
+            console.log(x[0].id);
+            var el = doc.getElementById(x[0].id);
+            el.addEventListener("click", this.modifyText(), true);
+
+            viewer.importXML(xml, function () {
+              var canvas = viewer.get("canvas");
+              canvas.addMarker(x[0].id, "highlight");
+
+              canvas.zoom("fit-viewport");
+              //canvas.addMarker('task', 'highlight');
+              //var elementRegistry = viewer.get('elementRegistry');
+
+              var eventBus = viewer.get("eventBus");
+
+              // you may hook into any of the following events
+              var events = [
+                //"element.hover",
+                //"element.out",
+                "element.click",
+                //"element.dblclick",
+                //"element.mousedown",
+                //"element.mouseup",
+              ];
+
+              events.forEach(function (event) {
+                eventBus.on(event, function (e) {
+                  // e.element = the model element
+                  // e.gfx = the graphical element
+
+                  console.log(event, "on", e.element.id);
+                  //viewer.get("minimap").open();
+                });
+              });
+            });
+          } catch (err) {
+            console.log("error rendering", err);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     generatePieSeries() {
       let series = [];
