@@ -62,3 +62,11 @@
 .button-shadow {
   box-shadow: $button-shadow;
 }
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+@import url("diagram-js-minimap/assets/diagram-js-minimap.css");
+@import url("bpmn-js/dist/assets/diagram-js.css");
+@import url("bpmn-js/dist/assets/bpmn-font/css/bpmn.css");

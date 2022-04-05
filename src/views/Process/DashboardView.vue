@@ -36,8 +36,7 @@
                     >12, 678</span
                   >
                 </v-col>
-                <v-col cols="6">
-                </v-col>
+                <v-col cols="6"> </v-col>
               </v-row>
               <v-row no-gutters class="justify-space-between pb-3">
                 <v-col cols="5">
@@ -55,7 +54,11 @@
                 <v-col cols="4" xl="2">
                   <div class="text-right card-light-grey">Rate</div>
                   <div
-                    class="text-right text-h6 card-dark-grey font-weight-regular"
+                    class="
+                      text-right text-h6
+                      card-dark-grey
+                      font-weight-regular
+                    "
                   >
                     3.25%
                   </div>
@@ -310,7 +313,8 @@
             </v-card-title>
             <v-card-text class="pa-6">
               <v-row>
-                <v-col>
+                <v-col class="overflow-hidden">
+                  <!-- BPMN -->
                   <div id="canvas"></div>
                 </v-col>
               </v-row>
@@ -598,21 +602,23 @@ export default {
       mainApexAreaSelect: "Daily",
     };
   },
-  created(){
+  created() {
     this.getBPMN();
   },
   methods: {
     getBPMN() {
       axios
-        .get("http://127.0.0.1:5001/process-model/get-last-bpmn/6241fad36d714f635bafbc9f")
+        .get(
+          "http://127.0.0.1:5001/process-model/get-last-bpmn/6241fad36d714f635bafbc9f"
+        )
         .then((r) => {
           this.diagram = r.data;
           //console.log(this.diagram);
           const xml = this.diagram; // my BPMN 2.0 xml
           const viewer = new BpmnJS({
             container: "#canvas",
-            //position: "absolute",
-            //display: "flex",
+            position: "relative",
+            height: '100vh', 
             additionalModules: [
               minimapModule,
               ZoomScrollModule,
@@ -634,10 +640,12 @@ export default {
               canvas.addMarker(x[0].id, "highlight");
 
               canvas.zoom("fit-viewport");
+              viewer.get("minimap").open();
+              console.log(viewer.get("minimap"));
               //canvas.addMarker('task', 'highlight');
               //var elementRegistry = viewer.get('elementRegistry');
 
-              var eventBus = viewer.get("eventBus");
+              /*var eventBus = viewer.get("eventBus");
 
               // you may hook into any of the following events
               var events = [
@@ -657,7 +665,7 @@ export default {
                   console.log(event, "on", e.element.id);
                   //viewer.get("minimap").open();
                 });
-              });
+              });*/
             });
           } catch (err) {
             console.log("error rendering", err);
@@ -666,6 +674,9 @@ export default {
         .catch((e) => {
           console.log(e);
         });
+    },
+    modifyText() {
+      console.log("HOLAAAAAAAAAAAAA");
     },
     generatePieSeries() {
       let series = [];
