@@ -35,14 +35,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Charts/PruebaView.vue')
   },
   ////////////// VISTAS DEL PROCESO //////////////
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Process/MainView.vue')
-  }
+
 ]
 
 const router = new VueRouter({
