@@ -104,10 +104,10 @@ export default {
     'Print'
   ],
   lastReports: [
-    {title: 'Print PDF', icon: 'mdi-printer'},
-    {title: 'Download', icon: 'mdi-download'},
-    {title: 'Sand by mail', icon: 'mdi-email'},
-    {title: 'Share', icon: 'mdi-share-variant'}
+    { title: 'Print PDF', icon: 'mdi-printer' },
+    { title: 'Download', icon: 'mdi-download' },
+    { title: 'Sand by mail', icon: 'mdi-email' },
+    { title: 'Share', icon: 'mdi-share-variant' }
   ],
   select: ['Daily', 'Weekly', 'Monthly'],
   apexPie: {
@@ -238,7 +238,7 @@ export default {
         },
         labels: {
           style: {
-            colors: ['#B9B9B980','#B9B9B980','#B9B9B980','#B9B9B980','#B9B9B980', '#B9B9B980','#B9B9B980','#B9B9B980'],
+            colors: ['#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980'],
             fontSize: '12px',
           },
         },
@@ -248,7 +248,7 @@ export default {
         labels: {
           style: {
             fontSize: '12px',
-            colors: ['#B9B9B980', '#B9B9B980','#B9B9B980','#B9B9B980','#B9B9B980','#B9B9B980', '#B9B9B980','#B9B9B980','#B9B9B980', '#B9B9B980','#B9B9B980', '#B9B9B980','#B9B9B980','#B9B9B980'],
+            colors: ['#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980', '#B9B9B980'],
           }
         },
         tickAmount: 10,
