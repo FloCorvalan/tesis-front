@@ -58,7 +58,7 @@
         <v-col lg="4" sm="6" cols="12">
           <v-card class="mx-1 mb-1">
             <v-card-title class="pa-6 pb-3">
-              <p>Sing App</p>
+              <p>Jira</p>
               <v-spacer></v-spacer>
               <v-menu>
                 <template v-slot:activator="{ on, attrs }">
@@ -78,40 +78,13 @@
               </v-menu>
             </v-card-title>
             <v-card-text class="pa-6 pt-0">
-              <v-row no-gutters>
-                <v-col cols="7" class="my-auto">
-                  <span class="" style="font-size: 42px"
-                    >121 <span class="error--text caption">-3.2%</span>
-                  </span>
-                </v-col>
-                <v-col cols="5">
-                  <ApexChart
-                    height="350"
-                    type="bar"
-                    v-if="apexLoading"
-                    :options="mock.apexBar2.options"
-                    :series="mock.apexBar2.series"
-                  ></ApexChart>
-                </v-col>
-              </v-row>
-              <v-row no-gutters class="justify-space-between">
-                <div>
-                  <div class="subtext">
-                    15<v-icon color="success"> mdi-arrow-top-right</v-icon>
-                  </div>
-                  <div class="subtext-index">Registrations</div>
-                </div>
-                <div>
-                  <div class="subtext">
-                    3.01%<v-icon color="success"> mdi-arrow-top-right</v-icon>
-                  </div>
-                  <div class="subtext-index">Bounce Rate</div>
-                </div>
-                <div>
-                  <div class="subtext">
-                    302<v-icon color="success"> mdi-arrow-top-right</v-icon>
-                  </div>
-                  <div class="subtext-index">Views</div>
+              <v-row no-gutters v-if="jira_options != []">
+                <div v-for="(opt, index) in jira_options" :key="index">
+                <DonutChart
+                  :options="opt.options"
+                  :series="opt.series"
+                >
+                </DonutChart>
                 </div>
               </v-row>
             </v-card-text>
@@ -253,6 +226,7 @@
 <script>
 import mock from "./mock";
 import ApexChart from "vue-apexcharts";
+import DonutChart from "@/components/DonutChart.vue";
 // MODELO
 import axios from "axios";
 import BpmnJS from "bpmn-js";
@@ -264,6 +238,7 @@ export default {
   name: "DashboardView",
   components: {
     ApexChart,
+    DonutChart,
   },
   data() {
     return {
@@ -275,12 +250,17 @@ export default {
 
       //aqui empieza
       team_name: "PROBANDO",
-      jenkins_options: null, 
+      jenkins_options: null,
+      jira_options: [],
     };
   },
   created() {
     this.getBPMN();
     this.getJenkinsParticipation(
+      "6241fad36d714f635bafbc9f",
+      "6241fb9a6db9b5f537d59a76"
+    );
+    this.getJiraParticipation(
       "6241fad36d714f635bafbc9f",
       "6241fb9a6db9b5f537d59a76"
     );
@@ -378,9 +358,11 @@ export default {
           console.log(percentages);
           console.log(this.jenkins_options);
           var jenkins_options = {
-            series: [{
-              data: percentages
-            }],
+            series: [
+              {
+                data: percentages,
+              },
+            ],
             options: {
               chart: {
                 type: "bar",
@@ -397,11 +379,58 @@ export default {
               },
               xaxis: {
                 categories: users,
-                max: 100
+                max: 100,
               },
             },
           };
           this.jenkins_options = jenkins_options;
+        });
+    },
+    getJiraParticipation(t_id, s_id) {
+      axios
+        .get("http://127.0.0.1:5001/jira/participation", {
+          team_id: t_id,
+          source_id: s_id,
+        })
+        .then((response) => {
+          var users = [];
+          var percentages = [];
+          console.log(response.data);
+          for (var key in response.data) {
+            response.data[key].forEach((e) => {
+              users.push(e[0]);
+              percentages.push(parseInt(e[1], 10));
+            });
+            var options = {
+              series: percentages,
+              options: {
+                chart: {
+                  type: "donut",
+                },
+                responsive: [
+                  {
+                    breakpoint: 480,
+                    options: {
+                      chart: {
+                        width: 200,
+                      },
+                      legend: {
+                        position: "bottom",
+                      },
+                    },
+                  },
+                ],
+                labels: users,
+                title: {
+                  text: key,
+                },
+              },
+            };
+            this.jira_options.push(options);
+            users = [];
+            percentages = [];
+          }
+          console.log(this.jira_options);
         });
     },
     ///////////////////
@@ -426,7 +455,6 @@ export default {
     setTimeout(() => {
       this.apexLoading = true;
     });
-    
   },
 };
 </script>
