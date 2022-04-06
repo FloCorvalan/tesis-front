@@ -42,11 +42,27 @@
               </v-btn>
             </v-card-title>
             <v-card-text class="pa-6 pt-0">
-              <v-row v-if="jenkins_options_2 != null">
-                <div v-for="(opt, index) in jenkins_options_2" :key="index">
-                  <DonutChart :options="opt.options" :series="opt.series">
-                  </DonutChart>
-                </div>
+              <v-row v-if="jenkins_options != null">
+                <DonutChart
+                  :options="jenkins_options.options"
+                  :series="jenkins_options.series"
+                >
+                </DonutChart>
+                <!--ApexChart
+                  height="100%"
+                  width="100%"
+                  type="bar"
+                  v-if="apexLoading"
+                  :options="jenkins_options.options"
+                  :series="jenkins_options.series"
+                ></ApexChart-->
+              </v-row>
+              <v-row v-if="jenkins_options_bar != null">
+                <BarChart
+                  :options="jenkins_options_bar.options"
+                  :series="jenkins_options_bar.series"
+                >
+                </BarChart>
                 <!--ApexChart
                   height="100%"
                   width="100%"
@@ -228,6 +244,7 @@
 import mock from "./mock";
 import ApexChart from "vue-apexcharts";
 import DonutChart from "@/components/DonutChart.vue";
+import BarChart from "@/components/BarChart.vue";
 // MODELO
 import axios from "axios";
 import BpmnJS from "bpmn-js";
@@ -240,6 +257,7 @@ export default {
   components: {
     ApexChart,
     DonutChart,
+    BarChart,
   },
   data() {
     return {
@@ -252,7 +270,7 @@ export default {
       //aqui empieza
       team_name: "PROBANDO",
       jenkins_options: null,
-      jenkins_options_2: [],
+      jenkins_options_bar: null, 
       jira_options: [],
     };
   },
@@ -395,12 +413,16 @@ export default {
           source_id: s_id,
         })
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
           var users = [];
           var percentages = [];
+          var success_per = [];
+          var failure_per = [];
           response.data.forEach((element) => {
             users.push(element.username);
             percentages.push(parseInt(element.total_per, 10));
+            success_per.push(parseInt(element.success_per, 10));
+            failure_per.push(parseInt(element.failure_per, 10));
           });
           var options = {
             series: percentages,
@@ -423,75 +445,58 @@ export default {
               ],
               labels: users,
               title: {
-                text: "Total participation",
+                text: "Builds",
               },
             },
           };
-          this.jenkins_options_2.push(options);
-          users = [];
-          percentages = [];
-          response.data.forEach((element) => {
-            users.push(element.username);
-            percentages.push(parseInt(element.success_per, 10));
-          });
-          options = {
-            series: percentages,
+          this.jenkins_options = options;
+          var bar_options = {
+            series: [
+              {
+                name: 'Successful build percentage',
+                data: success_per,
+              },
+              {
+                name: 'Failed build percentage',
+                data: failure_per,
+              },
+            ],
             options: {
               chart: {
-                type: "donut",
+                type: "bar",
+                height: 430,
               },
-              responsive: [
-                {
-                  breakpoint: 480,
-                  options: {
-                    chart: {
-                      width: 200,
-                    },
-                    legend: {
-                      position: "bottom",
-                    },
+              plotOptions: {
+                bar: {
+                  horizontal: true,
+                  dataLabels: {
+                    position: "top",
                   },
                 },
-              ],
-              labels: users,
-              title: {
-                text: "Successful build percentage",
+              },
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#fff"],
+                },
+              },
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ["#fff"],
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
+              },
+              xaxis: {
+                categories: users,
               },
             },
           };
-          this.jenkins_options_2.push(options);
-          users = [];
-          percentages = [];
-          response.data.forEach((element) => {
-            users.push(element.username);
-            percentages.push(parseInt(element.failure_per, 10));
-          });
-          options = {
-            series: percentages,
-            options: {
-              chart: {
-                type: "donut",
-              },
-              responsive: [
-                {
-                  breakpoint: 480,
-                  options: {
-                    chart: {
-                      width: 200,
-                    },
-                    legend: {
-                      position: "bottom",
-                    },
-                  },
-                },
-              ],
-              labels: users,
-              title: {
-                text: "Failed build percentage",
-              },
-            },
-          };
-          this.jenkins_options_2.push(options);
+          this.jenkins_options_bar = bar_options;
         });
     },
     getJiraParticipation(t_id, s_id) {
