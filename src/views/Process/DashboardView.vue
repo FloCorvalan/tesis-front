@@ -289,7 +289,7 @@ export default {
     getBPMN() {
       axios
         .get(
-          "http://127.0.0.1:5001/process-model/get-last-bpmn/6241fad36d714f635bafbc9f"
+          process.env.VUE_APP_BASE_URL + "/process-model/get-last-bpmn/6241fad36d714f635bafbc9f"
         )
         .then((r) => {
           this.diagram = r.data;
@@ -357,7 +357,7 @@ export default {
     },
     getJenkinsParticipation(t_id, s_id) {
       axios
-        .get("http://127.0.0.1:5001/jenkins/team-participation", {
+        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-participation", {
           team_id: t_id,
           source_id: s_id,
         })
@@ -408,7 +408,7 @@ export default {
     },
     getJenkinsParticipation2(t_id, s_id) {
       axios
-        .get("http://127.0.0.1:5001/jenkins/team-participation", {
+        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-participation", {
           team_id: t_id,
           source_id: s_id,
         })
@@ -501,7 +501,7 @@ export default {
     },
     getJiraParticipation(t_id, s_id) {
       axios
-        .get("http://127.0.0.1:5001/jira/participation", {
+        .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/participation", {
           team_id: t_id,
           source_id: s_id,
         })
