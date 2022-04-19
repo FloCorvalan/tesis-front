@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 sh "pwd"
-                echo "FRONT"
+                echo "FRONT 3"
             }
         }
     }
