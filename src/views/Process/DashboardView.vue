@@ -357,7 +357,7 @@ export default {
     },
     getJenkinsParticipation(t_id, s_id) {
       axios
-        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-participation", {
+        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
           team_id: t_id,
           source_id: s_id,
         })
@@ -408,7 +408,7 @@ export default {
     },
     getJenkinsParticipation2(t_id, s_id) {
       axios
-        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-participation", {
+        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
           team_id: t_id,
           source_id: s_id,
         })
