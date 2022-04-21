@@ -25,7 +25,21 @@
               <v-row>
                 <v-col class="overflow-hidden">
                   <!-- BPMN -->
-                  <div id="canvas"></div>
+                  <ul v-for="project in projects" :key="project.id">
+                    <li>
+                      <div
+                        class="project-name"
+                        v-on:click="changeVisibleModel(project)"
+                      >
+                        Proyecto {{ project.name }}
+                      </div>
+                    </li>
+                  </ul>
+                  <ul v-for="(project, index) in projects" :key="index">
+                    <li v-if="project.visibleModel == true">
+                      <BPMNModel :team_project_id="project.id"> </BPMNModel>
+                    </li>
+                  </ul>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -300,12 +314,13 @@ import mock from "./mock";
 import ApexChart from "vue-apexcharts";
 import DonutChart from "@/components/DonutChart.vue";
 import BarChart from "@/components/BarChart.vue";
-// MODELO
+import BPMNModel from "@/components/BPMNModel.vue";
 import axios from "axios";
-import BpmnJS from "bpmn-js";
+// MODELO
+/*import BpmnJS from "bpmn-js";
 import minimapModule from "diagram-js-minimap";
 import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
-import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
+import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";*/
 
 export default {
   name: "DashboardView",
@@ -313,6 +328,7 @@ export default {
     ApexChart,
     DonutChart,
     BarChart,
+    BPMNModel,
   },
   data() {
     return {
@@ -332,17 +348,34 @@ export default {
     };
   },
   created() {
-    this.getBPMN();
+    //this.getBPMNs();
     this.getProjects();
     this.getJiraParticipation(this.team_id);
   },
   methods: {
+    changeVisibleModel(project) {
+      if (project.visibleModel == false) {
+        project.visibleModel = true;
+      } else {
+        project.visibleModel = false;
+      }
+    },
+    /*getBPMNs() {
+      if (this.projects != []) {
+        var i = 0;
+        while (i < this.projects.length) {
+          this.getProjectBPMN(this.projects[i].id);
+          i++;
+        }
+      }
+    },
     //funcion para obtener un modelo bpmn
-    getBPMN() {
+    getProjectBPMN(team_project_id) {
       axios
         .get(
           process.env.VUE_APP_BASE_URL +
-            "/process-model/get-last-bpmn/625f1e47bffb6a90d59d3e06"
+            "/process-model/get-last-bpmn/" +
+            team_project_id
         )
         .then((r) => {
           this.diagram = r.data;
@@ -398,7 +431,7 @@ export default {
                   console.log(event, "on", e.element.id);
                   //viewer.get("minimap").open();
                 });
-              });*/
+              });  //*
             });
           } catch (err) {
             console.log("error rendering", err);
@@ -407,7 +440,7 @@ export default {
         .catch((e) => {
           console.log(e);
         });
-    },
+    },*/
     //funcion para obtener los ids de proyectos de un equipo de desarrollo
     getProjects() {
       if (this.team_id != "") {
@@ -424,6 +457,7 @@ export default {
               jenkins_options: null,
               jenkins_options_bar: null,
               github_options: [],
+              visibleModel: false,
               visibleJenkins: false,
               visibleGithub: false,
             };
@@ -655,7 +689,7 @@ export default {
               ],
               labels: users,
               title: {
-                text: 'Commits',
+                text: "Commits",
               },
             },
           };
@@ -681,7 +715,7 @@ export default {
               ],
               labels: users,
               title: {
-                text: 'Additions',
+                text: "Additions",
               },
             },
           };
@@ -707,7 +741,7 @@ export default {
               ],
               labels: users,
               title: {
-                text: 'Deletions',
+                text: "Deletions",
               },
             },
           };
