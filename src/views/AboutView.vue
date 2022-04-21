@@ -56,7 +56,7 @@ export default {
       });
     }, 
     displayImage2(){
-      axios.get("http://127.0.0.1:5001/process-model/get-last-image/6241fad36d714f635bafbc9f", {
+      axios.get("http://127.0.0.1:5001/process-model/get-last-image/625f1e47bffb6a90d59d3e06", {
       responseType: 'blob',
     }).then((response) => {
         console.log(response);
@@ -74,7 +74,7 @@ export default {
       });
     },
     prueba(){
-      axios.get("http://127.0.0.1:5001/process-model/get-last-image/6241fad36d714f635bafbc9f", {
+      axios.get("http://127.0.0.1:5001/process-model/get-last-image/625f1e47bffb6a90d59d3e06", {
       responseType: 'blob',
     }).then((response) => {
         var objectURL = URL.createObjectURL(response.data);

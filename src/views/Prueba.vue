@@ -67,7 +67,7 @@ export default {
     displayImage2() {
       axios
         .get(
-          "http://127.0.0.1:5001/process-model/get-last-image/6241fad36d714f635bafbc9f",
+          "http://127.0.0.1:5001/process-model/get-last-image/625f1e47bffb6a90d59d3e06",
           {
             responseType: "blob",
           }
@@ -90,7 +90,7 @@ export default {
     prueba() {
       axios
         .get(
-          "http://127.0.0.1:5001/process-model/get-last-image/6241fad36d714f635bafbc9f",
+          "http://127.0.0.1:5001/process-model/get-last-image/625f1e47bffb6a90d59d3e06",
           {
             responseType: "blob",
           }
@@ -102,7 +102,7 @@ export default {
     },
     pruebados() {
       axios
-        .get("http://127.0.0.1:5001/process-model/get-last-bpmn/6241fad36d714f635bafbc9f")
+        .get("http://127.0.0.1:5001/process-model/get-last-bpmn/625f1e47bffb6a90d59d3e06")
         .then((r) => {
           this.diagram = r.data;
           //console.log(this.diagram);

@@ -31,50 +31,7 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <!-- JENKINS -->
-        <v-col lg="4" sm="6" cols="12">
-          <v-card class="mx-1 mb-1">
-            <v-card-title class="pa-6 pb-3">
-              <p>Jenkins</p>
-              <v-spacer></v-spacer>
-              <v-btn>
-                <v-icon>fa-expand</v-icon>
-              </v-btn>
-            </v-card-title>
-            <v-card-text class="pa-6 pt-0">
-              <v-row v-if="jenkins_options != null">
-                <DonutChart
-                  :options="jenkins_options.options"
-                  :series="jenkins_options.series"
-                >
-                </DonutChart>
-                <!--ApexChart
-                  height="100%"
-                  width="100%"
-                  type="bar"
-                  v-if="apexLoading"
-                  :options="jenkins_options.options"
-                  :series="jenkins_options.series"
-                ></ApexChart-->
-              </v-row>
-              <v-row v-if="jenkins_options_bar != null">
-                <BarChart
-                  :options="jenkins_options_bar.options"
-                  :series="jenkins_options_bar.series"
-                >
-                </BarChart>
-                <!--ApexChart
-                  height="100%"
-                  width="100%"
-                  type="bar"
-                  v-if="apexLoading"
-                  :options="jenkins_options.options"
-                  :series="jenkins_options.series"
-                ></ApexChart-->
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
+        <!-- JIRA -->
         <v-col lg="4" sm="6" cols="12">
           <v-card class="mx-1 mb-1">
             <v-card-title class="pa-6 pb-3">
@@ -105,6 +62,104 @@
                 </div>
               </v-row>
             </v-card-text>
+          </v-card>
+        </v-col>
+        <!-- JENKINS -->
+        <v-col lg="4" sm="6" cols="12">
+          <v-card class="padding-card">
+            <div class="tool-name">
+              <h3>Jenkins</h3>
+            </div>
+            <ul v-for="project in projects" :key="project.id">
+              <li>
+                <div
+                  class="project-name"
+                  v-on:click="changeVisibleJenkins(project)"
+                >
+                  Proyecto {{ project.name }}
+                </div>
+              </li>
+            </ul>
+            <ul v-for="(project, index) in projects" :key="index">
+              <li>
+                <div v-if="project.visibleJenkins == true">
+                  <v-card class="mx-1 mb-1">
+                    <v-card-text class="pa-6 pt-0">
+                      <v-row v-if="project.jenkins_options != null">
+                        <DonutChart
+                          :options="project.jenkins_options.options"
+                          :series="project.jenkins_options.series"
+                        >
+                        </DonutChart>
+                        <!--ApexChart
+                  height="100%"
+                  width="100%"
+                  type="bar"
+                  v-if="apexLoading"
+                  :options="jenkins_options.options"
+                  :series="jenkins_options.series"
+                ></ApexChart-->
+                      </v-row>
+                      <v-row v-if="project.jenkins_options_bar != null">
+                        <BarChart
+                          :options="project.jenkins_options_bar.options"
+                          :series="project.jenkins_options_bar.series"
+                        >
+                        </BarChart>
+                        <!--ApexChart
+                  height="100%"
+                  width="100%"
+                  type="bar"
+                  v-if="apexLoading"
+                  :options="jenkins_options.options"
+                  :series="jenkins_options.series"
+                ></ApexChart-->
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </div>
+              </li>
+            </ul>
+          </v-card>
+        </v-col>
+        <!-- GITHUB -->
+        <v-col lg="4" sm="6" cols="12">
+          <v-card class="padding-card">
+            <div class="tool-name">
+              <h3>GitHub</h3>
+            </div>
+            <ul v-for="project in projects" :key="project.id">
+              <li>
+                <div
+                  class="project-name"
+                  v-on:click="changeVisibleGithub(project)"
+                >
+                  Proyecto {{ project.name }}
+                </div>
+              </li>
+            </ul>
+            <ul v-for="(project, index) in projects" :key="index">
+              <li>
+                <div v-if="project.visibleGithub == true">
+                  <v-card class="mx-1 mb-1">
+                    <v-card-text class="pa-6 pt-0">
+                      <v-row v-if="project.github_options != null">
+                        <div
+                          v-for="(opt, index) in project.github_options"
+                          :key="index"
+                        >
+                          <DonutChart
+                            :options="opt.options"
+                            :series="opt.series"
+                          >
+                          </DonutChart>
+                        </div>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </div>
+              </li>
+            </ul>
           </v-card>
         </v-col>
         <v-col lg="4" sm="6" cols="12">
@@ -268,28 +323,26 @@ export default {
       mainApexAreaSelect: "Daily",
 
       //aqui empieza
+      team_id: "6241fad36d714f635bafbc9f",
       team_name: "PROBANDO",
+      projects: [],
       jenkins_options: null,
-      jenkins_options_bar: null, 
+      jenkins_options_bar: null,
       jira_options: [],
     };
   },
   created() {
     this.getBPMN();
-    this.getJenkinsParticipation2(
-      "6241fad36d714f635bafbc9f",
-      "6241fb9a6db9b5f537d59a76"
-    );
-    this.getJiraParticipation(
-      "6241fad36d714f635bafbc9f",
-      "6241fb9a6db9b5f537d59a76"
-    );
+    this.getProjects();
+    this.getJiraParticipation(this.team_id);
   },
   methods: {
+    //funcion para obtener un modelo bpmn
     getBPMN() {
       axios
         .get(
-          process.env.VUE_APP_BASE_URL + "/process-model/get-last-bpmn/6241fad36d714f635bafbc9f"
+          process.env.VUE_APP_BASE_URL +
+            "/process-model/get-last-bpmn/625f1e47bffb6a90d59d3e06"
         )
         .then((r) => {
           this.diagram = r.data;
@@ -355,62 +408,62 @@ export default {
           console.log(e);
         });
     },
-    getJenkinsParticipation(t_id, s_id) {
-      axios
-        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
-          team_id: t_id,
-          source_id: s_id,
-        })
-        .then((response) => {
-          var users = [];
-          var percentages = [];
-          response.data.forEach((element) => {
-            users.push(element.username);
-            percentages.push(parseInt(element.total_per, 10));
+    //funcion para obtener los ids de proyectos de un equipo de desarrollo
+    getProjects() {
+      if (this.team_id != "") {
+        axios
+          .get(process.env.VUE_APP_BASE_URL + "/participation/get-projects", {
+            team_id: this.team_id,
+          })
+          .then((response) => {
+            var p = {
+              id: null,
+              name: null,
+              jenkins_id: null,
+              github_id: null,
+              jenkins_options: null,
+              jenkins_options_bar: null,
+              github_options: [],
+              visibleJenkins: false,
+              visibleGithub: false,
+            };
+            var pList = [];
+            response.data.forEach((element) => {
+              p.id = element.id;
+              p.name = element.name;
+              p.jenkins_id = element.jenkins;
+              p.github_id = element.github;
+              pList.push(p);
+            });
+            this.projects = pList;
+            this.getJenkinsParticipation();
+            this.getGithubParticipation();
           });
-          //this.jenkins_options.options.xaxis.categories = users;
-          //this.jenkins_options.series = [
-          //  {
-          //    data: percentages,
-          //  },
-          //];
-          console.log(users);
-          console.log(percentages);
-          console.log(this.jenkins_options);
-          var jenkins_options = {
-            series: [
-              {
-                data: percentages,
-              },
-            ],
-            options: {
-              chart: {
-                type: "bar",
-                height: 350,
-              },
-              plotOptions: {
-                bar: {
-                  borderRadius: 4,
-                  horizontal: true,
-                },
-              },
-              dataLabels: {
-                enabled: false,
-              },
-              xaxis: {
-                categories: users,
-                max: 100,
-              },
-            },
-          };
-          this.jenkins_options = jenkins_options;
-        });
+      }
     },
-    getJenkinsParticipation2(t_id, s_id) {
+    /////// funcion para cambiar la visibilidad de un projecto de jenkins
+    changeVisibleJenkins(project) {
+      if (project.visibleJenkins == false) {
+        project.visibleJenkins = true;
+      } else {
+        project.visibleJenkins = false;
+      }
+    },
+    getJenkinsParticipation() {
+      if (this.projects != []) {
+        var i = 0;
+        while (i < this.projects.length) {
+          this.getJenkinsProjectParticipation(i);
+          i++;
+        }
+      }
+    },
+    //funcion para obtener la participacion en Jenkins para un proyecto
+    getJenkinsProjectParticipation(index) {
       axios
         .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
-          team_id: t_id,
-          source_id: s_id,
+          team_id: this.projects[index].id,
+          source_id: this.projects[index].jenkins_id,
         })
         .then((response) => {
           console.log(response.data);
@@ -449,15 +502,15 @@ export default {
               },
             },
           };
-          this.jenkins_options = options;
+          this.projects[index].jenkins_options = options;
           var bar_options = {
             series: [
               {
-                name: 'Successful build percentage',
+                name: "Successful build percentage",
                 data: success_per,
               },
               {
-                name: 'Failed build percentage',
+                name: "Failed build percentage",
                 data: failure_per,
               },
             ],
@@ -496,14 +549,13 @@ export default {
               },
             },
           };
-          this.jenkins_options_bar = bar_options;
+          this.projects[index].jenkins_options_bar = bar_options;
         });
     },
-    getJiraParticipation(t_id, s_id) {
+    getJiraParticipation(t_id) {
       axios
         .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/participation", {
           team_id: t_id,
-          source_id: s_id,
         })
         .then((response) => {
           var users = [];
@@ -544,6 +596,122 @@ export default {
             percentages = [];
           }
           console.log(this.jira_options);
+        });
+    },
+    /////// funcion para cambiar la visibilidad de un projecto de github
+    changeVisibleGithub(project) {
+      if (project.visibleGithub == false) {
+        project.visibleGithub = true;
+      } else {
+        project.visibleGithub = false;
+      }
+    },
+    getGithubParticipation() {
+      if (this.projects != []) {
+        var i = 0;
+        while (i < this.projects.length) {
+          this.getGithubProjectParticipation(i);
+          i++;
+        }
+      }
+    },
+    //funcion para obtener la participacion en GitHub para un proyecto
+    getGithubProjectParticipation(index) {
+      axios
+        .get(process.env.VUE_APP_GITHUB_BASE_URL + "/github/participation", {
+          team_id: this.projects[index].id,
+          source_id: this.projects[index].github_id,
+        })
+        .then((response) => {
+          var users = [];
+          var commits_percentages = [];
+          var additions_percentages = [];
+          var deletions_percentages = [];
+          console.log(response.data);
+          response.data.forEach((e) => {
+            users.push(e.name);
+            commits_percentages.push(parseInt(e.commits_per, 10));
+            additions_percentages.push(parseInt(e.additions_per, 10));
+            deletions_percentages.push(parseInt(e.deletions_per, 10));
+          });
+          var options = {
+            series: commits_percentages,
+            options: {
+              chart: {
+                type: "donut",
+              },
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    chart: {
+                      width: 200,
+                    },
+                    legend: {
+                      position: "bottom",
+                    },
+                  },
+                },
+              ],
+              labels: users,
+              title: {
+                text: 'Commits',
+              },
+            },
+          };
+          this.projects[index].github_options.push(options);
+          options = {
+            series: additions_percentages,
+            options: {
+              chart: {
+                type: "donut",
+              },
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    chart: {
+                      width: 200,
+                    },
+                    legend: {
+                      position: "bottom",
+                    },
+                  },
+                },
+              ],
+              labels: users,
+              title: {
+                text: 'Additions',
+              },
+            },
+          };
+          this.projects[index].github_options.push(options);
+          options = {
+            series: deletions_percentages,
+            options: {
+              chart: {
+                type: "donut",
+              },
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    chart: {
+                      width: 200,
+                    },
+                    legend: {
+                      position: "bottom",
+                    },
+                  },
+                },
+              ],
+              labels: users,
+              title: {
+                text: 'Deletions',
+              },
+            },
+          };
+          this.projects[index].github_options.push(options);
         });
     },
     ///////////////////
