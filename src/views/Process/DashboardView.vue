@@ -416,12 +416,14 @@ export default {
           var commits_percentages = [];
           var additions_percentages = [];
           var deletions_percentages = [];
+          var files_added_percentages = [];
           console.log(response.data);
           response.data.forEach((e) => {
             users.push(e.name);
             commits_percentages.push(parseInt(e.commits_per, 10));
             additions_percentages.push(parseInt(e.additions_per, 10));
             deletions_percentages.push(parseInt(e.deletions_per, 10));
+            files_added_percentages.push(parseInt(e.files_added_per, 10));
           });
           var options = {
             series: commits_percentages,
@@ -497,6 +499,32 @@ export default {
               labels: users,
               title: {
                 text: "Deletions",
+              },
+            },
+          };
+          this.projects[index].github_options.push(options);
+          options = {
+            series: files_added_percentages,
+            options: {
+              chart: {
+                type: "donut",
+              },
+              responsive: [
+                {
+                  breakpoint: 480,
+                  options: {
+                    chart: {
+                      width: 200,
+                    },
+                    legend: {
+                      position: "bottom",
+                    },
+                  },
+                },
+              ],
+              labels: users,
+              title: {
+                text: "Files added",
               },
             },
           };
