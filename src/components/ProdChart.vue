@@ -1,8 +1,9 @@
 <template>
+<div>
   <v-card class="mx-1 mb-1">
     <v-card-title class="pa-6 pb-0">
       <v-row no-gutters>
-        <h3>Productividad equipo</h3>
+        <p>Productividad individual</p>
       </v-row>
     </v-card-title>
     <v-card-text class="pa-6">
@@ -14,7 +15,7 @@
                 class="project-name"
                 v-on:click="changeVisibleDev(developer)"
               >
-                <h3>Productividad desarrollador {{ developer.name }}</h3>
+                <h3>Productividad desarrollador/a {{ developer.name }}</h3>
               </div>
             </li>
           </ul>
@@ -41,6 +42,31 @@
       </v-row>
     </v-card-text>
   </v-card>
+  <v-card class="mx-1 mb-1">
+    <v-card-title class="pa-6 pb-0">
+      <v-row no-gutters>
+        <p>Productividad grupal</p>
+      </v-row>
+    </v-card-title>
+    <v-card-text class="pa-6">
+      <v-row class="overflow-hidden">
+        <v-col class="overflow-hidden">
+            <div
+              v-if="
+                team.series[0].data != []
+              "
+            >
+              <BarChart
+                :options="team.options"
+                :series="team.series"
+              >
+              </BarChart>
+            </div>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+</div>
 </template>
 
 <script>
@@ -60,10 +86,12 @@ export default {
     return {
       apexLoading: false,
       developers: [],
+      team: null, 
     };
   },
   created() {
     this.getGithubProd();
+    this.getJenkinsTeamProd();
   },
   methods: {
     changeVisibleDev(dev) {
@@ -86,7 +114,7 @@ export default {
             bar_options: {
               series: [
                 {
-                  name: "Commits",
+                  name: "Number of commits",
                   data: [],
                 },
                 {
@@ -128,7 +156,7 @@ export default {
                   categories: [],
                 },
                 legend: {
-                  position: "bottom",
+                  position: "top",
                   verticalAlign: "top",
                   containerMargin: {
                     left: 35,
@@ -145,11 +173,24 @@ export default {
                         },
                       },
                       legend: {
-                        position: "bottom",
+                        position: "top",
                       },
                     },
                   },
                 ],
+                title: {
+                  text: 'Number of commits and Successful builds / 2 weeks',
+                  align: "left",
+                  offsetX: 0,
+                  offsetY: 0,
+                  floating: false,
+                  style: {
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    fontFamily: undefined,
+                    color: "#263238",
+                  },
+                },
               },
             },
             bar_options_loc: {
@@ -193,7 +234,7 @@ export default {
                   categories: [],
                 },
                 legend: {
-                  position: "bottom",
+                  position: "top",
                   verticalAlign: "top",
                   containerMargin: {
                     left: 35,
@@ -210,11 +251,24 @@ export default {
                         },
                       },
                       legend: {
-                        position: "bottom",
+                        position: "top",
                       },
                     },
                   },
                 ],
+                title: {
+                  text: 'Number of Lines of code / 2 weeks',
+                  align: "left",
+                  offsetX: 0,
+                  offsetY: 0,
+                  floating: false,
+                  style: {
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    fontFamily: undefined,
+                    color: "#263238",
+                  },
+                },
               },
             },
           };
@@ -228,23 +282,19 @@ export default {
             devList.push(developer);
           });
           this.developers = devList;
-          this.getJenkinsProd();
+          this.getJenkinsIndProd();
         });
     },
     getDevIndex(developers, name) {
       var i = 0;
-      console.log("largo");
-      console.log(developers.length);
       while (i < developers.length) {
-        console.log(name);
-        console.log(developers[i].name);
         if (developers[i].name == name) {
           return i;
         }
         i++;
       }
     },
-    getJenkinsProd() {
+    getJenkinsIndProd() {
       axios
         .get(
           process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/individual-prod",
@@ -259,6 +309,116 @@ export default {
             this.developers[index].bar_options.series[1].data = element.success;
           });
         });
+    },
+    getJenkinsTeamProd() {
+      axios
+        .get(
+          process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-prod",
+          {
+            team_id: this.team_id,
+            team_project_id: this.team_project_id,
+          }
+        )
+        .then((response) => {
+            var bar_options =  {
+              series: [
+                {
+                  name: "Story points completed",
+                  data: [],
+                },
+                {
+                  name: "Successful builds",
+                  data: response.data.success,
+                },
+              ],
+              options: {
+                chart: {
+                  type: "bar",
+                  height: 430,
+                },
+                plotOptions: {
+                  bar: {
+                    horizontal: false,
+                    dataLabels: {
+                      position: "top",
+                    },
+                  },
+                },
+                dataLabels: {
+                  enabled: true,
+                  offsetX: -6,
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
+                stroke: {
+                  show: true,
+                  width: 1,
+                  colors: ["#fff"],
+                },
+                tooltip: {
+                  shared: true,
+                  intersect: false,
+                },
+                xaxis: {
+                  categories: response.data.dates,
+                },
+                legend: {
+                  position: "top",
+                  verticalAlign: "top",
+                  containerMargin: {
+                    left: 35,
+                    right: 60,
+                  },
+                },
+                responsive: [
+                  {
+                    breakpoint: 1000,
+                    options: {
+                      plotOptions: {
+                        bar: {
+                          horizontal: false,
+                        },
+                      },
+                      legend: {
+                        position: "top",
+                      },
+                    },
+                  },
+                ],
+                title: {
+                  text: 'Story points and Successful builds / 2 weeks',
+                  align: "left",
+                  offsetX: 0,
+                  offsetY: 0,
+                  floating: false,
+                  style: {
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    fontFamily: undefined,
+                    color: "#263238",
+                  },
+                },
+              },
+            };
+            this.team = bar_options
+            this.getJiraProd();
+            console.log(this.team)
+        });
+    },
+    getJiraProd(){
+        axios
+        .get(
+          process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod",
+          {
+            team_id: this.team_id,
+            team_project_id: this.team_project_id,
+          }
+        )
+        .then((response) => {
+            this.team.series[0].data = response.data.story_points
+        });       
     },
   },
   mounted() {},
