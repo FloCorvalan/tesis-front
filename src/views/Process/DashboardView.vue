@@ -149,6 +149,37 @@
             </ul>
           </v-card>
         </v-col>
+        <!-- PRODUCTIVITY -->
+        <v-col cols="12">
+          <v-card class="mx-1 mb-1">
+            <v-card-title class="pa-6 pb-0">
+              <v-row no-gutters>
+                  <h3>Productividad equipo {{ team_name }}</h3>
+              </v-row>
+            </v-card-title>
+            <v-card-text class="pa-6">
+              <v-row>
+                <v-col class="overflow-hidden">
+                  <ul v-for="project in projects" :key="project.id">
+                    <li>
+                      <div
+                        class="project-name"
+                        v-on:click="changeVisibleProdInd(project)"
+                      >
+                        <h3>Proyecto {{ project.name }}</h3>
+                      </div>
+                    </li>
+                  </ul>
+                  <ul v-for="(project, index) in projects" :key="index">
+                    <li v-if="project.visibleProdInd == true">
+                      <ProdChart :team_id="team_id" :team_project_id="project.id"> </ProdChart>
+                    </li>
+                  </ul>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
       </v-row>
     </div>
   </v-container>
@@ -158,6 +189,7 @@
 import DonutChart from "@/components/DonutChart.vue";
 import BarChart from "@/components/BarChart.vue";
 import BPMNModel from "@/components/BPMNModel.vue";
+import ProdChart from "@/components/ProdChart.vue";
 import axios from "axios";
 
 export default {
@@ -166,6 +198,7 @@ export default {
     DonutChart,
     BarChart,
     BPMNModel,
+    ProdChart,
   },
   data() {
     return {
@@ -196,6 +229,13 @@ export default {
         project.visibleModel = false;
       }
     },
+    changeVisibleProdInd(project) {
+      if (project.visibleProdInd == false) {
+        project.visibleProdInd = true;
+      } else {
+        project.visibleProdInd = false;
+      }
+    },
     //funcion para obtener los ids de proyectos de un equipo de desarrollo
     getProjects() {
       if (this.team_id != "") {
@@ -215,6 +255,8 @@ export default {
               visibleModel: false,
               visibleJenkins: false,
               visibleGithub: false,
+              visibleProdInd: false,
+              visbleProdTeam: false,
             };
             var pList = [];
             response.data.forEach((element) => {
