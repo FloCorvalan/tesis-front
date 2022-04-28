@@ -1,72 +1,48 @@
 <template>
-<div>
-  <v-card class="mx-1 mb-1">
-    <v-card-title class="pa-6 pb-0">
-      <v-row no-gutters>
-        <p>Productividad individual</p>
-      </v-row>
-    </v-card-title>
-    <v-card-text class="pa-6">
-      <v-row class="overflow-hidden">
-        <v-col class="overflow-hidden">
-          <ul v-for="(developer, index) in developers" :key="index">
-            <li>
-              <div
-                class="project-name"
-                v-on:click="changeVisibleDev(developer)"
+  <div>
+    <v-card class="mx-1 mb-1">
+      <v-card-title class="pa-6 pb-0">
+        <v-row no-gutters>
+          <p>Productividad individual</p>
+        </v-row>
+      </v-card-title>
+      <v-card-text class="pa-6">
+        <v-row class="overflow-hidden">
+          <v-col class="overflow-hidden">
+            <ul v-for="(developer, index) in developers" :key="index">
+              <li>
+                <div
+                  class="project-name"
+                  v-on:click="changeVisibleDev(developer)"
+                >
+                  <h3>Productividad desarrollador/a {{ developer.name }}</h3>
+                </div>
+              </li>
+            </ul>
+            <ul v-for="(developer, index) in developers" :key="index">
+              <li
+                v-if="
+                  developer.visibleProd == true &&
+                  developer.bar_options.options.xaxis.categories != []
+                "
               >
-                <h3>Productividad desarrollador/a {{ developer.name }}</h3>
-              </div>
-            </li>
-          </ul>
-          <ul v-for="(developer, index) in developers" :key="index">
-            <li
-              v-if="
-                developer.visibleProd == true &&
-                developer.bar_options.options.xaxis.categories != []
-              "
-            >
-              <BarChart
-                :options="developer.bar_options.options"
-                :series="developer.bar_options.series"
-              >
-              </BarChart>
-              <BarChart
-                :options="developer.bar_options_loc.options"
-                :series="developer.bar_options_loc.series"
-              >
-              </BarChart>
-            </li>
-          </ul>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
-  <v-card class="mx-1 mb-1">
-    <v-card-title class="pa-6 pb-0">
-      <v-row no-gutters>
-        <p>Productividad grupal</p>
-      </v-row>
-    </v-card-title>
-    <v-card-text class="pa-6">
-      <v-row class="overflow-hidden">
-        <v-col class="overflow-hidden">
-            <div
-              v-if="
-                team.series[0].data != []
-              "
-            >
-              <BarChart
-                :options="team.options"
-                :series="team.series"
-              >
-              </BarChart>
-            </div>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
-</div>
+                <BarChart
+                  :options="developer.bar_options.options"
+                  :series="developer.bar_options.series"
+                >
+                </BarChart>
+                <BarChart
+                  :options="developer.bar_options_loc.options"
+                  :series="developer.bar_options_loc.series"
+                >
+                </BarChart>
+              </li>
+            </ul>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -86,7 +62,7 @@ export default {
     return {
       apexLoading: false,
       developers: [],
-      team: null, 
+      team: null,
     };
   },
   created() {
@@ -179,7 +155,7 @@ export default {
                   },
                 ],
                 title: {
-                  text: 'Number of commits and Successful builds / 2 weeks',
+                  text: "Number of commits and Successful builds / 2 weeks",
                   align: "left",
                   offsetX: 0,
                   offsetY: 0,
@@ -257,7 +233,7 @@ export default {
                   },
                 ],
                 title: {
-                  text: 'Number of Lines of code / 2 weeks',
+                  text: "Number of Lines of code / 2 weeks",
                   align: "left",
                   offsetX: 0,
                   offsetY: 0,
@@ -312,113 +288,197 @@ export default {
     },
     getJenkinsTeamProd() {
       axios
-        .get(
-          process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-prod",
-          {
-            team_id: this.team_id,
-            team_project_id: this.team_project_id,
-          }
-        )
+        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-prod", {
+          team_id: this.team_id,
+          team_project_id: this.team_project_id,
+        })
         .then((response) => {
-            var bar_options =  {
-              series: [
+          var bar_options = {
+            series: [
+              {
+                name: "Story points completed",
+                data: [],
+              },
+              {
+                name: "Successful builds",
+                data: response.data.success,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 430,
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  dataLabels: {
+                    position: "top",
+                  },
+                },
+              },
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#000"],
+                },
+              },
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ["#fff"],
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
+              },
+              xaxis: {
+                categories: response.data.dates,
+              },
+              legend: {
+                position: "top",
+                verticalAlign: "top",
+                containerMargin: {
+                  left: 35,
+                  right: 60,
+                },
+              },
+              responsive: [
                 {
-                  name: "Story points completed",
-                  data: [],
-                },
-                {
-                  name: "Successful builds",
-                  data: response.data.success,
-                },
-              ],
-              options: {
-                chart: {
-                  type: "bar",
-                  height: 430,
-                },
-                plotOptions: {
-                  bar: {
-                    horizontal: false,
-                    dataLabels: {
+                  breakpoint: 1000,
+                  options: {
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                      },
+                    },
+                    legend: {
                       position: "top",
                     },
                   },
                 },
-                dataLabels: {
-                  enabled: true,
-                  offsetX: -6,
-                  style: {
-                    fontSize: "12px",
-                    colors: ["#000"],
-                  },
+              ],
+              title: {
+                text: "Story points and Successful builds / 2 weeks",
+                align: "left",
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  fontFamily: undefined,
+                  color: "#263238",
                 },
-                stroke: {
-                  show: true,
-                  width: 1,
-                  colors: ["#fff"],
-                },
-                tooltip: {
-                  shared: true,
-                  intersect: false,
-                },
-                xaxis: {
-                  categories: response.data.dates,
-                },
-                legend: {
-                  position: "top",
-                  verticalAlign: "top",
-                  containerMargin: {
-                    left: 35,
-                    right: 60,
-                  },
-                },
-                responsive: [
-                  {
-                    breakpoint: 1000,
-                    options: {
-                      plotOptions: {
-                        bar: {
-                          horizontal: false,
-                        },
-                      },
-                      legend: {
-                        position: "top",
-                      },
-                    },
-                  },
-                ],
-                title: {
-                  text: 'Story points and Successful builds / 2 weeks',
-                  align: "left",
-                  offsetX: 0,
-                  offsetY: 0,
-                  floating: false,
-                  style: {
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    fontFamily: undefined,
-                    color: "#263238",
+              },
+            },
+          };
+          this.team = bar_options;
+          this.getJiraProd();
+          console.log(this.team);
+        });
+    },
+    getJiraProd() {
+      axios
+        .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
+          team_id: this.team_id,
+          team_project_id: this.team_project_id,
+        })
+        .then((response) => {
+          var names = []
+          var estimated = []
+          var completed = []
+          for (var key in response.data) {
+            names.push(response.data[key].name)
+            estimated.push(response.data[key].estimated)
+            completed.push(response.data[key].completed)
+          }
+          var bar_options = {
+            series: [
+              {
+                name: "Estimated story points",
+                data: estimated,
+              },
+              {
+                name: "Story points completed",
+                data: completed,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 430,
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  dataLabels: {
+                    position: "top",
                   },
                 },
               },
-            };
-            this.team = bar_options
-            this.getJiraProd();
-            console.log(this.team)
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#000"],
+                },
+              },
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ["#fff"],
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
+              },
+              xaxis: {
+                categories: names,
+              },
+              legend: {
+                position: "top",
+                verticalAlign: "top",
+                containerMargin: {
+                  left: 35,
+                  right: 60,
+                },
+              },
+              responsive: [
+                {
+                  breakpoint: 1000,
+                  options: {
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                      },
+                    },
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                },
+              ],
+              title: {
+                text: "Team productivity",
+                align: "left",
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  fontFamily: undefined,
+                  color: "#263238",
+                },
+              },
+            },
+          };
+          this.team = bar_options;
         });
-    },
-    getJiraProd(){
-        axios
-        .get(
-          process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod",
-          {
-            team_id: this.team_id,
-            team_project_id: this.team_project_id,
-          }
-        )
-        .then((response) => {
-            this.team.series[0].data = response.data.story_points
-        });       
     },
   },
   mounted() {},

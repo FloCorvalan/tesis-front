@@ -10,7 +10,7 @@
           <v-card class="mx-1 mb-1">
             <v-card-title class="pa-6 pb-0">
               <v-row no-gutters>
-                  <h3>Modelos de proceso BPMN equipo {{ team_name }}</h3>
+                <h3>Modelos de proceso BPMN equipo {{ team_name }}</h3>
               </v-row>
             </v-card-title>
             <v-card-text class="pa-6">
@@ -50,8 +50,7 @@
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item
-                  >
+                  <v-list-item>
                     <v-list-item-title></v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -154,9 +153,26 @@
           <v-card class="mx-1 mb-1">
             <v-card-title class="pa-6 pb-0">
               <v-row no-gutters>
-                  <h3>Productividad equipo {{ team_name }}</h3>
+                <h3>Productividad equipo {{ team_name }}</h3>
               </v-row>
             </v-card-title>
+            <v-card class="mx-1 mb-1">
+              <v-card-title class="pa-6 pb-0">
+                <v-row no-gutters>
+                  <p>Productividad grupal</p>
+                </v-row>
+              </v-card-title>
+              <v-card-text class="pa-6">
+                <v-row class="overflow-hidden">
+                  <v-col class="overflow-hidden">
+                    <div v-if="team.series[0].data != []">
+                      <BarChart :options="team.options" :series="team.series">
+                      </BarChart>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
             <v-card-text class="pa-6">
               <v-row>
                 <v-col class="overflow-hidden">
@@ -172,7 +188,11 @@
                   </ul>
                   <ul v-for="(project, index) in projects" :key="index">
                     <li v-if="project.visibleProdInd == true">
-                      <ProdChart :team_id="team_id" :team_project_id="project.id"> </ProdChart>
+                      <ProdChart
+                        :team_id="team_id"
+                        :team_project_id="project.id"
+                      >
+                      </ProdChart>
                     </li>
                   </ul>
                 </v-col>
@@ -210,6 +230,7 @@ export default {
       //aqui empieza
       team_id: "6241fad36d714f635bafbc9f",
       team_name: "PROBANDO",
+      team: null,
       projects: [],
       jenkins_options: null,
       jenkins_options_bar: null,
@@ -220,6 +241,7 @@ export default {
     //this.getBPMNs();
     this.getProjects();
     this.getJiraParticipation(this.team_id);
+    this.getJiraProd();
   },
   methods: {
     changeVisibleModel(project) {
@@ -589,6 +611,106 @@ export default {
     getRandomInt(min, max) {
       let rand = min - 0.5 + Math.random() * (max - min + 1);
       return Math.round(rand);
+    },
+    getJiraProd() {
+      axios
+        .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
+          team_id: this.team_id,
+          team_project_id: this.team_project_id,
+        })
+        .then((response) => {
+          var names = [];
+          var estimated = [];
+          var completed = [];
+          for (var key in response.data) {
+            names.push(response.data[key].name);
+            estimated.push(response.data[key].estimated);
+            completed.push(response.data[key].completed);
+          }
+          var bar_options = {
+            series: [
+              {
+                name: "Estimated story points",
+                data: estimated,
+              },
+              {
+                name: "Story points completed",
+                data: completed,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 430,
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  dataLabels: {
+                    position: "top",
+                  },
+                },
+              },
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#000"],
+                },
+              },
+              stroke: {
+                show: true,
+                width: 1,
+                colors: ["#fff"],
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
+              },
+              xaxis: {
+                categories: names,
+              },
+              legend: {
+                position: "top",
+                verticalAlign: "top",
+                containerMargin: {
+                  left: 35,
+                  right: 60,
+                },
+              },
+              responsive: [
+                {
+                  breakpoint: 1000,
+                  options: {
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                      },
+                    },
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                },
+              ],
+              title: {
+                text: "Team productivity",
+                align: "left",
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  fontFamily: undefined,
+                  color: "#263238",
+                },
+              },
+            },
+          };
+          this.team = bar_options;
+        });
     },
   },
   mounted() {
