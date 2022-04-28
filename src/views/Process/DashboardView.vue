@@ -173,31 +173,38 @@
                 </v-row>
               </v-card-text>
             </v-card>
-            <v-card-text class="pa-6">
-              <v-row>
-                <v-col class="overflow-hidden">
-                  <ul v-for="project in projects" :key="project.id">
-                    <li>
-                      <div
-                        class="project-name"
-                        v-on:click="changeVisibleProdInd(project)"
-                      >
-                        <h3>Proyecto {{ project.name }}</h3>
-                      </div>
-                    </li>
-                  </ul>
-                  <ul v-for="(project, index) in projects" :key="index">
-                    <li v-if="project.visibleProdInd == true">
-                      <ProdChart
-                        :team_id="team_id"
-                        :team_project_id="project.id"
-                      >
-                      </ProdChart>
-                    </li>
-                  </ul>
-                </v-col>
-              </v-row>
-            </v-card-text>
+            <v-card class="mx-1 mb-1">
+              <v-card-title class="pa-6 pb-0">
+                <v-row no-gutters>
+                  <p>Productividad individual</p>
+                </v-row>
+              </v-card-title>
+              <v-card-text class="pa-6">
+                <v-row>
+                  <v-col class="overflow-hidden">
+                    <ul v-for="project in projects" :key="project.id">
+                      <li>
+                        <div
+                          class="project-name"
+                          v-on:click="changeVisibleProdInd(project)"
+                        >
+                          <h3>Proyecto {{ project.name }}</h3>
+                        </div>
+                      </li>
+                    </ul>
+                    <ul v-for="(project, index) in projects" :key="index">
+                      <li v-if="project.visibleProdInd == true">
+                        <ProdChart
+                          :team_id="team_id"
+                          :team_project_id="project.id"
+                        >
+                        </ProdChart>
+                      </li>
+                    </ul>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
           </v-card>
         </v-col>
       </v-row>

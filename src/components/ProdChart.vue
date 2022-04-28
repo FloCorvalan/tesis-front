@@ -1,43 +1,19 @@
 <template>
   <div>
     <v-card class="mx-1 mb-1">
-      <v-card-title class="pa-6 pb-0">
-        <v-row no-gutters>
-          <p>Productividad individual</p>
-        </v-row>
-      </v-card-title>
       <v-card-text class="pa-6">
         <v-row class="overflow-hidden">
           <v-col class="overflow-hidden">
-            <ul v-for="(developer, index) in developers" :key="index">
-              <li>
-                <div
-                  class="project-name"
-                  v-on:click="changeVisibleDev(developer)"
-                >
-                  <h3>Productividad desarrollador/a {{ developer.name }}</h3>
-                </div>
-              </li>
-            </ul>
-            <ul v-for="(developer, index) in developers" :key="index">
-              <li
-                v-if="
-                  developer.visibleProd == true &&
-                  developer.bar_options.options.xaxis.categories != []
-                "
-              >
-                <BarChart
-                  :options="developer.bar_options.options"
-                  :series="developer.bar_options.series"
-                >
-                </BarChart>
-                <BarChart
-                  :options="developer.bar_options_loc.options"
-                  :series="developer.bar_options_loc.series"
-                >
-                </BarChart>
-              </li>
-            </ul>
+            <LineChart
+              :options="developers.line_options.options"
+              :series="developers.line_options.series"
+            >
+            </LineChart>
+            <LineChart
+              :options="developers.line_options_loc.options"
+              :series="developers.line_options_loc.series"
+            >
+            </LineChart>
           </v-col>
         </v-row>
       </v-card-text>
@@ -47,12 +23,12 @@
 
 <script>
 import axios from "axios";
-import BarChart from "@/components/BarChart.vue";
+import LineChart from "@/components/LineChart.vue";
 
 export default {
   name: "ProdChart",
   components: {
-    BarChart,
+    LineChart,
   },
   props: {
     team_id: String,
@@ -84,181 +60,93 @@ export default {
           team_project_id: this.team_project_id,
         })
         .then((response) => {
-          var developer = {
-            name: null,
-            visibleProd: false,
-            bar_options: {
-              series: [
-                {
-                  name: "Number of commits",
-                  data: [],
-                },
-                {
-                  name: "Successful builds",
-                  data: [],
-                },
-              ],
+          var developers = {
+            line_options: {
+              series: [],
               options: {
                 chart: {
-                  type: "bar",
-                  height: 430,
-                },
-                plotOptions: {
-                  bar: {
-                    horizontal: false,
-                    dataLabels: {
-                      position: "top",
-                    },
+                  height: 350,
+                  type: "line",
+                  zoom: {
+                    enabled: false,
                   },
                 },
                 dataLabels: {
-                  enabled: true,
-                  offsetX: -6,
-                  style: {
-                    fontSize: "12px",
-                    colors: ["#000"],
-                  },
+                  enabled: false,
                 },
                 stroke: {
-                  show: true,
-                  width: 1,
-                  colors: ["#fff"],
+                  curve: "straight",
                 },
-                tooltip: {
-                  shared: true,
-                  intersect: false,
+                title: {
+                  text: "Commits / 2 weeks",
+                  align: "left",
+                },
+                grid: {
+                  row: {
+                    colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                    opacity: 0.5,
+                  },
                 },
                 xaxis: {
-                  categories: [],
-                },
-                legend: {
-                  position: "top",
-                  verticalAlign: "top",
-                  containerMargin: {
-                    left: 35,
-                    right: 60,
-                  },
-                },
-                responsive: [
-                  {
-                    breakpoint: 1000,
-                    options: {
-                      plotOptions: {
-                        bar: {
-                          horizontal: false,
-                        },
-                      },
-                      legend: {
-                        position: "top",
-                      },
-                    },
-                  },
-                ],
-                title: {
-                  text: "Number of commits and Successful builds / 2 weeks",
-                  align: "left",
-                  offsetX: 0,
-                  offsetY: 0,
-                  floating: false,
-                  style: {
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    fontFamily: undefined,
-                    color: "#263238",
-                  },
+                  categories: response.data[0].dates,
                 },
               },
             },
-            bar_options_loc: {
-              series: [
-                {
-                  name: "Lines of code",
-                  data: [],
-                },
-              ],
+            line_options_loc: {
+              series: [],
               options: {
                 chart: {
-                  type: "bar",
-                  height: 430,
-                },
-                plotOptions: {
-                  bar: {
-                    horizontal: false,
-                    dataLabels: {
-                      position: "top",
-                    },
+                  height: 350,
+                  type: "line",
+                  zoom: {
+                    enabled: false,
                   },
                 },
                 dataLabels: {
-                  enabled: true,
-                  offsetX: -6,
-                  style: {
-                    fontSize: "12px",
-                    colors: ["#000"],
-                  },
+                  enabled: false,
                 },
                 stroke: {
-                  show: true,
-                  width: 1,
-                  colors: ["#fff"],
+                  curve: "straight",
                 },
-                tooltip: {
-                  shared: true,
-                  intersect: false,
+                title: {
+                  text: "Lines of code / 2 weeks",
+                  align: "left",
+                },
+                grid: {
+                  row: {
+                    colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+                    opacity: 0.5,
+                  },
                 },
                 xaxis: {
-                  categories: [],
-                },
-                legend: {
-                  position: "top",
-                  verticalAlign: "top",
-                  containerMargin: {
-                    left: 35,
-                    right: 60,
-                  },
-                },
-                responsive: [
-                  {
-                    breakpoint: 1000,
-                    options: {
-                      plotOptions: {
-                        bar: {
-                          horizontal: false,
-                        },
-                      },
-                      legend: {
-                        position: "top",
-                      },
-                    },
-                  },
-                ],
-                title: {
-                  text: "Number of Lines of code / 2 weeks",
-                  align: "left",
-                  offsetX: 0,
-                  offsetY: 0,
-                  floating: false,
-                  style: {
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    fontFamily: undefined,
-                    color: "#263238",
-                  },
+                  categories: response.data[0].dates,
                 },
               },
             },
           };
-          var devList = [];
+          var series = {
+            name: null,
+            data: null,
+          };
           response.data.forEach((element) => {
-            developer.name = element.name;
-            developer.bar_options.series[0].data = element.commits;
-            developer.bar_options_loc.series[0].data = element.additions;
-            developer.bar_options_loc.options.xaxis.categories = element.dates;
-            developer.bar_options.options.xaxis.categories = element.dates;
-            devList.push(developer);
+            series.name = element.name;
+            series.data = element.commits;
+            developers.line_options.series.push(series);
+            series = {
+              name: null,
+              data: null,
+            };
           });
-          this.developers = devList;
-          this.getJenkinsIndProd();
+          response.data.forEach((element) => {
+            series.name = element.name;
+            series.data = element.additions;
+            developers.line_options_loc.series.push(series);
+            series = {
+              name: null,
+              data: null,
+            };
+          });
+          this.developers = developers;
         });
     },
     getDevIndex(developers, name) {
@@ -270,116 +158,6 @@ export default {
         i++;
       }
     },
-    getJenkinsIndProd() {
-      axios
-        .get(
-          process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/individual-prod",
-          {
-            team_id: this.team_id,
-            team_project_id: this.team_project_id,
-          }
-        )
-        .then((response) => {
-          response.data.forEach((element) => {
-            var index = this.getDevIndex(this.developers, element.name);
-            this.developers[index].bar_options.series[1].data = element.success;
-          });
-        });
-    },
-    getJenkinsTeamProd() {
-      axios
-        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/team-prod", {
-          team_id: this.team_id,
-          team_project_id: this.team_project_id,
-        })
-        .then((response) => {
-          var bar_options = {
-            series: [
-              {
-                name: "Story points completed",
-                data: [],
-              },
-              {
-                name: "Successful builds",
-                data: response.data.success,
-              },
-            ],
-            options: {
-              chart: {
-                type: "bar",
-                height: 430,
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  dataLabels: {
-                    position: "top",
-                  },
-                },
-              },
-              dataLabels: {
-                enabled: true,
-                offsetX: -6,
-                style: {
-                  fontSize: "12px",
-                  colors: ["#000"],
-                },
-              },
-              stroke: {
-                show: true,
-                width: 1,
-                colors: ["#fff"],
-              },
-              tooltip: {
-                shared: true,
-                intersect: false,
-              },
-              xaxis: {
-                categories: response.data.dates,
-              },
-              legend: {
-                position: "top",
-                verticalAlign: "top",
-                containerMargin: {
-                  left: 35,
-                  right: 60,
-                },
-              },
-              responsive: [
-                {
-                  breakpoint: 1000,
-                  options: {
-                    plotOptions: {
-                      bar: {
-                        horizontal: false,
-                      },
-                    },
-                    legend: {
-                      position: "top",
-                    },
-                  },
-                },
-              ],
-              title: {
-                text: "Story points and Successful builds / 2 weeks",
-                align: "left",
-                offsetX: 0,
-                offsetY: 0,
-                floating: false,
-                style: {
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  fontFamily: undefined,
-                  color: "#263238",
-                },
-              },
-            },
-          };
-          this.team = bar_options;
-          this.getJiraProd();
-          console.log(this.team);
-        });
-    },
     getJiraProd() {
       axios
         .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
@@ -387,13 +165,13 @@ export default {
           team_project_id: this.team_project_id,
         })
         .then((response) => {
-          var names = []
-          var estimated = []
-          var completed = []
+          var names = [];
+          var estimated = [];
+          var completed = [];
           for (var key in response.data) {
-            names.push(response.data[key].name)
-            estimated.push(response.data[key].estimated)
-            completed.push(response.data[key].completed)
+            names.push(response.data[key].name);
+            estimated.push(response.data[key].estimated);
+            completed.push(response.data[key].completed);
           }
           var bar_options = {
             series: [
