@@ -138,7 +138,7 @@
     methods: {
       login(){
         window.localStorage.setItem('authenticated', true);
-        this.$router.push('/dashboard');
+        this.$router.push('/leader');
       }
     },
     created() {

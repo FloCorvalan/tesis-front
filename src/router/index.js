@@ -46,6 +46,23 @@ const routes = [
   ////////////// VISTAS //////////////
   ////////////////////////////////////
   {
+    path: '/login',
+    name: 'login',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Login/LoginView.vue')
+  },
+  // primera vista de un lider o jefe de proyecto
+  {
+    path: '/leader',
+    name: 'laeder',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Leader/LeaderView.vue')
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     // route level code-splitting
@@ -53,14 +70,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Process/DashboardView.vue')
   },
-  {
-    path: '/login',
-    name: 'login',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login/LoginView.vue')
-  }
 ]
 
 const router = new VueRouter({

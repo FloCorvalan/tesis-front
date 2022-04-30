@@ -1,0 +1,32 @@
+ul {
+    list-style-type: none;
+    padding-left: 3%;
+    display: flex;
+    justify-content: left;
+}
+
+.card {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.card-title {
+    font-weight: 550;
+    padding-bottom: 2%;
+    font-size: 1.9vw;
+}
+
+.item {
+    font-size: medium;
+    float: none;
+    padding-bottom: 2%;
+    cursor: pointer;
+}
+
+.add-btn {
+    display: flex;
+    justify-content: left;
+    margin-left: 3%;
+    padding-bottom: 2%;
+}
