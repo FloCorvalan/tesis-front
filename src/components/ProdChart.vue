@@ -55,7 +55,7 @@ export default {
     },
     getGithubProd() {
       axios
-        .get(process.env.VUE_APP_GITHUB_BASE_URL + "/github/prod", {
+        .post(process.env.VUE_APP_GITHUB_BASE_URL + "/github/prod", {
           team_id: this.team_id,
           team_project_id: this.team_project_id,
         })

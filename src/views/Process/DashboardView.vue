@@ -29,7 +29,13 @@
                   </ul>
                   <ul v-for="(project, index) in projects" :key="index">
                     <li v-if="project.visibleModel == true">
-                      <BPMNModel :team_project_id="project.id"> </BPMNModel>
+                      <BPMNModel
+                        :team_id="team_id"
+                        :team_project_id="project.id"
+                        :github_id="project.github_id"
+                        :jenkins_id="project.jenkins_id"
+                      >
+                      </BPMNModel>
                     </li>
                   </ul>
                 </v-col>
@@ -235,7 +241,8 @@ export default {
       mainApexAreaSelect: "Daily",
 
       //aqui empieza
-      team_id: "6241fad36d714f635bafbc9f",
+      //team_id: "6241fad36d714f635bafbc9f",
+      team_id: "62702b09e2115db94f9d2d41",
       team_name: "PROBANDO",
       team: null,
       projects: [],
@@ -269,7 +276,7 @@ export default {
     getProjects() {
       if (this.team_id != "") {
         axios
-          .get(process.env.VUE_APP_BASE_URL + "/participation/get-projects", {
+          .post(process.env.VUE_APP_BASE_URL + "/participation/get-projects", {
             team_id: this.team_id,
           })
           .then((response) => {
@@ -321,8 +328,8 @@ export default {
     //funcion para obtener la participacion en Jenkins para un proyecto
     getJenkinsProjectParticipation(index) {
       axios
-        .get(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
-          team_id: this.projects[index].id,
+        .post(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
+          team_project_id: this.projects[index].id,
           source_id: this.projects[index].jenkins_id,
         })
         .then((response) => {
@@ -414,7 +421,7 @@ export default {
     },
     getJiraParticipation(t_id) {
       axios
-        .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/participation", {
+        .post(process.env.VUE_APP_JIRA_BASE_URL + "/jira/participation", {
           team_id: t_id,
         })
         .then((response) => {
@@ -478,8 +485,8 @@ export default {
     //funcion para obtener la participacion en GitHub para un proyecto
     getGithubProjectParticipation(index) {
       axios
-        .get(process.env.VUE_APP_GITHUB_BASE_URL + "/github/participation", {
-          team_id: this.projects[index].id,
+        .post(process.env.VUE_APP_GITHUB_BASE_URL + "/github/participation", {
+          team_project_id: this.projects[index].id,
           source_id: this.projects[index].github_id,
         })
         .then((response) => {
@@ -621,9 +628,9 @@ export default {
     },
     getJiraProd() {
       axios
-        .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
+        .post(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
           team_id: this.team_id,
-          team_project_id: this.team_project_id,
+          //team_project_id: this.team_project_id,
         })
         .then((response) => {
           var names = [];
