@@ -16,6 +16,7 @@ import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
 import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
 //import PaletteProvider from "bpmn-js/lib/features/palette/PaletteProvider";
 //import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
+//import AutoLayout from "@/js/Layout"
 
 export default {
   name: "BPMNModel",
@@ -86,69 +87,6 @@ export default {
     },
     //funcion para obtener un modelo bpmn
     getProjectBPMN(team_project_id) {
-      /*class CustomPaletteProvider extends PaletteProvider {
-        constructor(
-          create,
-          elementFactory,
-          globalConnect,
-          handTool,
-          lassoTool,
-          palette,
-          spaceTool,
-          translate
-        ) {
-          super(
-            palette,
-            create,
-            elementFactory,
-            spaceTool,
-            lassoTool,
-            handTool,
-            globalConnect,
-            translate
-          );
-
-          this.create = create;
-          this.elementFactory = elementFactory;
-          this.translate = translate;
-        }
-
-        getPaletteEntries(element) {
-          const { create, elementFactory, translate } = this;
-
-          return Object.assign(super.getPaletteEntries(element), {
-            "terminate-end-event": {
-              group: "event",
-              className: "bpmn-icon-script-task",
-              title: translate("Create Script Task"),
-              action: {
-                click: function (event) {
-                  var shape = elementFactory.createShape({
-                    type: "bpmn:ScriptTask",
-                  });
-
-                  shape.businessObject.scriptFormat = "Javascript";
-                  shape.businessObject.script =
-                    'console.log("test");\nnext(null, "done");';
-
-                  create.start(event, shape);
-                },
-              },
-            },
-          });
-        }
-      }
-
-      CustomPaletteProvider.$inject = [
-        "create",
-        "elementFactory",
-        "globalConnect",
-        "handTool",
-        "lassoTool",
-        "palette",
-        "spaceTool",
-        "translate",
-      ];*/
       axios
         .get(
           process.env.VUE_APP_BASE_URL +
@@ -182,16 +120,52 @@ export default {
             var parser = new DOMParser();
             var doc = parser.parseFromString(xml, "text/xml");
             var x = doc.getElementsByName("CONSTRUIR");
-            console.log(x[0].id);
+            //var elements = doc.getElementsByTagName("bpmn:task")
+            //console.log(elements)
+            console.log(x[0]);
             //var el = doc.getElementById(x[0].id);
             //el.addEventListener("click", this.modifyText(), true);
 
-            viewer.importXML(xml, function () {
+            var AutoLayout = require("@/js/Layout");
+
+            var diagramXML = xml;
+
+            var autoLayout = new AutoLayout();
+
+            (async () => {
+              var layoutedDiagramXML = await autoLayout.layoutProcess(
+                diagramXML
+              );
+            viewer.importXML(layoutedDiagramXML, function () {
               var canvas = viewer.get("canvas");
               canvas.addMarker(x[0].id, "highlight");
 
               canvas.zoom("fit-viewport");
               viewer.get("minimap").open();
+
+              var elementRegistry = viewer.get("elementRegistry");
+              //var elements = [];
+              elementRegistry.filter(function (element) {
+                //bpmn:Process bpmn:StartEvent label bpmn:ParallelGateway bpmn:EndEvent
+                if (
+                  element.type == "bpmn:Task" ||
+                  element.type == "bpmn:ExclusiveGateway" ||
+                  element.type == "bpmn:SequenceFlow" ||
+                  element.type == "bpmn:Process" ||
+                  element.type == "bpmn:StartEvent" ||
+                  element.type == "bpmn:ParallelGateway" ||
+                  element.type == "bpmn:EndEvent"
+                ) {
+                  
+                  /*console.log(element.di.waypoint)
+                  if(element.di.waypoint != undefined){
+                    element.di.waypoint[0].x = 20
+                    element.di.waypoint[1].x = 20
+                  }*/
+                  //elements.push(element);
+                }
+                //console.log(elements);
+              });
 
               //console.log(viewer.get("minimap"));
               //canvas.addMarker('task', 'highlight');
@@ -219,6 +193,8 @@ export default {
                 });
               });*/
             });
+            //console.log(layoutedDiagramXML);
+            })();
           } catch (err) {
             console.log("error rendering", err);
           }
