@@ -61,89 +61,31 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
             var nextFlowElements = [];
             var deleteFlowElements = [];
             flowElements, newFlowElements, nextFlowElements, deleteFlowElements = self._test(flowElements, newFlowElements, nextFlowElements, deleteFlowElements);
+            console.log("DELETE")
+            console.log(deleteFlowElements)
             deleteFlowElements.forEach(element => {
                 flowElements = filterElementsById(flowElements, element);
+                console.log("DELETE")
+                console.log(element)
             });
-
-            //////////
-            /*newFlowElements, nextFlowElements, deleteFlowElements = self._test2(newFlowElements, nextFlowElements, nextFlowElements[0], deleteFlowElements)
-            deleteFlowElements.forEach(element => {
-                flowElements = filterElementsById(flowElements, element);
-            });
-            nextFlowElements.forEach(element => {
-                newFlowElements.push(element);
-            });
-
-            var element = nextFlowElements[1]
-            nextFlowElements = []
-            newFlowElements, nextFlowElements, deleteFlowElements = self._test2(newFlowElements, nextFlowElements, element, deleteFlowElements)
-            deleteFlowElements.forEach(element => {
-                flowElements = filterElementsById(flowElements, element);
-            });*/
-
-
-
-            //while (nextFlowElements.length > 0) {
-            /*var oldNext = [...nextFlowElements]
-            oldNext.forEach(e => {
-                console.log("entreeeeeeeeeeeeeeee")
-                newFlowElements, nextFlowElements, deleteFlowElements = self._test2(newFlowElements, nextFlowElements, e, deleteFlowElements)
-                deleteFlowElements.forEach(element => {
-                    flowElements = filterElementsById(flowElements, element);
-                });
-            });
+            console.log("FLOWELEMENTS")
+            console.log(flowElements);
+            console.log("NEW_FLOWELEMENTS")
+            console.log(newFlowElements);
             console.log("NEXT_FLOWELEMENTS")
-            console.log(nextFlowElements);*/
-            //}
-            /*while (nextFlowElements.length > 0) {
-                var oldNext = [...nextFlowElements]
-                oldNext.forEach(e => {
-                    console.log("yanose")
-                    console.log(oldNext)
-                    console.log(nextFlowElements)
-                    console.log("entreeeeeeeeeeeeeeee")
-                    if (e.$type != "bpmn:EndEvent") {
-                        nextFlowElements = []
-                        newFlowElements, nextFlowElements, deleteFlowElements = self._test2(newFlowElements, nextFlowElements, e, deleteFlowElements)
-                        deleteFlowElements.forEach(element => {
-                            flowElements = filterElementsById(flowElements, element);
-                        });
-                    }
-                    if (e.$type == "bpmn:EndEvent" && flowElements.length > 0) {
-                        console.log("CAIIIIIIIIIIIIIIIII")
-                        var j = 0;
-                        var selected;
-                        while (j < flowElements.length) {
-                            if (flowElements[j].$type != 'bpmn:SequenceFlow') {
-                                selected = flowElements[j]
-                                j = flowElements.length
-                                console.log("S")
-                                console.log("E")
-                                console.log("L")
-                                console.log("E")
-                                console.log("C")
-                                console.log("T")
-                            }
-                            j += 1
-                        }
-                        nextFlowElements = []
-                        newFlowElements, nextFlowElements, deleteFlowElements = self._test2(newFlowElements, nextFlowElements, selected, deleteFlowElements)
-                        deleteFlowElements.forEach(element => {
-                            flowElements = filterElementsById(flowElements, element);
-                        });
-                    }
-                });
-                console.log("NEXT_FLOWELEMENTS")
-                console.log(nextFlowElements);
-            }*/
+            console.log(nextFlowElements);
 
-            self._test5(flowElements, nextFlowElements, deleteFlowElements, newFlowElements)
+            var len = root.flowElements.length
 
-            //newFlowElements.push(nextFlowElements[0]);
+            self._test5(flowElements, nextFlowElements, deleteFlowElements, newFlowElements, len)
+
+
             nextFlowElements.forEach(element => {
                 newFlowElements.push(element);
             });
             console.log("################")
+            console.log("FLOWELEMENTS")
+            console.log(flowElements);
             console.log("NEW_FLOWELEMENTS")
             console.log(newFlowElements);
 
@@ -185,7 +127,7 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
 function filterElementsById(flowElements, id) {
     return flowElements.filter(e => {
         //console.log(e.id != id)
-        return e.id != id
+        return e.id !== id
     })
 }
 
@@ -234,8 +176,8 @@ AutoLayout.prototype._test4 = function (root, rootDi) {
     });
 }
 
-AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, deleteFlowElements, newFlowElements) {
-    while (nextFlowElements.length > 0) {
+AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, deleteFlowElements, newFlowElements, len) {
+    while (flowElements.length > 0) {
         var oldNext = [...nextFlowElements]
         oldNext.forEach(e => {
             console.log("yanose")
@@ -268,11 +210,32 @@ AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, deleteFl
                 }
                 nextFlowElements = []
                 newFlowElements, nextFlowElements, deleteFlowElements = this._test2(newFlowElements, nextFlowElements, selected, deleteFlowElements)
+                console.log("asjhfkjasidfj")
                 deleteFlowElements.forEach(element => {
                     flowElements = filterElementsById(flowElements, element);
                 });
             }
         });
+        if (nextFlowElements.length == 0 && flowElements.length > 0) {
+            //len = newFlowElements.length - 1
+            console.log(len)
+            console.log("CAIIIIIIIIIIIIIIIII 2222222222")
+            var j = 0;
+            var selected;
+            while (j < flowElements.length) {
+                if (flowElements[j].$type != 'bpmn:SequenceFlow') {
+                    selected = flowElements[j]
+                    j = flowElements.length
+                }
+                j += 1
+            }
+            nextFlowElements = []
+            newFlowElements, nextFlowElements, deleteFlowElements = this._test2(newFlowElements, nextFlowElements, selected, deleteFlowElements)
+            console.log("asjhfkjasidfj")
+            deleteFlowElements.forEach(element => {
+                flowElements = filterElementsById(flowElements, element);
+            });
+        }
         console.log("FLOWELEMENTS")
         console.log(flowElements);
         console.log("NEW_FLOWELEMENTS")
@@ -323,7 +286,8 @@ AutoLayout.prototype._test2 = function (newFlowElements, nextFlowElements, eleme
     //console.log(element)
     //console.log(flowElements.length)
     //nextFlowElements = [];
-    deleteFlowElements.push(element)
+    deleteFlowElements = [];
+    deleteFlowElements.push(element.id)
     var i = 0;
     if (element.outgoing != undefined && element.outgoing.length > 0) {
         element.outgoing.forEach(e => {
@@ -333,21 +297,16 @@ AutoLayout.prototype._test2 = function (newFlowElements, nextFlowElements, eleme
             newFlowElements.push(e.targetRef)
             e.targetRef.y = element.y + i;
             e.targetRef.x = element.x + 1;
-            if (e.targetRef.revIn == undefined) {
-                e.targetRef.revIn = 1;
-            } else {
-                e.targetRef.revIn += 1;
-            }
             if (e.targetRef.marked == undefined) {
                 e.targetRef.marked = true;
                 nextFlowElements.push(e.targetRef);
+                console.log("push e.targetRef")
             }
             i += 1;
         });
     }
-    //nextFlowElements = filterElementsById(nextFlowElements, element);
-
     console.log("voy a saliiiiir")
+    console.log(nextFlowElements)
     return newFlowElements, nextFlowElements, deleteFlowElements;
 }
 

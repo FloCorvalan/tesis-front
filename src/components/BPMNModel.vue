@@ -128,7 +128,7 @@ export default {
             //var el = doc.getElementById(x[0].id);
             //el.addEventListener("click", this.modifyText(), true);
 
-            var AutoLayout = require("@/js/Layout2");
+            var AutoLayout = require("@/js/Layout4");
 
             var diagramXML = xml;
 
