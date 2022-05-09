@@ -147,18 +147,19 @@ export default {
 
               var elementRegistry = viewer.get("elementRegistry");
               //var elements = [];
+             //var cont = 0;
               elementRegistry.filter(function (element) {
                 //bpmn:Process bpmn:StartEvent label bpmn:ParallelGateway bpmn:EndEvent
                 if (
-                  element.type == "bpmn:Task" ||
+                  //element.type == "bpmn:Task" ||
                   element.type == "bpmn:ExclusiveGateway" ||
-                  element.type == "bpmn:SequenceFlow" ||
-                  element.type == "bpmn:Process" ||
-                  element.type == "bpmn:StartEvent" ||
-                  element.type == "bpmn:ParallelGateway" ||
-                  element.type == "bpmn:EndEvent"
+                  //element.type == "bpmn:SequenceFlow" ||
+                  //element.type == "bpmn:Process" ||
+                  //element.type == "bpmn:StartEvent" ||
+                  element.type == "bpmn:ParallelGateway" //||
+                  //element.type == "bpmn:EndEvent"
                 ) {
-                  
+                  //cont += 1
                   /*console.log(element.di.waypoint)
                   if(element.di.waypoint != undefined){
                     element.di.waypoint[0].x = 20
@@ -168,7 +169,7 @@ export default {
                 }
                 //console.log(element);
               });
-
+               //console.log(cont);
               //console.log(viewer.get("minimap"));
               //canvas.addMarker('task', 'highlight');
               //var elementRegistry = viewer.get('elementRegistry');

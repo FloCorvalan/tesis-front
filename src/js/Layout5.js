@@ -91,11 +91,11 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
             console.log("MAX")
             var maxX;
             var maxY;
-            maxX, maxY = self._getMax(newFlowElements)
+            [maxX, maxY] = self._getMax(newFlowElements)
             console.log(maxX)
             console.log(maxY)
 
-            root.flowElements = newFlowElements
+            root.flowElements = [...newFlowElements]
             console.log(root.flowElements);
             self._test3(root, rootDi);
             self._test4(root, rootDi);
@@ -148,9 +148,13 @@ AutoLayout.prototype._test3 = function (root, rootDi) {
     root.flowElements.forEach(element => {
         if (element.$type != 'bpmn:SequenceFlow') {
             size = getDefaultSize(element);
+            /*console.log('element.x')
+            console.log(element.x)
+            console.log('element.y')
+            console.log(element.y)*/
             pos = {
-                x: element.x * 110 + 1,
-                y: element.y * 100 + 1
+                x: element.x * 110,
+                y: element.y * 100
             }
             element.bounds = Object.assign({}, size, pos);
             elementDi = createDi('shape', element, pos);
@@ -205,7 +209,7 @@ AutoLayout.prototype._getMax = function (flowElements) {
     });
     console.log(maxX)
     console.log(maxY)
-    return maxX, maxY;
+    return [maxX, maxY];
 }
 
 AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, newFlowElements, len) {
@@ -271,6 +275,9 @@ AutoLayout.prototype._test2 = function (flowElements, newFlowElements, nextFlowE
     var i = 0;
     if (element.outgoing != undefined && element.outgoing.length > 0) {
         element.outgoing.forEach(e => {
+            if(element.x == undefined && element.y == undefined) {
+                [element.x, element.y] = this._getMax(newFlowElements)
+            }
             e.targetRef.y = element.y + i;
             e.targetRef.x = element.x + 1;
             if (e.targetRef.marked != true) {
