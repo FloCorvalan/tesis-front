@@ -34,7 +34,9 @@ export default {
     };
   },
   created() {
+    // DESCOMENTAR ESTO DESPUESSSSSSSSSSSSSSSS//
     this.generateLastModel();
+    //this.getProjectBPMN(this.team_project_id);
   },
   methods: {
     getJenkinsRegisters() {
@@ -126,7 +128,7 @@ export default {
             //var el = doc.getElementById(x[0].id);
             //el.addEventListener("click", this.modifyText(), true);
 
-            var AutoLayout = require("@/js/Layout");
+            var AutoLayout = require("@/js/Layout2");
 
             var diagramXML = xml;
 
@@ -138,7 +140,7 @@ export default {
               );
             viewer.importXML(layoutedDiagramXML, function () {
               var canvas = viewer.get("canvas");
-              canvas.addMarker(x[0].id, "highlight");
+              //canvas.addMarker(x[0].id, "highlight");
 
               canvas.zoom("fit-viewport");
               viewer.get("minimap").open();
@@ -164,7 +166,7 @@ export default {
                   }*/
                   //elements.push(element);
                 }
-                //console.log(elements);
+                console.log(element);
               });
 
               //console.log(viewer.get("minimap"));
