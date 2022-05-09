@@ -19,6 +19,7 @@ function AutoLayout() {
         xCant: 0,
         yCant: 0
     }
+    this.cont = 0;
 }
 
 module.exports = AutoLayout;
@@ -59,15 +60,7 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
             console.log(flowElements);
             var newFlowElements = [];
             var nextFlowElements = [];
-            var deleteFlowElements = [];
-            flowElements, newFlowElements, nextFlowElements, deleteFlowElements = self._test(flowElements, newFlowElements, nextFlowElements, deleteFlowElements);
-            console.log("DELETE")
-            console.log(deleteFlowElements)
-            deleteFlowElements.forEach(element => {
-                flowElements = filterElementsById(flowElements, element);
-                console.log("DELETE")
-                console.log(element)
-            });
+            self._test(flowElements, newFlowElements, nextFlowElements);
             console.log("FLOWELEMENTS")
             console.log(flowElements);
             console.log("NEW_FLOWELEMENTS")
@@ -75,19 +68,32 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
             console.log("NEXT_FLOWELEMENTS")
             console.log(nextFlowElements);
 
+            console.log("################")
+            console.log("################")
+
             var len = root.flowElements.length
 
-            self._test5(flowElements, nextFlowElements, deleteFlowElements, newFlowElements, len)
+            self._test5(flowElements, nextFlowElements, newFlowElements, len)
 
 
             nextFlowElements.forEach(element => {
                 newFlowElements.push(element);
             });
             console.log("################")
+            console.log("cont")
+            console.log(self.cont);
             console.log("FLOWELEMENTS")
             console.log(flowElements);
             console.log("NEW_FLOWELEMENTS")
             console.log(newFlowElements);
+            console.log("NEXT_FLOWELEMENTS")
+            console.log(nextFlowElements);
+            console.log("MAX")
+            var maxX;
+            var maxY;
+            maxX, maxY = self._getMax(newFlowElements)
+            console.log(maxX)
+            console.log(maxY)
 
             root.flowElements = newFlowElements
             console.log(root.flowElements);
@@ -111,14 +117,6 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
             //flowElements = filterElementsById(flowElements, id);
             console.log("2 LENGHT")
             console.log(flowElements.length)*/
-            console.log("this.grid")
-            console.log(this.grid);
-            console.log("FLOWELEMENTS")
-            console.log(flowElements);
-            console.log("NEW_FLOWELEMENTS")
-            console.log(newFlowElements);
-            console.log("NEXT_FLOWELEMENTS")
-            console.log(nextFlowElements);
         });
     });
 
@@ -139,8 +137,8 @@ function filterElementsById(flowElements, id) {
 }*/
 
 AutoLayout.prototype._test3 = function (root, rootDi) {
-    console.log("ROOT")
-    console.log(root)
+    //console.log("ROOT")
+    //console.log(root)
     var childrenDi = rootDi.get('planeElement');
     var size;
     var pos;
@@ -151,87 +149,92 @@ AutoLayout.prototype._test3 = function (root, rootDi) {
         if (element.$type != 'bpmn:SequenceFlow') {
             size = getDefaultSize(element);
             pos = {
-                x: element.x * 110,
-                y: element.y * 100
+                x: element.x * 110 + 1,
+                y: element.y * 100 + 1
             }
             element.bounds = Object.assign({}, size, pos);
             elementDi = createDi('shape', element, pos);
             childrenDi.push(elementDi);
-            console.log(elementDi);
+            //console.log(elementDi);
         }
     });
 }
 
 AutoLayout.prototype._test4 = function (root, rootDi) {
-    console.log("ROOT")
-    console.log(root)
+    //console.log("ROOT")
+    //console.log(root)
     var childrenDi = rootDi.get('planeElement');
     var createDi = this.DiFactory.createBpmnElementDi.bind(this.DiFactory);
     root.flowElements.forEach(element => {
         if (element.$type == 'bpmn:SequenceFlow') {
             var connectionDi = createDi('connection', element);
             childrenDi.push(connectionDi);
-            console.log(connectionDi);
+            //console.log(connectionDi);
         }
     });
 }
 
-AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, deleteFlowElements, newFlowElements, len) {
-    while (flowElements.length > 0) {
+AutoLayout.prototype._deleteElement = function (arr, element) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].id === element.id) {
+            arr.splice(i, 1);
+        }
+    }
+    console.log("NEW_LIST")
+    console.log(arr)
+}
+
+AutoLayout.prototype._deleteAndAddElement = function (arrIni, arrfin, element) {
+    var initLen = arrIni.length
+    this._deleteElement(arrIni, element);
+    if((initLen - 1) == arrIni.length){
+        arrfin.push(element)
+    }
+}
+
+AutoLayout.prototype._getMax = function (flowElements) {
+    var maxX = 0;
+    var maxY = 0;
+    flowElements.forEach(element => {
+        if(element.x > maxX) {
+            maxX = element.x;
+        }
+        if(element.y > maxY) {
+            maxY = element.y;
+        }
+    });
+    console.log(maxX)
+    console.log(maxY)
+    return maxX, maxY;
+}
+
+AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, newFlowElements, len) {
+    while (flowElements.length > 0 && this.cont < 300) {
+        this.cont += 1;
+        console.log(len)
         var oldNext = [...nextFlowElements]
+        var j;
+        var selected;
+        nextFlowElements = []
         oldNext.forEach(e => {
+            // si no es end, tiene si o si un outcoming
             if (e.$type != "bpmn:EndEvent") {
-                nextFlowElements = []
-                nextFlowElements, deleteFlowElements = this._test2(newFlowElements, nextFlowElements, e, deleteFlowElements)
-                deleteFlowElements.forEach(element => {
-                    flowElements = filterElementsById(flowElements, element);
-                });
+                this._test2(flowElements, newFlowElements, nextFlowElements, e)
             }
-            if (e.$type == "bpmn:EndEvent" && flowElements.length > 0) {
-                console.log("CAIIIIIIIIIIIIIIIII")
-                var j = 0;
-                var selected;
+            // si next es vacio, se debe buscar otro
+            if ((nextFlowElements.length == 0 || e.$type == "bpmn:EndEvent") && flowElements.length > 0) {
+                j = 0;
+                selected;
                 while (j < flowElements.length) {
                     if (flowElements[j].$type != 'bpmn:SequenceFlow') {
                         selected = flowElements[j]
                         j = flowElements.length
-                        console.log("S")
-                        console.log("E")
-                        console.log("L")
-                        console.log("E")
-                        console.log("C")
-                        console.log("T")
                     }
                     j += 1
                 }
-                nextFlowElements = []
-                newFlowElements, nextFlowElements, deleteFlowElements = this._test2(newFlowElements, nextFlowElements, selected, deleteFlowElements)
-                console.log("asjhfkjasidfj")
-                deleteFlowElements.forEach(element => {
-                    flowElements = filterElementsById(flowElements, element);
-                });
+                this._test2(flowElements, newFlowElements, nextFlowElements, selected)
             }
         });
-        if (nextFlowElements.length == 0 && flowElements.length > 0) {
-            //len = newFlowElements.length - 1
-            console.log(len)
-            console.log("CAIIIIIIIIIIIIIIIII 2222222222")
-            var j = 0;
-            var selected;
-            while (j < flowElements.length) {
-                if (flowElements[j].$type != 'bpmn:SequenceFlow') {
-                    selected = flowElements[j]
-                    j = flowElements.length
-                }
-                j += 1
-            }
-            nextFlowElements = []
-            newFlowElements, nextFlowElements, deleteFlowElements = this._test2(newFlowElements, nextFlowElements, selected, deleteFlowElements)
-            console.log("asjhfkjasidfj")
-            deleteFlowElements.forEach(element => {
-                flowElements = filterElementsById(flowElements, element);
-            });
-        }
         console.log("FLOWELEMENTS")
         console.log(flowElements);
         console.log("NEW_FLOWELEMENTS")
@@ -241,64 +244,44 @@ AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, deleteFl
     }
 }
 
-AutoLayout.prototype._test = function (flowElements, newFlowElements, nextFlowElements, deleteFlowElements) {
-    //console.log(element)
-    //console.log(flowElements.length)
+AutoLayout.prototype._test = function (flowElements, newFlowElements, nextFlowElements) {
     flowElements.forEach(element => {
         if (element.$type == "bpmn:StartEvent") {
             element.x = 0;
             element.y = 0;
-            element.revOut = 1;
             this.grid.xCant += 1;
             this.grid.yCant += 1;
-            newFlowElements.push(element)
-            deleteFlowElements.push(element.id)
-            //flowElements = filterElementsById(flowElements, element.id);
-            deleteFlowElements.push(element.id)
+            this._deleteAndAddElement(flowElements, newFlowElements, element)
             if (element.outgoing != undefined && element.outgoing.length > 0) {
                 var i = 0;
                 element.outgoing.forEach(e => {
-                    //flowElements = filterElementsById(flowElements, e.id);
-                    deleteFlowElements.push(e.id)
-                    newFlowElements.push(e);
                     e.targetRef.y = element.y + i;
                     e.targetRef.x = element.x + 1;
                     nextFlowElements.push(e.targetRef);
+                    this._deleteAndAddElement(flowElements, newFlowElements, e)
+                    this._deleteAndAddElement(flowElements, newFlowElements, e.targetRef)
                     i += 1;
                 });
             }
-            return nextFlowElements, deleteFlowElements
         }
     });
-    return nextFlowElements, deleteFlowElements
 }
 
-AutoLayout.prototype._test2 = function (newFlowElements, nextFlowElements, element, deleteFlowElements) {
-    //console.log(element)
-    //console.log(flowElements.length)
-    //nextFlowElements = [];
-    deleteFlowElements = [];
-    deleteFlowElements.push(element.id)
+AutoLayout.prototype._test2 = function (flowElements, newFlowElements, nextFlowElements, element) {
     var i = 0;
     if (element.outgoing != undefined && element.outgoing.length > 0) {
         element.outgoing.forEach(e => {
-            deleteFlowElements.push(e.id)
-            newFlowElements.push(e)
             e.targetRef.y = element.y + i;
             e.targetRef.x = element.x + 1;
-            if (e.targetRef.marked == undefined) {
+            if (e.targetRef.marked != true) {
                 e.targetRef.marked = true;
-                deleteFlowElements.push(e.targetRef)
-                newFlowElements.push(e.targetRef)
                 nextFlowElements.push(e.targetRef);
-                console.log("push e.targetRef")
+                this._deleteAndAddElement(flowElements, newFlowElements, e.targetRef)
             }
             i += 1;
+            this._deleteAndAddElement(flowElements, newFlowElements, e)
         });
     }
-    console.log("voy a saliiiiir")
-    console.log(nextFlowElements)
-    return newFlowElements, nextFlowElements, deleteFlowElements;
 }
 
 AutoLayout.prototype._posStartElementInGrid = function (flowElements, newFlowElements) {

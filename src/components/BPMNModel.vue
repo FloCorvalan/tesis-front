@@ -128,7 +128,7 @@ export default {
             //var el = doc.getElementById(x[0].id);
             //el.addEventListener("click", this.modifyText(), true);
 
-            var AutoLayout = require("@/js/Layout4");
+            var AutoLayout = require("@/js/Layout5");
 
             var diagramXML = xml;
 
@@ -166,7 +166,7 @@ export default {
                   }*/
                   //elements.push(element);
                 }
-                console.log(element);
+                //console.log(element);
               });
 
               //console.log(viewer.get("minimap"));
