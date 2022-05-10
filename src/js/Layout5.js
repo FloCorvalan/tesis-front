@@ -76,8 +76,20 @@ AutoLayout.prototype.layoutProcess = function (xmlStr, callback) {
             nextFlowElements = [];
             self._test2(flowElements, newFlowElements, nextFlowElements, selected)
             selected = nextFlowElements[0]
+            var selected2 = nextFlowElements[1]
             nextFlowElements = [];
-            self._test2(flowElements, newFlowElements, nextFlowElements, selected)*/
+            self._test2(flowElements, newFlowElements, nextFlowElements, selected)
+            self._test2(flowElements, newFlowElements, nextFlowElements, selected2)
+            selected = nextFlowElements[0]
+            selected2 = nextFlowElements[1]
+            nextFlowElements = [];
+            self._test2(flowElements, newFlowElements, nextFlowElements, selected)
+            self._test2(flowElements, newFlowElements, nextFlowElements, selected2)
+            selected = nextFlowElements[0]
+            selected2 = nextFlowElements[1]
+            nextFlowElements = [];
+            self._test2(flowElements, newFlowElements, nextFlowElements, selected)
+            self._test2(flowElements, newFlowElements, nextFlowElements, selected2)*/
             var len = root.flowElements.length
 
             self._test5(flowElements, nextFlowElements, newFlowElements, len)
@@ -203,6 +215,46 @@ AutoLayout.prototype._deleteAndAddElement = function (arrIni, arrfin, element) {
     }
 }
 
+AutoLayout.prototype._layoutElement = function (i, parent, element, flowElements) {
+    let isgroup = false;
+    element.x = parent.x + 1;
+    element.y = parent.y + i; ///////////
+    flowElements.forEach(e => {
+        //console.log("IS GROUP?????")
+        //isgroup = this._isGroup(parent.groupId, e);
+        if (e.groupList != undefined && e.groupList.length > 0) {
+            e.groupList.forEach(el => {
+                console.log(el >= parent.groupId)
+                if (el >= parent.groupId && el.id != element.id) {
+                    isgroup = true;
+                }
+            });
+        }
+        if (isgroup == true || e.groupId > parent.groupId) {
+            console.log("IS GROUP")
+            console.log(element)
+            console.log(e)
+            e.x += 1;
+            e.y += 0;
+        }
+    });
+    return element;
+}
+
+AutoLayout.prototype._isGroup = function (group, element) {
+    if (element.groupList != undefined && element.groupList.length > 0) {
+        console.log(element)
+        console.log(group)
+        element.groupList.forEach(e => {
+            console.log(e >= group)
+            if (e >= group) {
+                return true;
+            }
+        });
+    }
+    return false;
+}
+
 AutoLayout.prototype._getMax = function (flowElements) {
     var maxX = 0;
     var maxY = 0;
@@ -220,7 +272,7 @@ AutoLayout.prototype._getMax = function (flowElements) {
 }
 
 AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, newFlowElements, len) {
-    while (flowElements.length > 0 && this.cont < 300) {
+    while (flowElements.length > 0 && this.cont < 100) {
         this.cont += 1;
         console.log(len)
         var oldNext = [...nextFlowElements]
@@ -228,9 +280,8 @@ AutoLayout.prototype._test5 = function (flowElements, nextFlowElements, newFlowE
         //var selected;
         nextFlowElements = []
         oldNext.forEach(e => {
-            // si no es end, tiene si o si un outcoming
+            // si no es end, tiene si o si un outgoing
             if (e.$type != "bpmn:EndEvent") {
-                console.log("ENTRE DE NUEVO")
                 this._test2(flowElements, newFlowElements, nextFlowElements, e)
             }
             // si next es vacio, se debe buscar otro
@@ -300,15 +351,19 @@ AutoLayout.prototype._test2 = function (flowElements, newFlowElements, nextFlowE
             } else {
                 e.targetRef.groupList.push(element.groupId);
             }
-            if (element.x == undefined && element.y == undefined) {
-                [element.x, element.y] = this._getMax(newFlowElements)
-            }
-            e.targetRef.y = element.y + i;
-            e.targetRef.x = element.x + 1;
+            //if (element.x == undefined && element.y == undefined) {
+            //    [element.x, element.y] = this._getMax(newFlowElements)
+            //}
+            //e.targetRef.y = element.y + i;
+            //e.targetRef.x = element.x + 1;
+            //e.targetRef = this._layoutElement(i, element, e.targetRef, newFlowElements)
             if (e.targetRef.marked != true) {
+                e.targetRef = this._layoutElement(i, element, e.targetRef, newFlowElements)
                 e.targetRef.marked = true;
                 nextFlowElements.push(e.targetRef);
                 this._deleteAndAddElement(flowElements, newFlowElements, e.targetRef)
+            } else {
+                element.y += 1;
             }
             i += 1;
             this._deleteAndAddElement(flowElements, newFlowElements, e)

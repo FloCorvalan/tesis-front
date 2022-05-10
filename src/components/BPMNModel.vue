@@ -128,17 +128,17 @@ export default {
             //var el = doc.getElementById(x[0].id);
             //el.addEventListener("click", this.modifyText(), true);
 
-            var AutoLayout = require("@/js/Layout5");
+            //var AutoLayout = require("@/js/Layout5");
 
-            var diagramXML = xml;
+            //var diagramXML = xml;
 
-            var autoLayout = new AutoLayout();
+            //var autoLayout = new AutoLayout();
 
-            (async () => {
-              var layoutedDiagramXML = await autoLayout.layoutProcess(
-                diagramXML
-              );
-            viewer.importXML(layoutedDiagramXML, function () {
+            //(async () => {
+            //  var layoutedDiagramXML = await autoLayout.layoutProcess(
+            //    diagramXML
+            //  );
+            viewer.importXML(xml, function () {
               var canvas = viewer.get("canvas");
               //canvas.addMarker(x[0].id, "highlight");
 
@@ -195,7 +195,7 @@ export default {
                   //viewer.get("minimap").open();
                 });
               });*/
-            });
+            //});
             //console.log(layoutedDiagramXML);
             })();
           } catch (err) {
