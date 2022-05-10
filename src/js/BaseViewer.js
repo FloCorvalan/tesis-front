@@ -28,11 +28,11 @@
   
   import {
     importBpmnDiagram
-  } from './import/Importer';
+  } from 'bpmn-js/lib/import/Importer';
   
   import {
     wrapForCompatibility
-  } from './util/CompatibilityUtil';
+  } from 'bpmn-js/lib/util/CompatibilityUtil';
   
   /**
    * A base viewer for BPMN 2.0 diagrams.
@@ -312,7 +312,7 @@
           while (k < elements.length) {
             //console.log("k")
             //console.log(k)
-            var el = elements[k]
+            //var el = elements[k]
             if (e.targetRef.id == el.bpmnElement.id) {
               el.bounds.x += 20
               k = elements.length
@@ -680,6 +680,7 @@
   BaseViewer.prototype.saveSVG = wrapForCompatibility(function saveSVG(options) {
   
     options = options || {};
+    console.log(options)
   
     var self = this;
   
@@ -989,7 +990,7 @@
     open as openPoweredBy,
     BPMNIO_IMG,
     LINK_STYLES as BPMNIO_LINK_STYLES
-  } from './util/PoweredByUtil';
+  } from 'bpmn-js/lib/util/PoweredByUtil';
   
   import {
     event as domEvent
