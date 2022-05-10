@@ -143,34 +143,34 @@
       first = line.waypoint[0]
       centx = shape.bounds.x + shape.bounds.width/2
       centy = shape.bounds.y + shape.bounds.height/2
-      if(first.x < centx){
-        return 'left'
-      }
-      if(first.x > centx){
-        return 'right'
-      }
       if(first.y < centy){
         return 'up'
       }
       if(first.y > centy){
         return 'down'
       }
+      if(first.x < centx){
+        return 'left'
+      }
+      if(first.x > centx){
+        return 'right'
+      }
     }
     if(type == 'target'){
       last = line.waypoint[line.waypoint.length - 1]
       centx = shape.bounds.x + shape.bounds.width/2
       centy = shape.bounds.y + shape.bounds.height/2
-      if(last.x < centx){
-        return 'left'
-      }
-      if(last.x > centx){
-        return 'right'
-      }
       if(last.y < centy){
         return 'up'
       }
       if(last.y > centy){
         return 'down'
+      }
+      if(last.x < centx){
+        return 'left'
+      }
+      if(last.x > centx){
+        return 'right'
       }
     }
   };
@@ -209,17 +209,23 @@
     });
     elements.forEach(element => {
       if(element.bounds){
-        element.bounds.x *= 1.35;
+        element.bounds.x *= 1.4;
       }
       if(element.waypoint){
         element.waypoint.forEach(e => {
-          e.x *= 1.35;
+          e.x *= 1.4;
         });
         source = element.bpmnElement.sourceRef.id
         while(i < elements.length){
           if(source == elements[i].bpmnElement.id){
             // Se define el punto
             point = this.getPoint(element, elements[i], 'source')
+            if(element.waypoint[0].x < point[0]){
+              element.waypoint[1].x += (point[0] - element.waypoint[0].x)
+            }
+            if(element.waypoint[0].x > point[0]){
+              element.waypoint[1].x -= (element.waypoint[0].x - point[0])
+            }
             element.waypoint[0].x = point[0]
             element.waypoint[0].y = point[1]
             i = elements.length
@@ -232,8 +238,19 @@
           if(target == elements[i].bpmnElement.id){
             // Se define el punto
             point = this.getPoint(element, elements[i], 'target')
+            if(element.waypoint[element.waypoint.length - 1].x < point[0]){
+              element.waypoint[element.waypoint.length - 2].x += (point[0] - element.waypoint[element.waypoint.length - 1].x)
+            }
+            if(element.waypoint[element.waypoint.length - 1].x > point[0]){
+              element.waypoint[element.waypoint.length - 2].x -= (element.waypoint[element.waypoint.length - 1].x - point[0])
+            }
             element.waypoint[element.waypoint.length - 1].x = point[0]
             element.waypoint[element.waypoint.length - 1].y = point[1]
+            element.waypoint.forEach(e => {
+              if(element.waypoint[element.waypoint.length - 1].x < e.x && elements[i].bounds.x >= element.waypoint[element.waypoint.length - 1].x){
+                e.x = element.waypoint[element.waypoint.length - 1].x
+              }
+            });
             i = elements.length
           }
           i += 1
