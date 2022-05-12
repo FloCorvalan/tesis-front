@@ -22,7 +22,7 @@
   } from 'tiny-svg';
   
   import Diagram from 'diagram-js';
-  import BpmnModdle from 'bpmn-moddle';
+  import BpmnModdle from '@/js/bpmn-moddle';
   
   import inherits from 'inherits';
   

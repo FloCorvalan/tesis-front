@@ -10,7 +10,8 @@
 <script>
 // MODELO
 import axios from "axios";
-import BpmnJS from "bpmn-js";
+//import BpmnJS from "bpmn-js";
+import BpmnJS from "@/js"
 import minimapModule from "diagram-js-minimap";
 import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
 import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
