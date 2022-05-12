@@ -41,8 +41,9 @@ export default {
     };
   },
   created() {
-    // DESCOMENTAR ESTO DESPUESSSSSSSSSSSSSSSS//
-    this.generateLastModel();
+    this.getModel();
+    // DESCOMENTAR ESTO DESPUESSSSSSSSSSSSSSSS// ??????
+    //this.generateLastModel();
     //this.getProjectBPMN(this.team_project_id);
   },
   methods: {
@@ -52,6 +53,9 @@ export default {
           team_id: this.team_id,
           team_project_id: this.team_project_id,
           source_id: this.jenkins_id,
+        })
+        .then(() => {
+          return true;
         })
         .catch((e) => {
           console.log(e);
@@ -72,14 +76,31 @@ export default {
         .post(process.env.VUE_APP_JIRA_BASE_URL + "/jira", {
           team_id: this.team_id,
         })
+        .then(() => {
+          return true;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getModel() {
+      axios
+        .post(process.env.VUE_APP_BASE_URL + "/process-model/get-model", {
+          team_id: this.team_id,
+          team_project_id: this.team_project_id,
+          source_id_github: this.github_id,
+          source_id_jenkins: this.jenkins_id,
+        })
+        .then((r) => {
+          this.svgDiagram = r.data;
+          this.listo = true;
+        })
         .catch((e) => {
           console.log(e);
         });
     },
     generateLastModel() {
-      this.getJenkinsRegisters();
-      this.getGithubRegisters();
-      this.getJiraRegisters();
+      this.getRegisters();
       axios
         .get(
           process.env.VUE_APP_BASE_URL +
