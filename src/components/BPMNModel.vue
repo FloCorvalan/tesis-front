@@ -5,7 +5,9 @@
     </div>
     <!--div v-else id="canvas"></div-->
     <div id="svgContainer">
-      <p v-html="svgDiagram"></p>
+      <panZoom>
+        <p v-html="svgDiagram"></p>
+      </panZoom>
     </div>
   </div>
 </template>
@@ -35,7 +37,7 @@ export default {
     return {
       apexLoading: false,
       listo: false,
-      svgDiagram: null, 
+      svgDiagram: null,
     };
   },
   created() {
@@ -101,7 +103,21 @@ export default {
             team_project_id
         )
         .then((r) => {
-          this.svgDiagram = r.data
+          this.svgDiagram = r.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getProjectBPMNantiguo(team_project_id) {
+      axios
+        .get(
+          process.env.VUE_APP_BASE_URL +
+            "/process-model/get-last-bpmn/" +
+            team_project_id
+        )
+        .then((r) => {
+          this.svgDiagram = r.data;
           this.diagram = r.data;
           //console.log(this.diagram);
           const xml = this.diagram; // my BPMN 2.0 xml
