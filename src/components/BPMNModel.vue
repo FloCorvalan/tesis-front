@@ -3,7 +3,10 @@
     <div v-if="listo == false" class="text-center">
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
-    <div v-else id="canvas"></div>
+    <!--div v-else id="canvas"></div-->
+    <div id="svgContainer">
+      <p v-html="svgDiagram"></p>
+    </div>
   </div>
 </template>
 
@@ -11,7 +14,7 @@
 // MODELO
 import axios from "axios";
 //import BpmnJS from "bpmn-js";
-import BpmnJS from "@/js"
+import BpmnJS from "@/js";
 import minimapModule from "diagram-js-minimap";
 import ZoomScrollModule from "diagram-js/lib/navigation/zoomscroll";
 import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
@@ -32,6 +35,7 @@ export default {
     return {
       apexLoading: false,
       listo: false,
+      svgDiagram: null, 
     };
   },
   created() {
@@ -97,6 +101,7 @@ export default {
             team_project_id
         )
         .then((r) => {
+          this.svgDiagram = r.data
           this.diagram = r.data;
           //console.log(this.diagram);
           const xml = this.diagram; // my BPMN 2.0 xml
@@ -148,7 +153,7 @@ export default {
 
               var elementRegistry = viewer.get("elementRegistry");
               //var elements = [];
-             //var cont = 0;
+              //var cont = 0;
               elementRegistry.filter(function (element) {
                 //bpmn:Process bpmn:StartEvent label bpmn:ParallelGateway bpmn:EndEvent
                 if (
@@ -170,7 +175,7 @@ export default {
                 }
                 //console.log(element);
               });
-               //console.log(cont);
+              //console.log(cont);
               //console.log(viewer.get("minimap"));
               //canvas.addMarker('task', 'highlight');
               //var elementRegistry = viewer.get('elementRegistry');
@@ -196,8 +201,8 @@ export default {
                   //viewer.get("minimap").open();
                 });
               });*/
-            //});
-            //console.log(layoutedDiagramXML);
+              //});
+              //console.log(layoutedDiagramXML);
             })();
           } catch (err) {
             console.log("error rendering", err);
@@ -211,3 +216,10 @@ export default {
   mounted() {},
 };
 </script>
+
+<style>
+svg {
+  height: 100%;
+  width: 100%;
+}
+</style>
