@@ -10,7 +10,9 @@
           <v-card class="mx-1 mb-1">
             <v-card-title class="pa-6 pb-0">
               <v-row no-gutters>
-                <h3>Modelos de proceso BPMN equipo {{ team_name }}</h3>
+                <h3 class="title-color">
+                  Modelos de proceso BPMN equipo {{ team_name }}
+                </h3>
               </v-row>
             </v-card-title>
             <v-card-text class="pa-6">
@@ -20,7 +22,7 @@
                   <ul v-for="project in projects" :key="project.id">
                     <li>
                       <div
-                        class="project-name"
+                        class="project-name-2"
                         v-on:click="changeVisibleModel(project)"
                       >
                         <h3>Proyecto {{ project.name }}</h3>
@@ -43,25 +45,21 @@
             </v-card-text>
           </v-card>
         </v-col>
+        <v-col cols="12">
+          <div>
+            <v-card-title>
+              <h3>
+                Participación de los desarrolladores equipo {{ team_name }}
+              </h3>
+            </v-card-title>
+          </div>
+        </v-col>
         <!-- JIRA -->
         <v-col lg="4" sm="6" cols="12">
           <v-card class="mx-1 mb-1">
-            <v-card-title class="pa-6 pb-3">
+            <div class="tool-name">
               <h3>Jira</h3>
-              <v-spacer></v-spacer>
-              <v-menu>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn icon v-bind="attrs" v-on="on">
-                    <v-icon color="textColor">mdi-dots-vertical</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-title></v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-card-title>
+            </div>
             <v-card-text class="pa-6 pt-0">
               <v-row no-gutters v-if="jira_options != []">
                 <div v-for="(opt, index) in jira_options" :key="index">
@@ -81,7 +79,7 @@
             <ul v-for="project in projects" :key="project.id">
               <li>
                 <div
-                  class="project-name"
+                  class="project-name-3"
                   v-on:click="changeVisibleJenkins(project)"
                 >
                   Proyecto {{ project.name }}
@@ -123,7 +121,7 @@
             <ul v-for="project in projects" :key="project.id">
               <li>
                 <div
-                  class="project-name"
+                  class="project-name-3"
                   v-on:click="changeVisibleGithub(project)"
                 >
                   Proyecto {{ project.name }}

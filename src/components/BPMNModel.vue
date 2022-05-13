@@ -4,10 +4,33 @@
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
     <!--div v-else id="canvas"></div-->
-    <div id="svgContainer">
+    <div id="svgContainer" v-if="listo">
       <panZoom>
         <p v-html="svgDiagram"></p>
       </panZoom>
+    </div>
+    <div class="disp-center">
+      <ul v-for="(act, index) in activities" :key="index" class="act-cards">
+        <ActivitiesCard
+          v-if="act._id == 'jira'"
+          tool="Jira"
+          :activities="act.activities"
+        ></ActivitiesCard>
+      </ul>
+      <ul v-for="(act, index) in activities" :key="index" class="act-cards">
+        <ActivitiesCard
+          v-if="act._id == 'jenkins'"
+          tool="Jenkins"
+          :activities="act.activities"
+        ></ActivitiesCard>
+      </ul>
+      <ul v-for="(act, index) in activities" :key="index" class="act-cards">
+        <ActivitiesCard
+          v-if="act._id == 'github'"
+          tool="GitHub"
+          :activities="act.activities"
+        ></ActivitiesCard>
+      </ul>
     </div>
   </div>
 </template>
@@ -23,10 +46,13 @@ import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
 //import PaletteProvider from "bpmn-js/lib/features/palette/PaletteProvider";
 //import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 //import AutoLayout from "@/js/Layout"
+import ActivitiesCard from "@/components/ActivitiesCard.vue";
 
 export default {
   name: "BPMNModel",
-  components: {},
+  components: {
+    ActivitiesCard,
+  },
   props: {
     team_id: String,
     team_project_id: String,
@@ -38,15 +64,64 @@ export default {
       apexLoading: false,
       listo: false,
       svgDiagram: null,
+      activities: [],
     };
   },
   created() {
     this.getModel();
+    //this.getColors();
     // DESCOMENTAR ESTO DESPUESSSSSSSSSSSSSSSS// ??????
     //this.generateLastModel();
     //this.getProjectBPMN(this.team_project_id);
   },
+  computed: {},
   methods: {
+    getModel() {
+      axios
+        .post(process.env.VUE_APP_BASE_URL + "/process-model/get-model", {
+          team_id: this.team_id,
+          team_project_id: this.team_project_id,
+          source_id_github: this.github_id,
+          source_id_jenkins: this.jenkins_id,
+        })
+        .then((r) => {
+          //console.log(r)
+          this.svgDiagram = r.data;
+          this.getActCount();
+          this.listo = true;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getActCount() {
+      axios
+        .post(
+          process.env.VUE_APP_BASE_URL + "/process-model/get-activities-count",
+          {
+            team_project_id: this.team_project_id,
+          }
+        )
+        .then((r) => {
+          //console.log(r)
+          this.activities = r.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    ////////////////////////////////////////////////
+    getColors() {
+      for (const a of document.querySelectorAll("text")) {
+        if (a.textContent.includes("IMPLEMENTACION_code")) {
+          a.classList.add("color-class");
+          console.log(a);
+        }
+      }
+      var svg = document.querySelector("svg");
+      console.log(svg);
+      this.svgDiagram = svg;
+    },
     getJenkinsRegisters() {
       axios
         .post(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins", {
@@ -78,22 +153,6 @@ export default {
         })
         .then(() => {
           return true;
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    },
-    getModel() {
-      axios
-        .post(process.env.VUE_APP_BASE_URL + "/process-model/get-model", {
-          team_id: this.team_id,
-          team_project_id: this.team_project_id,
-          source_id_github: this.github_id,
-          source_id_jenkins: this.jenkins_id,
-        })
-        .then((r) => {
-          this.svgDiagram = r.data;
-          this.listo = true;
         })
         .catch((e) => {
           console.log(e);
@@ -250,13 +309,20 @@ export default {
         });
     },
   },
-  mounted() {},
+  mounted: function () {
+    var elements = this.$el.querySelectorAll("text");
+    console.log(elements);
+    elements.forEach((element) => {
+      element.classList.add("color-class");
+      console.log(element);
+    });
+  },
 };
 </script>
 
 <style>
-svg {
-  height: 100%;
-  width: 100%;
+
+.color-class {
+  color: white;
 }
 </style>
