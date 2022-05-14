@@ -112,7 +112,10 @@
             </li>
           </ul>
           <div class="add-btn">
-            <v-btn>Agregar projecto</v-btn>
+            <v-btn v-on:click="showProjectModal()">Agregar projecto</v-btn>
+            <v-app v-if="modalProjectVis">
+              <ProjectModal v-show="modalProjectVis" :team_id="team_id" @close="closeProjectModal" />
+            </v-app>
           </div>
         </div>
         <div>
@@ -150,6 +153,7 @@
 import NavBar from "@/components/NavBar.vue";
 import DeveloperModal from "@/components/Modal/DeveloperModal.vue";
 import DeveloperModalNew from "@/components/Modal/DeveloperModalNew.vue";
+import ProjectModal from "@/components/Modal/ProjectModal.vue";
 import JiraSourceModal from "@/components/Modal/JiraSourceModal.vue";
 import axios from "axios";
 
@@ -159,6 +163,7 @@ export default {
     NavBar,
     DeveloperModal,
     DeveloperModalNew,
+    ProjectModal,
     JiraSourceModal, 
   },
   data() {
@@ -170,6 +175,7 @@ export default {
       projects: [],
       modalDevNewVis: false,
       modalDevVis: false,
+      modalProjectVis: false, 
       modalJiraVis: false,
     };
   },
@@ -192,6 +198,13 @@ export default {
     closeDevModal() {
       this.modalDevVis = false;
       this.getDevelopers();
+    },
+    showProjectModal() {
+      this.modalProjectVis = true;
+    },
+    closeProjectModal() {
+      this.modalProjectVis = false;
+      this.getProjects();
     },
     showJiraModal() {
       this.modalJiraVis = true;
