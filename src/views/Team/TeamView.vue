@@ -105,14 +105,6 @@
                   TAG (para asociar con Jira): {{ project.tag }}
                 </v-list-item>
               </div>
-              <div
-                class="add-btn"
-                v-if="
-                  project.jenkins == undefined || project.github == undefined
-                "
-              >
-                <v-btn>Agregar fuente de información</v-btn>
-              </div>
             </li>
           </ul>
           <div class="add-btn">
@@ -138,7 +130,10 @@
             <v-list-item class="list-item">No existe</v-list-item>
           </div>
           <div class="add-btn" v-if="jira == null">
-            <v-btn>Agregar fuente de información Jira</v-btn>
+            <v-btn v-on:click="showJiraModal()">Agregar fuente de información Jira</v-btn>
+            <v-app v-if="modalJiraVis">
+              <JiraSourceModal v-show="modalJiraVis" :team_id="team_id" @close="closeJiraModal" />
+            </v-app>
           </div>
         </div>
       </v-card-text>
@@ -150,6 +145,7 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import DeveloperModal from "@/components/Modal/DeveloperModal.vue";
+import JiraSourceModal from "@/components/Modal/JiraSourceModal.vue";
 import axios from "axios";
 
 export default {
@@ -157,6 +153,7 @@ export default {
   components: {
     NavBar,
     DeveloperModal,
+    JiraSourceModal, 
   },
   data() {
     return {
@@ -166,6 +163,7 @@ export default {
       jira: null,
       projects: [],
       modalDevVis: false,
+      modalJiraVis: false,
     };
   },
   created() {
@@ -180,6 +178,13 @@ export default {
     closeDevModal() {
       this.modalDevVis = false;
       this.getDevelopers();
+    },
+    showJiraModal() {
+      this.modalJiraVis = true;
+    },
+    closeJiraModal() {
+      this.modalJiraVis = false;
+      this.getJira();
     },
     changeVis(obj) {
       if (obj.vis == false) {
