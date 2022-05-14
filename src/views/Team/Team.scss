@@ -1,0 +1,51 @@
+ul {
+    list-style-type: none;
+    padding-left: 3%;
+    display: flex;
+    justify-content: left;
+}
+
+.card {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.card-title {
+    font-weight: 550;
+    padding-bottom: 2%;
+    font-size: 1.9vw;
+}
+
+.item {
+    font-size: medium;
+    float: none;
+    padding-bottom: 2%;
+    cursor: pointer;
+}
+
+.add-btn {
+    display: flex;
+    justify-content: left;
+    margin-left: 3%;
+    margin-top: 3%;
+    padding-bottom: 2%;
+}
+
+.v-btn.v-size--default {
+    font-size: x-small;
+}
+
+.list-item {
+    padding: 0%;
+    padding-left: 3%;
+    min-height: auto;
+    //white-space: nowrap;
+    width: max-content;
+}
+
+.disp-left {
+    display: flex;
+    justify-content: left;
+    margin-bottom: 3%;
+}

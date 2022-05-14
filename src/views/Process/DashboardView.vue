@@ -1,219 +1,222 @@
 <template>
-  <v-container fluid>
-    <div class="dashboard-page">
-      <v-row no-gutters class="d-flex justify-space-between mt-10 mb-6">
-        <h1 class="page-title">Dashboard</h1>
-      </v-row>
-      <v-row>
-        <!-- AQUI EMPIEZA -->
-        <v-col cols="12">
-          <v-card class="mx-1 mb-1">
-            <v-card-title class="pa-6 pb-0">
-              <v-row no-gutters>
-                <h3 class="title-color">
-                  Modelos de proceso BPMN equipo {{ team_name }}
-                </h3>
-              </v-row>
-            </v-card-title>
-            <v-card-text class="pa-6">
-              <v-row>
-                <v-col class="overflow-hidden">
-                  <!-- BPMN -->
-                  <ul v-for="project in projects" :key="project.id">
-                    <li>
-                      <div
-                        class="project-name-2"
-                        v-on:click="changeVisibleModel(project)"
-                      >
-                        <h3>Proyecto {{ project.name }}</h3>
-                      </div>
-                    </li>
-                  </ul>
-                  <ul v-for="(project, index) in projects" :key="index">
-                    <li v-if="project.visibleModel == true">
-                      <BPMNModel
-                        :team_id="team_id"
-                        :team_project_id="project.id"
-                        :github_id="project.github_id"
-                        :jenkins_id="project.jenkins_id"
-                      >
-                      </BPMNModel>
-                    </li>
-                  </ul>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="12">
-          <div>
-            <v-card-title>
-              <h3>
-                Participación de los desarrolladores equipo {{ team_name }}
-              </h3>
-            </v-card-title>
-          </div>
-        </v-col>
-        <!-- JIRA -->
-        <v-col lg="4" sm="6" cols="12">
-          <v-card class="mx-1 mb-1">
-            <div class="tool-name">
-              <h3>Jira</h3>
-            </div>
-            <v-card-text class="pa-6 pt-0">
-              <v-row no-gutters v-if="jira_options != []">
-                <div v-for="(opt, index) in jira_options" :key="index">
-                  <DonutChart :options="opt.options" :series="opt.series">
-                  </DonutChart>
-                </div>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <!-- JENKINS -->
-        <v-col lg="4" sm="6" cols="12">
-          <v-card class="padding-card">
-            <div class="tool-name">
-              <h3>Jenkins</h3>
-            </div>
-            <ul v-for="project in projects" :key="project.id">
-              <li>
-                <div
-                  class="project-name-3"
-                  v-on:click="changeVisibleJenkins(project)"
-                >
-                  Proyecto {{ project.name }}
-                </div>
-              </li>
-            </ul>
-            <ul v-for="(project, index) in projects" :key="index">
-              <li>
-                <div v-if="project.visibleJenkins == true">
-                  <v-card class="mx-1 mb-1">
-                    <v-card-text class="pa-6 pt-0">
-                      <v-row v-if="project.jenkins_options != null">
-                        <DonutChart
-                          :options="project.jenkins_options.options"
-                          :series="project.jenkins_options.series"
-                        >
-                        </DonutChart>
-                      </v-row>
-                      <v-row v-if="project.jenkins_options_bar != null">
-                        <BarChart
-                          :options="project.jenkins_options_bar.options"
-                          :series="project.jenkins_options_bar.series"
-                        >
-                        </BarChart>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </div>
-              </li>
-            </ul>
-          </v-card>
-        </v-col>
-        <!-- GITHUB -->
-        <v-col lg="4" sm="6" cols="12">
-          <v-card class="padding-card">
-            <div class="tool-name">
-              <h3>GitHub</h3>
-            </div>
-            <ul v-for="project in projects" :key="project.id">
-              <li>
-                <div
-                  class="project-name-3"
-                  v-on:click="changeVisibleGithub(project)"
-                >
-                  Proyecto {{ project.name }}
-                </div>
-              </li>
-            </ul>
-            <ul v-for="(project, index) in projects" :key="index">
-              <li>
-                <div v-if="project.visibleGithub == true">
-                  <v-card class="mx-1 mb-1">
-                    <v-card-text class="pa-6 pt-0">
-                      <v-row v-if="project.github_options != null">
-                        <div
-                          v-for="(opt, index) in project.github_options"
-                          :key="index"
-                        >
-                          <DonutChart
-                            :options="opt.options"
-                            :series="opt.series"
-                          >
-                          </DonutChart>
-                        </div>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </div>
-              </li>
-            </ul>
-          </v-card>
-        </v-col>
-        <!-- PRODUCTIVITY -->
-        <v-col cols="12">
-          <v-card class="mx-1 mb-1">
-            <v-card-title class="pa-6 pb-0">
-              <v-row no-gutters>
-                <h3>Productividad equipo {{ team_name }}</h3>
-              </v-row>
-            </v-card-title>
+  <div>
+    <NavBar></NavBar>
+    <v-container fluid>
+      <div class="dashboard-page">
+        <v-row no-gutters class="d-flex justify-space-between mt-10 mb-6">
+          <h1 class="page-title">Dashboard</h1>
+        </v-row>
+        <v-row>
+          <!-- AQUI EMPIEZA -->
+          <v-col cols="12">
             <v-card class="mx-1 mb-1">
               <v-card-title class="pa-6 pb-0">
                 <v-row no-gutters>
-                  <p>Productividad grupal</p>
-                </v-row>
-              </v-card-title>
-              <v-card-text class="pa-6">
-                <v-row class="overflow-hidden">
-                  <v-col class="overflow-hidden">
-                    <div v-if="team.series[0].data != []">
-                      <BarChart :options="team.options" :series="team.series">
-                      </BarChart>
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-            <v-card class="mx-1 mb-1">
-              <v-card-title class="pa-6 pb-0">
-                <v-row no-gutters>
-                  <p>Productividad individual</p>
+                  <h3 class="title-color">
+                    Modelos de proceso BPMN equipo {{ team_name }}
+                  </h3>
                 </v-row>
               </v-card-title>
               <v-card-text class="pa-6">
                 <v-row>
                   <v-col class="overflow-hidden">
+                    <!-- BPMN -->
                     <ul v-for="project in projects" :key="project.id">
                       <li>
                         <div
-                          class="project-name"
-                          v-on:click="changeVisibleProdInd(project)"
+                          class="project-name-2"
+                          v-on:click="changeVisibleModel(project)"
                         >
                           <h3>Proyecto {{ project.name }}</h3>
                         </div>
                       </li>
                     </ul>
                     <ul v-for="(project, index) in projects" :key="index">
-                      <li v-if="project.visibleProdInd == true">
-                        <ProdChart
+                      <li v-if="project.visibleModel == true">
+                        <BPMNModel
                           :team_id="team_id"
                           :team_project_id="project.id"
+                          :github_id="project.github_id"
+                          :jenkins_id="project.jenkins_id"
                         >
-                        </ProdChart>
+                        </BPMNModel>
                       </li>
                     </ul>
                   </v-col>
                 </v-row>
               </v-card-text>
             </v-card>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
-  </v-container>
+          </v-col>
+          <v-col cols="12">
+            <div>
+              <v-card-title>
+                <h3>
+                  Participación de los desarrolladores equipo {{ team_name }}
+                </h3>
+              </v-card-title>
+            </div>
+          </v-col>
+          <!-- JIRA -->
+          <v-col lg="4" sm="6" cols="12">
+            <v-card class="mx-1 mb-1">
+              <div class="tool-name">
+                <h3>Jira</h3>
+              </div>
+              <v-card-text class="pa-6 pt-0">
+                <v-row no-gutters v-if="jira_options != []">
+                  <div v-for="(opt, index) in jira_options" :key="index">
+                    <DonutChart :options="opt.options" :series="opt.series">
+                    </DonutChart>
+                  </div>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <!-- JENKINS -->
+          <v-col lg="4" sm="6" cols="12">
+            <v-card class="padding-card">
+              <div class="tool-name">
+                <h3>Jenkins</h3>
+              </div>
+              <ul v-for="project in projects" :key="project.id">
+                <li>
+                  <div
+                    class="project-name-3"
+                    v-on:click="changeVisibleJenkins(project)"
+                  >
+                    Proyecto {{ project.name }}
+                  </div>
+                </li>
+              </ul>
+              <ul v-for="(project, index) in projects" :key="index">
+                <li>
+                  <div v-if="project.visibleJenkins == true">
+                    <v-card class="mx-1 mb-1">
+                      <v-card-text class="pa-6 pt-0">
+                        <v-row v-if="project.jenkins_options != null">
+                          <DonutChart
+                            :options="project.jenkins_options.options"
+                            :series="project.jenkins_options.series"
+                          >
+                          </DonutChart>
+                        </v-row>
+                        <v-row v-if="project.jenkins_options_bar != null">
+                          <BarChart
+                            :options="project.jenkins_options_bar.options"
+                            :series="project.jenkins_options_bar.series"
+                          >
+                          </BarChart>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </div>
+                </li>
+              </ul>
+            </v-card>
+          </v-col>
+          <!-- GITHUB -->
+          <v-col lg="4" sm="6" cols="12">
+            <v-card class="padding-card">
+              <div class="tool-name">
+                <h3>GitHub</h3>
+              </div>
+              <ul v-for="project in projects" :key="project.id">
+                <li>
+                  <div
+                    class="project-name-3"
+                    v-on:click="changeVisibleGithub(project)"
+                  >
+                    Proyecto {{ project.name }}
+                  </div>
+                </li>
+              </ul>
+              <ul v-for="(project, index) in projects" :key="index">
+                <li>
+                  <div v-if="project.visibleGithub == true">
+                    <v-card class="mx-1 mb-1">
+                      <v-card-text class="pa-6 pt-0">
+                        <v-row v-if="project.github_options != null">
+                          <div
+                            v-for="(opt, index) in project.github_options"
+                            :key="index"
+                          >
+                            <DonutChart
+                              :options="opt.options"
+                              :series="opt.series"
+                            >
+                            </DonutChart>
+                          </div>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </div>
+                </li>
+              </ul>
+            </v-card>
+          </v-col>
+          <!-- PRODUCTIVITY -->
+          <v-col cols="12">
+            <v-card class="mx-1 mb-1">
+              <v-card-title class="pa-6 pb-0">
+                <v-row no-gutters>
+                  <h3>Productividad equipo {{ team_name }}</h3>
+                </v-row>
+              </v-card-title>
+              <v-card class="mx-1 mb-1">
+                <v-card-title class="pa-6 pb-0">
+                  <v-row no-gutters>
+                    <p>Productividad grupal</p>
+                  </v-row>
+                </v-card-title>
+                <v-card-text class="pa-6">
+                  <v-row class="overflow-hidden">
+                    <v-col class="overflow-hidden">
+                      <div v-if="team.series[0].data != []">
+                        <BarChart :options="team.options" :series="team.series">
+                        </BarChart>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+              <v-card class="mx-1 mb-1">
+                <v-card-title class="pa-6 pb-0">
+                  <v-row no-gutters>
+                    <p>Productividad individual</p>
+                  </v-row>
+                </v-card-title>
+                <v-card-text class="pa-6">
+                  <v-row>
+                    <v-col class="overflow-hidden">
+                      <ul v-for="project in projects" :key="project.id">
+                        <li>
+                          <div
+                            class="project-name"
+                            v-on:click="changeVisibleProdInd(project)"
+                          >
+                            <h3>Proyecto {{ project.name }}</h3>
+                          </div>
+                        </li>
+                      </ul>
+                      <ul v-for="(project, index) in projects" :key="index">
+                        <li v-if="project.visibleProdInd == true">
+                          <ProdChart
+                            :team_id="team_id"
+                            :team_project_id="project.id"
+                          >
+                          </ProdChart>
+                        </li>
+                      </ul>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -221,11 +224,13 @@ import DonutChart from "@/components/DonutChart.vue";
 import BarChart from "@/components/BarChart.vue";
 import BPMNModel from "@/components/BPMNModel.vue";
 import ProdChart from "@/components/ProdChart.vue";
+import NavBar from "@/components/NavBar.vue";
 import axios from "axios";
 
 export default {
   name: "DashboardView",
   components: {
+    NavBar,
     DonutChart,
     BarChart,
     BPMNModel,
@@ -240,8 +245,10 @@ export default {
 
       //aqui empieza
       //team_id: "6241fad36d714f635bafbc9f",
-      team_id: "62702b09e2115db94f9d2d41",
-      team_name: "PROBANDO",
+      //team_id: "62702b09e2115db94f9d2d41",
+      team_id: JSON.parse(localStorage.getItem('teamId')),
+      //team_name: "PROBANDO",
+      team_name: JSON.parse(localStorage.getItem('teamName')),
       team: null,
       projects: [],
       jenkins_options: null,
@@ -269,6 +276,7 @@ export default {
       } else {
         project.visibleProdInd = false;
       }
+      console.log(project)
     },
     //funcion para obtener los ids de proyectos de un equipo de desarrollo
     getProjects() {

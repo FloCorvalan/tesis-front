@@ -9,7 +9,7 @@
       >
       <v-card-text>
         <ul v-for="team in teams" :key="team">
-          <li class="item" v-on:click="getDashboard(team._id)">
+          <li class="item" v-on:click="getDashboard(team)">
             {{ team.name }}
           </li>
         </ul>
@@ -118,11 +118,17 @@ export default {
         .post(process.env.VUE_APP_BASE_URL + "/team/by-leader", data, headers)
         .then((response) => {
           this.teams = response.data;
+          console.log(this.teams)
         });
     },
-    getDashboard(oid) {
-      var id = oid.$oid.toString();
+    getDashboard(team) {
+      var id = team._id.$oid.toString();
+      this.$store.commit("saveTeamId", id);
+      var name = team.name.toString();
+      this.$store.commit("saveTeamName", name);
       console.log(id);
+      console.log(name);
+      this.$router.push("/dashboard");
     },
     validate() {
       this.$refs.form.validate();
