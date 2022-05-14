@@ -3,8 +3,19 @@
     <NavBar></NavBar>
     <v-card class="card">
       <v-card-title
-        ><div class="card-title">Equipo {{ team_name }}</div></v-card-title
-      >
+        ><div class="card-title">Nombre de equipo: {{ team_name }}</div>
+        <v-spacer></v-spacer>
+        <div
+          v-if="developers.length != 0 && projects.length != 0 && jira != null"
+        >
+          <v-btn class="dash-btn" v-on:click="getDashboard()"
+            >Ver dashboard</v-btn
+          >
+        </div>
+        <div v-else>
+          <v-btn class="dash-btn" disabled>Ver dashboard</v-btn>
+        </div>
+      </v-card-title>
       <v-card-text>
         <div>
           <h3 class="disp-left">Desarrolladores/as</h3>
@@ -36,7 +47,10 @@
             </li>
           </ul>
           <div class="add-btn">
-            <v-btn>Agregar desarrollador/a</v-btn>
+            <v-btn v-on:click="showDevModal()">Agregar desarrollador/a</v-btn>
+            <v-app v-if="modalDevVis">
+              <DeveloperModal v-show="modalDevVis" :team_id="team_id" @close="closeDevModal" />
+            </v-app>
           </div>
         </div>
         <div>
@@ -53,10 +67,8 @@
               <div>
                 Fuentes de información
                 <v-list>
-                    <v-list-item class="list-item"
-                    >Jenkins:</v-list-item>
-                  <v-list-item class="list-item"
-                    >
+                  <v-list-item class="list-item">Jenkins:</v-list-item>
+                  <v-list-item class="list-item">
                     <div v-if="project.jenkins != undefined">
                       <v-list>
                         <v-list-item class="list-item">
@@ -72,10 +84,8 @@
                     </div>
                     <div v-else>No existe</div>
                   </v-list-item>
-                  <v-list-item class="list-item"
-                    >GitHub:</v-list-item>
-                  <v-list-item class="list-item"
-                    >
+                  <v-list-item class="list-item">GitHub:</v-list-item>
+                  <v-list-item class="list-item">
                     <div v-if="project.github != undefined">
                       <v-list>
                         <v-list-item class="list-item">
@@ -87,17 +97,48 @@
                       </v-list>
                     </div>
                     <div v-else>No existe</div>
-                    </v-list-item
-                  >
+                  </v-list-item>
                 </v-list>
               </div>
-              <div class="add-btn" v-if="project.jenkins == undefined || project.github == undefined">
-            <v-btn>Agregar fuente de información</v-btn>
-          </div>
+              <div>
+                <v-list-item class="list-item">
+                  TAG (para asociar con Jira): {{ project.tag }}
+                </v-list-item>
+              </div>
+              <div
+                class="add-btn"
+                v-if="
+                  project.jenkins == undefined || project.github == undefined
+                "
+              >
+                <v-btn>Agregar fuente de información</v-btn>
+              </div>
             </li>
           </ul>
           <div class="add-btn">
             <v-btn>Agregar projecto</v-btn>
+          </div>
+        </div>
+        <div>
+          <h3 class="disp-left">Fuente de información Jira</h3>
+          <div v-if="jira != null">
+            <v-list>
+              <v-list-item class="list-item"
+                >Usuario: {{ jira.user }}</v-list-item
+              >
+              <v-list-item class="list-item"
+                >Key del proyecto: {{ jira.name }}</v-list-item
+              >
+              <v-list-item class="list-item"
+                >URL: {{ jira.ip_port }}</v-list-item
+              >
+            </v-list>
+          </div>
+          <div v-else>
+            <v-list-item class="list-item">No existe</v-list-item>
+          </div>
+          <div class="add-btn" v-if="jira == null">
+            <v-btn>Agregar fuente de información Jira</v-btn>
           </div>
         </div>
       </v-card-text>
@@ -108,27 +149,38 @@
 
 <script>
 import NavBar from "@/components/NavBar.vue";
+import DeveloperModal from "@/components/Modal/DeveloperModal.vue";
 import axios from "axios";
 
 export default {
   name: "TeamView",
   components: {
     NavBar,
+    DeveloperModal,
   },
   data() {
     return {
       team_id: JSON.parse(localStorage.getItem("teamId")),
       team_name: JSON.parse(localStorage.getItem("teamName")),
       developers: [],
-      sources: [],
+      jira: null,
       projects: [],
+      modalDevVis: false,
     };
   },
   created() {
     this.getDevelopers();
     this.getProjects();
+    this.getJira();
   },
   methods: {
+    showDevModal() {
+      this.modalDevVis = true;
+    },
+    closeDevModal() {
+      this.modalDevVis = false;
+      this.getDevelopers();
+    },
     changeVis(obj) {
       if (obj.vis == false) {
         obj.vis = true;
@@ -168,6 +220,7 @@ export default {
         )
         .then((response) => {
           //this.developers = response.data;
+          this.developers = [];
           response.data.forEach((element) => {
             element.vis = false;
             var e = element;
@@ -189,16 +242,16 @@ export default {
             var e = element;
             this.projects.push(e);
           });
-          console.log(this.projects);
         });
     },
-    getDashboard(team) {
-      var id = team._id.$oid.toString();
-      this.$store.commit("saveTeamId", id);
-      var name = team.name.toString();
-      this.$store.commit("saveTeamName", name);
-      console.log(id);
-      console.log(name);
+    getJira() {
+      axios
+        .get(process.env.VUE_APP_BASE_URL + "/source/get-jira/" + this.team_id)
+        .then((response) => {
+          this.jira = response.data;
+        });
+    },
+    getDashboard() {
       this.$router.push("/dashboard");
     },
     validate() {

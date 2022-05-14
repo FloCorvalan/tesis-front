@@ -9,7 +9,7 @@
       >
       <v-card-text>
         <ul v-for="team in teams" :key="team">
-          <li class="item" v-on:click="getDashboard(team)">
+          <li class="item" v-on:click="getTeamView(team)">
             {{ team.name }}
           </li>
         </ul>
@@ -121,14 +121,14 @@ export default {
           console.log(this.teams)
         });
     },
-    getDashboard(team) {
+    getTeamView(team) {
       var id = team._id.$oid.toString();
       this.$store.commit("saveTeamId", id);
       var name = team.name.toString();
       this.$store.commit("saveTeamName", name);
       console.log(id);
       console.log(name);
-      this.$router.push("/dashboard");
+      this.$router.push("/team");
     },
     validate() {
       this.$refs.form.validate();
