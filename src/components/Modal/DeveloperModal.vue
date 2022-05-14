@@ -8,40 +8,18 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  label="Nombre*"
-                  v-model="name"
+              <v-col
+                cols="12"
+                sm="6"
+              >
+                <v-select
+                  :items="developers"
+                  label="Desarrollador/a*"
+                  v-model="devSelected"
+                  :item-text="'name'"
+                  :item-value="'_id'"
                   required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Email*"
-                  v-model="email"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Nombre en Jira*"
-                  v-model="jira"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Nombre en Jenkins*"
-                  v-model="jenkins"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Nombre en GitHub*"
-                  v-model="github"
-                  required
-                ></v-text-field>
+                ></v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -64,41 +42,36 @@ export default {
   name: "DeveloperModal",
   data: () => ({
     dialog: true,
-    name: null,
-    email: null,
-    jira: null,
-    jenkins: null,
-    github: null,
+    developers: [],
+    devSelected: null,
   }),
   props: {
-      team_id: String
+    team_id: String,
+  },
+  created(){
+    this.getDevelopers();
   },
   methods: {
+    getDevelopers() {
+      axios.get(process.env.VUE_APP_BASE_URL + "/developer/").then((r) => {
+        this.developers = r.data
+      });
+    },
     close() {
       this.$emit("close");
     },
     save() {
+      console.log(this.devSelected)
       var body = {
-        name: this.name,
-        email: this.email,
-        jira: this.jira,
-        jenkins: this.jenkins,
-        github: this.github,
+        dev_id: this.devSelected.$oid,
         team_id: this.team_id,
       };
-      if (
-        body != null &&
-        body.name != null &&
-        body.email != null &&
-        body.jira != null &&
-        body.jenkins != null &&
-        body.github != null
-      ) {
+      if (body != null && body.dev_id != null) {
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/developer/", body)
+          .post(process.env.VUE_APP_BASE_URL + "/team/add-dev", body)
           .then((r) => {
-            if(r.status == 200){
-                this.$emit("close");
+            if (r.status == 200) {
+              this.$emit("close");
             }
           });
       }

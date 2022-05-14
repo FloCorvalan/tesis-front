@@ -51,6 +51,10 @@
             <v-app v-if="modalDevVis">
               <DeveloperModal v-show="modalDevVis" :team_id="team_id" @close="closeDevModal" />
             </v-app>
+            <v-btn v-on:click="showDevNewModal()">Agregar nuevo/a desarrollador/a</v-btn>
+            <v-app v-if="modalDevNewVis">
+              <DeveloperModalNew v-show="modalDevNewVis" :team_id="team_id" @close="closeDevNewModal" />
+            </v-app>
           </div>
         </div>
         <div>
@@ -145,6 +149,7 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
 import DeveloperModal from "@/components/Modal/DeveloperModal.vue";
+import DeveloperModalNew from "@/components/Modal/DeveloperModalNew.vue";
 import JiraSourceModal from "@/components/Modal/JiraSourceModal.vue";
 import axios from "axios";
 
@@ -153,6 +158,7 @@ export default {
   components: {
     NavBar,
     DeveloperModal,
+    DeveloperModalNew,
     JiraSourceModal, 
   },
   data() {
@@ -162,6 +168,7 @@ export default {
       developers: [],
       jira: null,
       projects: [],
+      modalDevNewVis: false,
       modalDevVis: false,
       modalJiraVis: false,
     };
@@ -172,6 +179,13 @@ export default {
     this.getJira();
   },
   methods: {
+    showDevNewModal() {
+      this.modalDevNewVis = true;
+    },
+    closeDevNewModal() {
+      this.modalDevNewVis = false;
+      this.getDevelopers();
+    },
     showDevModal() {
       this.modalDevVis = true;
     },
