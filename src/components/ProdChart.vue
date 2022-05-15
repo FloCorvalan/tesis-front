@@ -43,7 +43,6 @@ export default {
   },
   created() {
     this.getGithubProd();
-    this.getJenkinsTeamProd();
   },
   methods: {
     changeVisibleDev(dev) {
@@ -55,7 +54,7 @@ export default {
     },
     getGithubProd() {
       axios
-        .post(process.env.VUE_APP_GITHUB_BASE_URL + "/github/prod", {
+        .post(process.env.VUE_APP_BASE_URL + "/prod/github", {
           team_id: this.team_id,
           team_project_id: this.team_project_id,
         })

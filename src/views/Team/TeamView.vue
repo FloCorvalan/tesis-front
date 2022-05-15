@@ -1,7 +1,8 @@
 <template>
   <div>
     <NavBar></NavBar>
-    <v-card class="card">
+    <div class="card">
+    <v-card>
       <v-card-title
         ><div class="card-title">Nombre de equipo: {{ team_name }}</div>
         <v-spacer></v-spacer>
@@ -19,14 +20,14 @@
       <v-card-text>
         <div>
           <h3 class="disp-left">Desarrolladores/as</h3>
-          <ul v-for="dev in developers" :key="dev.id">
+          <ul class="ul" v-for="dev in developers" :key="dev.id">
             <li>
               <div class="item" v-on:click="changeVis(dev)">
                 {{ dev.name }}
               </div>
             </li>
           </ul>
-          <ul v-for="dev in developers" :key="dev.id">
+          <ul class="ul" v-for="dev in developers" :key="dev.id">
             <li v-if="dev.vis == true">
               <div>
                 <v-list>
@@ -59,14 +60,14 @@
         </div>
         <div>
           <h3 class="disp-left">Proyectos</h3>
-          <ul v-for="project in projects" :key="project.id">
+          <ul class="ul" v-for="project in projects" :key="project.id">
             <li>
               <div class="item" v-on:click="changeVisProject(project)">
                 {{ project.name }}
               </div>
             </li>
           </ul>
-          <ul v-for="project in projects" :key="project.id">
+          <ul class="ul" v-for="project in projects" :key="project.id">
             <li v-if="project.vis == true">
               <div>
                 Fuentes de información
@@ -145,6 +146,7 @@
         </div>
       </v-card-text>
     </v-card>
+    </div>
   </div>
 </template>
 

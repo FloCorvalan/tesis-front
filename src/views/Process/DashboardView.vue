@@ -334,7 +334,7 @@ export default {
     //funcion para obtener la participacion en Jenkins para un proyecto
     getJenkinsProjectParticipation(index) {
       axios
-        .post(process.env.VUE_APP_JENKINS_BASE_URL + "/jenkins/participation", {
+        .post(process.env.VUE_APP_BASE_URL + "/participation/jenkins", {
           team_project_id: this.projects[index].id,
           source_id: this.projects[index].jenkins_id,
         })
@@ -427,7 +427,10 @@ export default {
     },
     getJiraParticipation(t_id) {
       axios
-        .post(process.env.VUE_APP_JIRA_BASE_URL + "/jira/participation", {
+      //////////////////////////////////////////////////////////////////
+      ///////////// CAMBIAR DESPUEEEEEEESSSSSSSSSSSSSS /////////////////
+      //////////////////////////////////////////////////////////////////
+        .post(process.env.VUE_APP_BASE_URL + "/jira/participation", { 
           team_id: t_id,
         })
         .then((response) => {
@@ -491,7 +494,7 @@ export default {
     //funcion para obtener la participacion en GitHub para un proyecto
     getGithubProjectParticipation(index) {
       axios
-        .post(process.env.VUE_APP_GITHUB_BASE_URL + "/github/participation", {
+        .post(process.env.VUE_APP_BASE_URL + "/participation/github", {
           team_project_id: this.projects[index].id,
           source_id: this.projects[index].github_id,
         })
@@ -634,7 +637,7 @@ export default {
     },
     getJiraProd() {
       axios
-        .post(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
+        .post(process.env.VUE_APP_BASE_URL + "/prod/jira", {
           team_id: this.team_id,
           //team_project_id: this.team_project_id,
         })
