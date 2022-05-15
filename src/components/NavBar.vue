@@ -5,7 +5,7 @@
 
       <v-toolbar-title class="title">Toad System</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="toggleTheme"  class="mr-2" color="#023047"><v-icon color="#FFFFFF">mdi-account</v-icon></v-btn>
+      <v-btn class="mr-2" color="#023047"><v-icon color="#FFFFFF">mdi-account</v-icon></v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -14,7 +14,7 @@
           v-model="group"
           active-class="deep-purple--text text--accent-4"
         >
-          <v-list-item>
+          <v-list-item @click="goLeader()">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
@@ -45,7 +45,11 @@ export default {
   },
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    goLeader(){
+      this.$router.push('/leader')
+    }
+  },
 };
 </script>
 

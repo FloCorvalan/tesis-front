@@ -1,7 +1,7 @@
 <template>
   <div>
     <NavBar></NavBar>
-    <v-container fluid>
+    <v-container fluid class="back-color">
       <div class="dashboard-page">
         <v-row no-gutters class="d-flex justify-space-between mt-10 mb-6">
           <h1 class="page-title">Dashboard</h1>
@@ -48,17 +48,17 @@
             </v-card>
           </v-col>
           <v-col cols="12">
-            <div>
+            <v-card>
               <v-card-title>
                 <h3>
                   Participación de los desarrolladores equipo {{ team_name }}
                 </h3>
               </v-card-title>
-            </div>
+            </v-card>
           </v-col>
           <!-- JIRA -->
           <v-col lg="4" sm="6" cols="12">
-            <v-card class="mx-1 mb-1">
+            <v-card class="mx-1 mb-1 card-color">
               <div class="tool-name">
                 <h3>Jira</h3>
               </div>
@@ -246,9 +246,9 @@ export default {
       //aqui empieza
       //team_id: "6241fad36d714f635bafbc9f",
       //team_id: "62702b09e2115db94f9d2d41",
-      team_id: JSON.parse(localStorage.getItem('teamId')),
+      team_id: JSON.parse(localStorage.getItem("teamId")),
       //team_name: "PROBANDO",
-      team_name: JSON.parse(localStorage.getItem('teamName')),
+      team_name: JSON.parse(localStorage.getItem("teamName")),
       team: null,
       projects: [],
       jenkins_options: null,
@@ -276,7 +276,7 @@ export default {
       } else {
         project.visibleProdInd = false;
       }
-      console.log(project)
+      console.log(project);
     },
     //funcion para obtener los ids de proyectos de un equipo de desarrollo
     getProjects() {
@@ -405,7 +405,7 @@ export default {
                 offsetX: -6,
                 style: {
                   fontSize: "12px",
-                  colors: ["#fff"],
+                  colors: ["#000"],
                 },
               },
               stroke: {
@@ -427,10 +427,10 @@ export default {
     },
     getJiraParticipation(t_id) {
       axios
-      //////////////////////////////////////////////////////////////////
-      ///////////// CAMBIAR DESPUEEEEEEESSSSSSSSSSSSSS /////////////////
-      //////////////////////////////////////////////////////////////////
-        .post(process.env.VUE_APP_BASE_URL + "/jira/participation", { 
+        //////////////////////////////////////////////////////////////////
+        ///////////// CAMBIAR DESPUEEEEEEESSSSSSSSSSSSSS /////////////////
+        //////////////////////////////////////////////////////////////////
+        .post(process.env.VUE_APP_BASE_URL + "/jira/participation", {
           team_id: t_id,
         })
         .then((response) => {
@@ -447,6 +447,14 @@ export default {
               options: {
                 chart: {
                   type: "donut",
+                },
+                stroke: {
+                  show: true,
+                  curve: "smooth",
+                  lineCap: "butt",
+                  colors: undefined,
+                  width: 2,
+                  dashArray: 0,
                 },
                 responsive: [
                   {

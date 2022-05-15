@@ -1,6 +1,6 @@
 <template>
   <ApexChart
-    height="100%"
+    height="150%"
     width="100%"
     type="bar"
     v-if="apexLoading"
