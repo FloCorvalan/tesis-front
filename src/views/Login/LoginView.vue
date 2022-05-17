@@ -155,27 +155,23 @@ export default {
       axios
         .post(process.env.VUE_APP_BASE_URL + "/login", user)
         .then((response) => {
-          console.log(response)
+          console.log(response);
           if (response.status == 200) {
             this.$store.commit("saveToken", response.data.token);
             this.$store.commit("saveLeaderId", response.data._id);
-            window.localStorage.setItem("authenticated", true);
+            this.$store.commit("saveAuthen", true);
             this.$router.push("/leader");
           }
         });
     },
   },
   created() {
-    axios.get(process.env.VUE_APP_BASE_URL + "/is-logged").then((response) => {
-      console.log(response.data.result)
-      console.log(window.localStorage.getItem("authenticated"))
-      if (
-        response.data.result == true &&
-        window.localStorage.getItem("authenticated") == true
-      ) {
-        this.$router.push("/leader");
-      }
-    });
+    console.log(JSON.parse(localStorage.getItem("authenticated")));
+    if (
+      JSON.parse(localStorage.getItem("authenticated")) == true
+    ) {
+      this.$router.push("/leader");
+    }
     //if (window.localStorage.getItem('authenticated') === 'true') {
     //  this.$router.push('/dashboard');
     //}

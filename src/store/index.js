@@ -12,6 +12,7 @@ export default new Vuex.Store({
     teamId: null, 
     teamName: null, 
     token: null, 
+    authenticated: null, 
   },
   getters: {
   },
@@ -31,6 +32,10 @@ export default new Vuex.Store({
     saveToken(state, token) {
       state.token = token;
       localStorage.setItem('token', JSON.stringify(token));
+    },
+    saveAuthen(state, b) {
+      state.authenticated = b;
+      localStorage.setItem('authenticated', JSON.stringify(b));
     },
   },
   actions: {
