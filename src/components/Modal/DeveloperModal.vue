@@ -44,6 +44,7 @@ export default {
     dialog: true,
     developers: [],
     devSelected: null,
+    token: JSON.parse(localStorage.getItem("token")),
   }),
   props: {
     team_id: String,
@@ -53,7 +54,10 @@ export default {
   },
   methods: {
     getDevelopers() {
-      axios.get(process.env.VUE_APP_BASE_URL + "/developer/").then((r) => {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
+      axios.get(process.env.VUE_APP_BASE_URL + "/developer/", {}, {headers}).then((r) => {
         this.developers = r.data
       });
     },
@@ -67,8 +71,11 @@ export default {
         team_id: this.team_id,
       };
       if (body != null && body.dev_id != null) {
+        var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/team/add-dev", body)
+          .post(process.env.VUE_APP_BASE_URL + "/team/add-dev", body, {headers})
           .then((r) => {
             if (r.status == 200) {
               this.$emit("close");

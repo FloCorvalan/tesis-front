@@ -246,6 +246,7 @@ export default {
       //aqui empieza
       //team_id: "6241fad36d714f635bafbc9f",
       //team_id: "62702b09e2115db94f9d2d41",
+      token: JSON.parse(localStorage.getItem("token")),
       team_id: JSON.parse(localStorage.getItem("teamId")),
       //team_name: "PROBANDO",
       team_name: JSON.parse(localStorage.getItem("teamName")),
@@ -281,10 +282,13 @@ export default {
     //funcion para obtener los ids de proyectos de un equipo de desarrollo
     getProjects() {
       if (this.team_id != "") {
+        var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
         axios
           .post(process.env.VUE_APP_BASE_URL + "/participation/get-projects", {
             team_id: this.team_id,
-          })
+          }, {headers})
           .then((response) => {
             var p = {
               id: null,
@@ -333,11 +337,14 @@ export default {
     },
     //funcion para obtener la participacion en Jenkins para un proyecto
     getJenkinsProjectParticipation(index) {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .post(process.env.VUE_APP_BASE_URL + "/participation/jenkins", {
           team_project_id: this.projects[index].id,
           source_id: this.projects[index].jenkins_id,
-        })
+        }, {headers})
         .then((response) => {
           console.log(response.data);
           var users = [];
@@ -426,13 +433,16 @@ export default {
         });
     },
     getJiraParticipation(t_id) {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         //////////////////////////////////////////////////////////////////
         ///////////// CAMBIAR DESPUEEEEEEESSSSSSSSSSSSSS /////////////////
         //////////////////////////////////////////////////////////////////
         .post(process.env.VUE_APP_BASE_URL + "/jira/participation", {
           team_id: t_id,
-        })
+        }, {headers})
         .then((response) => {
           var users = [];
           var percentages = [];
@@ -501,11 +511,14 @@ export default {
     },
     //funcion para obtener la participacion en GitHub para un proyecto
     getGithubProjectParticipation(index) {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .post(process.env.VUE_APP_BASE_URL + "/participation/github", {
           team_project_id: this.projects[index].id,
           source_id: this.projects[index].github_id,
-        })
+        }, {headers})
         .then((response) => {
           var users = [];
           var commits_percentages = [];
@@ -644,11 +657,14 @@ export default {
       return Math.round(rand);
     },
     getJiraProd() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .post(process.env.VUE_APP_BASE_URL + "/prod/jira", {
           team_id: this.team_id,
           //team_project_id: this.team_project_id,
-        })
+        },{headers})
         .then((response) => {
           var names = [];
           var estimated = [];

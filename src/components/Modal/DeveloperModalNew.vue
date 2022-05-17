@@ -69,6 +69,7 @@ export default {
     jira: null,
     jenkins: null,
     github: null,
+    token: JSON.parse(localStorage.getItem("token")),
   }),
   props: {
       team_id: String
@@ -94,8 +95,11 @@ export default {
         body.jenkins != null &&
         body.github != null
       ) {
+        var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/developer/", body)
+          .post(process.env.VUE_APP_BASE_URL + "/developer/", body, {headers})
           .then((r) => {
             if(r.status == 200){
                 this.$emit("close");

@@ -65,6 +65,7 @@ export default {
       listo: false,
       svgDiagram: null,
       activities: [],
+      token: JSON.parse(localStorage.getItem("token")),
     };
   },
   created() {
@@ -77,13 +78,16 @@ export default {
   computed: {},
   methods: {
     getModel() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .post(process.env.VUE_APP_BASE_URL + "/process-model/get-model", {
           team_id: this.team_id,
           team_project_id: this.team_project_id,
           source_id_github: this.github_id,
           source_id_jenkins: this.jenkins_id,
-        })
+        }, {headers})
         .then((r) => {
           //console.log(r)
           this.svgDiagram = r.data;
@@ -95,12 +99,15 @@ export default {
         });
     },
     getActCount() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .post(
           process.env.VUE_APP_BASE_URL + "/process-model/get-activities-count",
           {
             team_project_id: this.team_project_id,
-          }
+          }, {headers}
         )
         .then((r) => {
           //console.log(r)

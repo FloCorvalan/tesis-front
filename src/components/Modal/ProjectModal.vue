@@ -107,6 +107,7 @@ export default {
     github_name: null,
     github_user: null,
     github_token: null,
+    token: JSON.parse(localStorage.getItem("token")),
   }),
   props: {
     team_id: String,
@@ -140,8 +141,11 @@ export default {
         body.github_user != null &&
         body.github_token != null
       ) {
+        var headers = {
+        "Authorization": `Bearer: ${this.authtoken}`
+      };
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/team-project/add", body)
+          .post(process.env.VUE_APP_BASE_URL + "/team-project/add", body, {headers})
           .then((r) => {
             if (r.status == 200) {
               this.$emit("close");

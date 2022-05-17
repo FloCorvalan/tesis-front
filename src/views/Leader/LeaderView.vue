@@ -42,8 +42,10 @@ export default {
   },
   data() {
     return {
-      leader_id: "62423e9a47d19f4bd43b9c21",
+      //leader_id: "62423e9a47d19f4bd43b9c21",
+      leader_id: JSON.parse(localStorage.getItem("leaderId")),
       teams: [],
+      token: JSON.parse(localStorage.getItem("token")),
       modalTeamVis: false,
       //
       valid: true,
@@ -76,10 +78,11 @@ export default {
     getTeams() {
       var data = { leader_id: this.leader_id };
       var headers = {
-        "Content-Type": "application/json",
+        "Authorization": `Bearer: ${this.token}`
       };
+      //console.log(data)
       axios
-        .post(process.env.VUE_APP_BASE_URL + "/team/by-leader", data, headers)
+        .post(process.env.VUE_APP_BASE_URL + "/team/by-leader", data, {headers})
         .then((response) => {
           this.teams = response.data;
           console.log(this.teams);

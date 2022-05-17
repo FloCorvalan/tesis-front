@@ -37,6 +37,7 @@ export default {
   data: () => ({
     dialog: true,
     name: null,
+    token: JSON.parse(localStorage.getItem("token")),
   }),
   props: {
       leader_id: String
@@ -54,8 +55,11 @@ export default {
         body != null &&
         body.name != null
       ) {
+        var headers = {
+        "Authorization": `Bearer: ${this.authtoken}`
+      };
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/team/", body)
+          .post(process.env.VUE_APP_BASE_URL + "/team/", body, {headers})
           .then((r) => {
             if(r.status == 200){
                 this.$emit("close");

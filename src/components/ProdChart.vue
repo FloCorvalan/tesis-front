@@ -39,6 +39,7 @@ export default {
       apexLoading: false,
       developers: [],
       team: null,
+      token: JSON.parse(localStorage.getItem("token")),
     };
   },
   created() {
@@ -53,11 +54,14 @@ export default {
       }
     },
     getGithubProd() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .post(process.env.VUE_APP_BASE_URL + "/prod/github", {
           team_id: this.team_id,
           team_project_id: this.team_project_id,
-        })
+        }, {headers})
         .then((response) => {
           var developers = {
             line_options: {
@@ -158,11 +162,14 @@ export default {
       }
     },
     getJiraProd() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
           team_id: this.team_id,
           team_project_id: this.team_project_id,
-        })
+        }, {headers})
         .then((response) => {
           var names = [];
           var estimated = [];

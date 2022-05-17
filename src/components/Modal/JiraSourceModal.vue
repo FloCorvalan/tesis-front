@@ -61,6 +61,7 @@ export default {
     user: null, 
     token: null, 
     ip_port: null, 
+    authtoken: JSON.parse(localStorage.getItem("token")),
   }),
   props: {
       team_id: String
@@ -85,8 +86,11 @@ export default {
         body.token != null &&
         body.ip_port != null
       ) {
+        var headers = {
+        "Authorization": `Bearer: ${this.authtoken}`
+      };
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/source/", body)
+          .post(process.env.VUE_APP_BASE_URL + "/source/", body, {headers})
           .then((r) => {
             if(r.status == 200){
                 this.$emit("close");

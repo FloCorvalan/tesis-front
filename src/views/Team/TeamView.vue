@@ -170,6 +170,7 @@ export default {
   },
   data() {
     return {
+      token: JSON.parse(localStorage.getItem("token")),
       team_id: JSON.parse(localStorage.getItem("teamId")),
       team_name: JSON.parse(localStorage.getItem("teamName")),
       developers: [],
@@ -224,11 +225,14 @@ export default {
     },
     changeVisProject(project) {
       if (project.vis == false) {
+        var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
         axios
           .get(
             process.env.VUE_APP_BASE_URL +
               "/source/by-team-project/" +
-              project._id.$oid
+              project._id.$oid, {headers}
           )
           .then((response) => {
             var jenkins = response.data.jenkins;
@@ -248,9 +252,12 @@ export default {
       }
     },
     getDevelopers() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .get(
-          process.env.VUE_APP_BASE_URL + "/developer/by-team/" + this.team_id
+          process.env.VUE_APP_BASE_URL + "/developer/by-team/" + this.team_id, {headers}
         )
         .then((response) => {
           //this.developers = response.data;
@@ -264,9 +271,12 @@ export default {
         });
     },
     getProjects() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
         .get(
-          process.env.VUE_APP_BASE_URL + "/team-project/by-team/" + this.team_id
+          process.env.VUE_APP_BASE_URL + "/team-project/by-team/" + this.team_id, {headers}
         )
         .then((response) => {
           response.data.forEach((element) => {
@@ -279,8 +289,11 @@ export default {
         });
     },
     getJira() {
+      var headers = {
+        "Authorization": `Bearer: ${this.token}`
+      };
       axios
-        .get(process.env.VUE_APP_BASE_URL + "/source/get-jira/" + this.team_id)
+        .get(process.env.VUE_APP_BASE_URL + "/source/get-jira/" + this.team_id, {headers})
         .then((response) => {
           this.jira = response.data;
         });
