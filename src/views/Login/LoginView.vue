@@ -104,7 +104,7 @@
                                   createPassword === 0
                                 "
                                 color="primary"
-                                @click="login"
+                                @click="signup"
                               >
                                 Create your account</v-btn
                               >
@@ -136,9 +136,9 @@ export default {
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+/.test(v) || "E-mail must be valid",
       ],
-      createFullName: "John Smith",
-      createEmail: "john@flatlogic.com",
-      createPassword: "123456",
+      createFullName: "",
+      createEmail: "",
+      createPassword: "",
       password: "",
       passRules: [
         (v) => !!v || "Password is required",
@@ -164,6 +164,27 @@ export default {
           }
         });
     },
+    signup(){
+      var user = {
+        username: this.createFullName,
+        type: 'leader',
+        password: this.createPassword,
+        email: this.createEmail
+      }
+      if(user.username != "" && user.password != "" && user.email != ""){
+        axios
+        .post(process.env.VUE_APP_BASE_URL + "/signup", user)
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200) {
+            this.$store.commit("saveToken", response.data.token);
+            this.$store.commit("saveLeaderId", response.data._id);
+            this.$store.commit("saveAuthen", true);
+            this.$router.push("/leader");
+          }
+        });
+      }
+    }
   },
   created() {
     console.log(JSON.parse(localStorage.getItem("authenticated")));
