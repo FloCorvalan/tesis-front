@@ -56,6 +56,13 @@ const routes = [
   // primera vista de un lider o jefe de proyecto
   {
     path: '/leader',
+    beforeEnter: (to, from, next) => {
+      if(JSON.parse(localStorage.getItem("leaderId"))){
+        next();
+      }else{
+        next(from.path)
+      }
+    },
     name: 'laeder',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -64,6 +71,14 @@ const routes = [
   },
   {
     path: '/team',
+    beforeEnter: (to, from, next) => {
+      if(JSON.parse(localStorage.getItem("teamId")) && JSON.parse(localStorage.getItem("teamName"))){
+        next();
+      }
+      else{
+        next(from.path)
+      }
+    },
     name: 'team',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -72,6 +87,14 @@ const routes = [
   },
   {
     path: '/dashboard',
+    beforeEnter: (to, from, next) => {
+      if(JSON.parse(localStorage.getItem("teamId")) && JSON.parse(localStorage.getItem("teamName"))){
+        next();
+      }
+      else{
+        next(from.path)
+      }
+    },
     name: 'dashboard',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -84,6 +107,17 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = JSON.parse(localStorage.getItem('authenticated'));
+  const root = ['/'].includes(to.path);
+  const login = ['/login'].includes(to.path);
+  if ((root || !loggedIn) && !login) {
+    next('/login');
+  } else {
+    next();
+  }
 })
 
 export default router
