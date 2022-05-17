@@ -64,7 +64,13 @@ export default {
             if(r.status == 200){
                 this.$emit("close");
             }
-          });
+          }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
       }
     },
   },

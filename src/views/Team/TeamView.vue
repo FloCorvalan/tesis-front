@@ -246,7 +246,13 @@ export default {
             project.jenkins = jenkins;
             project.github = github;
             project.vis = true;
-          });
+          }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
       } else {
         project.vis = false;
       }
@@ -268,7 +274,13 @@ export default {
             this.developers.push(e);
           });
           console.log(this.developers);
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getProjects() {
       var headers = {
@@ -286,7 +298,13 @@ export default {
             var e = element;
             this.projects.push(e);
           });
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getJira() {
       var headers = {
@@ -296,7 +314,13 @@ export default {
         .get(process.env.VUE_APP_BASE_URL + "/source/get-jira/" + this.team_id, {headers})
         .then((response) => {
           this.jira = response.data;
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getDashboard() {
       this.$router.push("/dashboard");

@@ -315,7 +315,14 @@ export default {
             this.projects = pList;
             this.getJenkinsParticipation();
             this.getGithubParticipation();
-          });
+          })
+          .catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
       }
     },
     /////// funcion para cambiar la visibilidad de un projecto de jenkins
@@ -430,7 +437,13 @@ export default {
             },
           };
           this.projects[index].jenkins_options_bar = bar_options;
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getJiraParticipation(t_id) {
       var headers = {
@@ -490,7 +503,13 @@ export default {
             percentages = [];
           }
           console.log(this.jira_options);
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     /////// funcion para cambiar la visibilidad de un projecto de github
     changeVisibleGithub(project) {
@@ -637,7 +656,13 @@ export default {
             },
           };
           this.projects[index].github_options.push(options);
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     ///////////////////
     modifyText() {
@@ -757,7 +782,13 @@ export default {
             },
           };
           this.team = bar_options;
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
   },
   mounted() {

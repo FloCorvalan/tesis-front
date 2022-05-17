@@ -152,7 +152,13 @@ export default {
             };
           });
           this.developers = developers;
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getDevIndex(developers, name) {
       var i = 0;

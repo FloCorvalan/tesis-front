@@ -86,7 +86,13 @@ export default {
         .then((response) => {
           this.teams = response.data;
           console.log(this.teams);
-        });
+        }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getTeamView(team) {
       var id = team._id.$oid.toString();

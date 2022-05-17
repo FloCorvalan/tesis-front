@@ -94,9 +94,13 @@ export default {
           this.getActCount();
           this.listo = true;
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     getActCount() {
       var headers = {
@@ -113,9 +117,13 @@ export default {
           //console.log(r)
           this.activities = r.data;
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     ////////////////////////////////////////////////
     getColors() {

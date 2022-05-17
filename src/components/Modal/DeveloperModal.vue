@@ -59,7 +59,13 @@ export default {
       };
       axios.get(process.env.VUE_APP_BASE_URL + "/developer/", {}, {headers}).then((r) => {
         this.developers = r.data
-      });
+      }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
     },
     close() {
       this.$emit("close");
@@ -80,7 +86,13 @@ export default {
             if (r.status == 200) {
               this.$emit("close");
             }
-          });
+          }).catch((error) => {
+          console.log(error)
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        }
+        );
       }
     },
   },
