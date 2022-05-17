@@ -5,11 +5,13 @@
         <v-row class="overflow-hidden">
           <v-col class="overflow-hidden">
             <LineChart
+              :height="'200%'"
               :options="developers.line_options.options"
               :series="developers.line_options.series"
             >
             </LineChart>
             <LineChart
+              :height="'100%'"
               :options="developers.line_options_loc.options"
               :series="developers.line_options_loc.series"
             >
