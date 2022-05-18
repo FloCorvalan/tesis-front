@@ -25,11 +25,7 @@
               <div class="item" v-on:click="changeVis(dev)">
                 {{ dev.name }}
               </div>
-            </li>
-          </ul>
-          <ul class="ul" v-for="dev in developers" :key="dev.id">
-            <li v-if="dev.vis == true">
-              <div>
+              <div v-if="dev.vis == true">
                 <v-list>
                   <v-list-item class="list-item"
                     >Email: {{ dev.email }}</v-list-item
@@ -70,7 +66,7 @@
           <ul class="ul" v-for="project in projects" :key="project.id">
             <li v-if="project.vis == true">
               <div>
-                Fuentes de información
+                <div class="item-2">Fuentes de información</div>
                 <v-list>
                   <v-list-item class="list-item">Jenkins:</v-list-item>
                   <v-list-item class="list-item">

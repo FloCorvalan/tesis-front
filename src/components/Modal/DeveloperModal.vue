@@ -57,7 +57,7 @@ export default {
       var headers = {
         "Authorization": `Bearer: ${this.token}`
       };
-      axios.get(process.env.VUE_APP_BASE_URL + "/developer/", {}, {headers}).then((r) => {
+      axios.get(process.env.VUE_APP_BASE_URL + "/developer/", {headers}).then((r) => {
         this.developers = r.data
       }).catch((error) => {
           console.log(error)
