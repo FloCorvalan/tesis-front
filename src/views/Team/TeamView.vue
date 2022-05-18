@@ -61,10 +61,7 @@
               <div class="item" v-on:click="changeVisProject(project)">
                 {{ project.name }}
               </div>
-            </li>
-          </ul>
-          <ul class="ul" v-for="project in projects" :key="project.id">
-            <li v-if="project.vis == true">
+              <div v-if="project.vis == true">
               <div>
                 <div class="item-2">Fuentes de información</div>
                 <v-list>
@@ -105,6 +102,7 @@
                 <v-list-item class="list-item">
                   TAG (para asociar con Jira): {{ project.tag }}
                 </v-list-item>
+              </div>
               </div>
             </li>
           </ul>
@@ -287,6 +285,7 @@ export default {
           process.env.VUE_APP_BASE_URL + "/team-project/by-team/" + this.team_id, {headers}
         )
         .then((response) => {
+          this.projects = [];
           response.data.forEach((element) => {
             element.vis = false;
             element.jenkins = null;
