@@ -10,27 +10,21 @@
       </panZoom>
     </div>
     <div class="disp-center">
-      <ul v-for="(act, index) in activities" :key="index" class="act-cards">
-        <ActivitiesCard
-          v-if="act._id == 'jira'"
-          tool="Jira"
-          :activities="act.activities"
-        ></ActivitiesCard>
-      </ul>
-      <ul v-for="(act, index) in activities" :key="index" class="act-cards">
-        <ActivitiesCard
-          v-if="act._id == 'jenkins'"
-          tool="Jenkins"
-          :activities="act.activities"
-        ></ActivitiesCard>
-      </ul>
-      <ul v-for="(act, index) in activities" :key="index" class="act-cards">
-        <ActivitiesCard
-          v-if="act._id == 'github'"
-          tool="GitHub"
-          :activities="act.activities"
-        ></ActivitiesCard>
-      </ul>
+      <div v-if="chart_jira != null">
+        <BarChart :options="chart_jira.options" :series="chart_jira.series">
+        </BarChart>
+      </div>
+      <div v-if="chart_jenkins != null">
+        <BarChart
+          :options="chart_jenkins.options"
+          :series="chart_jenkins.series"
+        >
+        </BarChart>
+      </div>
+      <div v-if="chart_github != null">
+        <BarChart :options="chart_github.options" :series="chart_github.series">
+        </BarChart>
+      </div>
     </div>
   </div>
 </template>
@@ -46,12 +40,12 @@ import MoveCanvasModule from "diagram-js/lib/navigation/movecanvas";
 //import PaletteProvider from "bpmn-js/lib/features/palette/PaletteProvider";
 //import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 //import AutoLayout from "@/js/Layout"
-import ActivitiesCard from "@/components/ActivitiesCard.vue";
+import BarChart from "@/components/BarChart.vue";
 
 export default {
   name: "BPMNModel",
   components: {
-    ActivitiesCard,
+    BarChart,
   },
   props: {
     team_id: String,
@@ -64,7 +58,9 @@ export default {
       apexLoading: false,
       listo: false,
       svgDiagram: null,
-      activities: [],
+      chart_jira: null,
+      chart_github: null,
+      chart_jenkins: null,
       token: JSON.parse(localStorage.getItem("token")),
     };
   },
@@ -79,15 +75,19 @@ export default {
   methods: {
     getModel() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .post(process.env.VUE_APP_BASE_URL + "/process-model/get-model", {
-          team_id: this.team_id,
-          team_project_id: this.team_project_id,
-          source_id_github: this.github_id,
-          source_id_jenkins: this.jenkins_id,
-        }, {headers})
+        .post(
+          process.env.VUE_APP_BASE_URL + "/process-model/get-model",
+          {
+            team_id: this.team_id,
+            team_project_id: this.team_project_id,
+            source_id_github: this.github_id,
+            source_id_jenkins: this.jenkins_id,
+          },
+          { headers }
+        )
         .then((r) => {
           //console.log(r)
           this.svgDiagram = r.data;
@@ -95,35 +95,160 @@ export default {
           this.listo = true;
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     getActCount() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
         .post(
           process.env.VUE_APP_BASE_URL + "/process-model/get-activities-count",
           {
             team_project_id: this.team_project_id,
-          }, {headers}
+          },
+          { headers }
         )
         .then((r) => {
-          //console.log(r)
-          this.activities = r.data;
+          console.log(r);
+          var i = 0;
+          var count_jira = [];
+          while (i < r.data.jira.count.length) {
+            count_jira.push(parseInt(r.data.jira.count[i], 10));
+            i += 1;
+          }
+          i = 0;
+          var count_github = [];
+          while (i < r.data.github.count.length) {
+            count_github.push(parseInt(r.data.github.count[i], 10));
+            i += 1;
+          }
+          i = 0;
+          var count_jenkins = [];
+          while (i < r.data.jenkins.count.length) {
+            count_jenkins.push(parseInt(r.data.jenkins.count[i], 10));
+            i += 1;
+          }
+          var bar_options_jira = {
+            series: [
+              {
+                data: count_jira,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 350,
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: true,
+                },
+              },
+              stroke: {
+                width: 0,
+                colors: ["#fff"],
+              },
+              title: {
+                text: "Actividades en Jira: cantidad de veces realizadas",
+              },
+              xaxis: {
+                categories: r.data.jira.activities,
+              },
+              fill: {
+                opacity: 1,
+              },
+              legend: {
+                position: "top",
+                horizontalAlign: "left",
+                offsetX: 40,
+              },
+            },
+          };
+          var bar_options_github = {
+            series: [
+              {
+                data: count_github,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 350,
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: true,
+                },
+              },
+              stroke: {
+                width: 0,
+                colors: ["#fff"],
+              },
+              title: {
+                text: "Actividades en GitHub: cantidad de veces realizadas",
+              },
+              xaxis: {
+                categories: r.data.github.activities,
+              },
+              fill: {
+                opacity: 1,
+              },
+              legend: {
+                position: "top",
+                horizontalAlign: "left",
+                offsetX: 40,
+              },
+            },
+          };
+          var bar_options_jenkins = {
+            series: [
+              {
+                data: count_jenkins,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 350,
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: true,
+                },
+              },
+              stroke: {
+                width: 0,
+                colors: ["#fff"],
+              },
+              title: {
+                text: "Actividades en Jenkins: cantidad de veces realizadas",
+              },
+              xaxis: {
+                categories: r.data.jenkins.activities,
+              },
+              legend: {
+                position: "top",
+                horizontalAlign: "left",
+                offsetX: 40,
+              },
+            },
+          };
+          this.chart_jira = bar_options_jira;
+          this.chart_github = bar_options_github;
+          this.chart_jenkins = bar_options_jenkins;
+          console.log(this.chart_jira);
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     ////////////////////////////////////////////////
     getColors() {
@@ -336,7 +461,6 @@ export default {
 </script>
 
 <style>
-
 .color-class {
   color: white;
 }

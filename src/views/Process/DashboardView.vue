@@ -283,12 +283,16 @@ export default {
     getProjects() {
       if (this.team_id != "") {
         var headers = {
-        "Authorization": `Bearer: ${this.token}`
-      };
+          Authorization: `Bearer: ${this.token}`,
+        };
         axios
-          .post(process.env.VUE_APP_BASE_URL + "/participation/get-projects", {
-            team_id: this.team_id,
-          }, {headers})
+          .post(
+            process.env.VUE_APP_BASE_URL + "/participation/get-projects",
+            {
+              team_id: this.team_id,
+            },
+            { headers }
+          )
           .then((response) => {
             var p = {
               id: null,
@@ -317,12 +321,11 @@ export default {
             this.getGithubParticipation();
           })
           .catch((error) => {
-          console.log(error)
-          this.$store.commit("saveAuthen", false);
-          this.$store.commit("saveToken", null);
-          this.$router.push("/login");
-        }
-        );
+            console.log(error);
+            this.$store.commit("saveAuthen", false);
+            this.$store.commit("saveToken", null);
+            this.$router.push("/login");
+          });
       }
     },
     /////// funcion para cambiar la visibilidad de un projecto de jenkins
@@ -345,13 +348,17 @@ export default {
     //funcion para obtener la participacion en Jenkins para un proyecto
     getJenkinsProjectParticipation(index) {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .post(process.env.VUE_APP_BASE_URL + "/participation/jenkins", {
-          team_project_id: this.projects[index].id,
-          source_id: this.projects[index].jenkins_id,
-        }, {headers})
+        .post(
+          process.env.VUE_APP_BASE_URL + "/participation/jenkins",
+          {
+            team_project_id: this.projects[index].id,
+            source_id: this.projects[index].jenkins_id,
+          },
+          { headers }
+        )
         .then((response) => {
           console.log(response.data);
           var users = [];
@@ -385,7 +392,7 @@ export default {
               ],
               labels: users,
               title: {
-                text: "Builds",
+                text: "Construcciones del pipeline",
               },
             },
           };
@@ -393,69 +400,77 @@ export default {
           var bar_options = {
             series: [
               {
-                name: "Successful build percentage",
+                name: "Construcciones exitosas",
                 data: success_per,
               },
               {
-                name: "Failed build percentage",
+                name: "Construcciones fallidas",
                 data: failure_per,
               },
             ],
             options: {
               chart: {
                 type: "bar",
-                height: 430,
+                height: 350,
+                stacked: true,
+                stackType: "100%",
               },
               plotOptions: {
                 bar: {
                   horizontal: true,
-                  dataLabels: {
-                    position: "top",
-                  },
-                },
-              },
-              dataLabels: {
-                enabled: true,
-                offsetX: -6,
-                style: {
-                  fontSize: "12px",
-                  colors: ["#000"],
                 },
               },
               stroke: {
-                show: true,
-                width: 1,
+                width: 0,
                 colors: ["#fff"],
               },
-              tooltip: {
-                shared: true,
-                intersect: false,
+              title: {
+                text: "Construcciones exitosas vs fallidas",
               },
               xaxis: {
                 categories: users,
               },
+              tooltip: {
+                y: {
+                  formatter: function (val) {
+                    return val + "K";
+                  },
+                },
+              },
+              fill: {
+                opacity: 1,
+              },
+              legend: {
+                position: "top",
+                horizontalAlign: "left",
+                offsetX: 40,
+              },
             },
           };
           this.projects[index].jenkins_options_bar = bar_options;
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     getJiraParticipation(t_id) {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
         //////////////////////////////////////////////////////////////////
         ///////////// CAMBIAR DESPUEEEEEEESSSSSSSSSSSSSS /////////////////
         //////////////////////////////////////////////////////////////////
-        .post(process.env.VUE_APP_BASE_URL + "/jira/participation", {
-          team_id: t_id,
-        }, {headers})
+        .post(
+          process.env.VUE_APP_BASE_URL + "/jira/participation",
+          {
+            team_id: t_id,
+          },
+          { headers }
+        )
         .then((response) => {
           var users = [];
           var percentages = [];
@@ -503,13 +518,13 @@ export default {
             percentages = [];
           }
           console.log(this.jira_options);
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     /////// funcion para cambiar la visibilidad de un projecto de github
     changeVisibleGithub(project) {
@@ -531,13 +546,17 @@ export default {
     //funcion para obtener la participacion en GitHub para un proyecto
     getGithubProjectParticipation(index) {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .post(process.env.VUE_APP_BASE_URL + "/participation/github", {
-          team_project_id: this.projects[index].id,
-          source_id: this.projects[index].github_id,
-        }, {headers})
+        .post(
+          process.env.VUE_APP_BASE_URL + "/participation/github",
+          {
+            team_project_id: this.projects[index].id,
+            source_id: this.projects[index].github_id,
+          },
+          { headers }
+        )
         .then((response) => {
           var users = [];
           var commits_percentages = [];
@@ -656,13 +675,13 @@ export default {
             },
           };
           this.projects[index].github_options.push(options);
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     ///////////////////
     modifyText() {
@@ -683,13 +702,17 @@ export default {
     },
     getJiraProd() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .post(process.env.VUE_APP_BASE_URL + "/prod/jira", {
-          team_id: this.team_id,
-          //team_project_id: this.team_project_id,
-        },{headers})
+        .post(
+          process.env.VUE_APP_BASE_URL + "/prod/jira",
+          {
+            team_id: this.team_id,
+            //team_project_id: this.team_project_id,
+          },
+          { headers }
+        )
         .then((response) => {
           var names = [];
           var estimated = [];
@@ -782,13 +805,13 @@ export default {
             },
           };
           this.team = bar_options;
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
   },
   mounted() {
