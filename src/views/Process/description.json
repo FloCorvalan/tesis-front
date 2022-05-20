@@ -1,0 +1,25 @@
+{
+    "jira": {
+        "created_issues": "Incidencias que han sido creadas",
+        "updated_issues": "Incidencias que han sido actualizadas. Que se le ha aplicado algún evento",
+        "story_point_estimate": "Asignar puntos de historia a una incidencia",
+        "resolution": "Cambiar el estado de una incidencia a Finalizado/Done",
+        "status": "Cambiar el estado de una incidencia. Estados: Por hacer/To do, En proceso/In progress, Finalizado/Done",
+        "sprint": "Asignar una incidencia a un Sprint"
+    },
+    "jenkins": {
+        "construcciones": "Instancias de ejecución del pipeline",
+        "comparacion": "Comparación entre las construcciones que fueron exitosas (la ejecución del pipeline terminó correctamente) y las que fueron fallidas (el pipeline no terminó de ejecutarse porque ocurrió algún error)"
+    },
+    "github": {
+        "commits": "Porcentaje de commits realizados",
+        "additions": "Porcentaje de líneas de código agregadas",
+        "deletions": "Porcentaje de líneas de código eliminadas",
+        "files_added": "Porcentaje de archivos agregados"
+    },
+    "productivity": {
+        "team": "Productividad grupal expresada en puntos de historia, comparando los estimados antes de iniciar el Sprint con los completados al terminar el Sprint",
+        "individual1": "Cantidad de commits por día",
+        "individual2": "Cantidad de líneas de código agregadas por día"
+    }
+}

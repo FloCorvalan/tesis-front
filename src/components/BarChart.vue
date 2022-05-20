@@ -1,7 +1,7 @@
 <template>
   <ApexChart
-    height="150%"
-    width="100%"
+    :height="height"
+    :width="width"
     type="bar"
     v-if="apexLoading"
     :options="options"
@@ -19,6 +19,8 @@ export default {
   props: {
     options: [],
     series: [],
+    width: String,
+    height: String,
   },
   data: function () {
     return {

@@ -11,18 +11,20 @@
     </div>
     <div class="disp-center">
       <div v-if="chart_jira != null">
-        <BarChart :options="chart_jira.options" :series="chart_jira.series">
+        <BarChart :options="chart_jira.options" :series="chart_jira.series" :width="'50%'" :height="'100%'">
         </BarChart>
       </div>
       <div v-if="chart_jenkins != null">
         <BarChart
           :options="chart_jenkins.options"
           :series="chart_jenkins.series"
+          :width="'50%'"
+          :height="'200%'"
         >
         </BarChart>
       </div>
       <div v-if="chart_github != null">
-        <BarChart :options="chart_github.options" :series="chart_github.series">
+        <BarChart :options="chart_github.options" :series="chart_github.series" :width="'50%'" :height="'100%'">
         </BarChart>
       </div>
     </div>
@@ -147,7 +149,22 @@ export default {
               plotOptions: {
                 bar: {
                   horizontal: true,
+                  dataLabels: {
+                    position: "top",
+                  },
                 },
+              },
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#000"],
+                },
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
               },
               stroke: {
                 width: 0,
@@ -159,14 +176,29 @@ export default {
               xaxis: {
                 categories: r.data.jira.activities,
               },
-              fill: {
-                opacity: 1,
-              },
               legend: {
                 position: "top",
-                horizontalAlign: "left",
-                offsetX: 40,
+                verticalAlign: "top",
+                containerMargin: {
+                  left: 35,
+                  right: 60,
+                },
               },
+              responsive: [
+                {
+                  breakpoint: 1000,
+                  options: {
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                      },
+                    },
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                },
+              ]
             },
           };
           var bar_options_github = {
@@ -183,7 +215,22 @@ export default {
               plotOptions: {
                 bar: {
                   horizontal: true,
+                  dataLabels: {
+                    position: "top",
+                  },
                 },
+              },
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#000"],
+                },
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
               },
               stroke: {
                 width: 0,
@@ -195,14 +242,29 @@ export default {
               xaxis: {
                 categories: r.data.github.activities,
               },
-              fill: {
-                opacity: 1,
-              },
               legend: {
                 position: "top",
-                horizontalAlign: "left",
-                offsetX: 40,
+                verticalAlign: "top",
+                containerMargin: {
+                  left: 35,
+                  right: 60,
+                },
               },
+              responsive: [
+                {
+                  breakpoint: 1000,
+                  options: {
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                      },
+                    },
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                },
+              ]
             },
           };
           var bar_options_jenkins = {
@@ -219,7 +281,22 @@ export default {
               plotOptions: {
                 bar: {
                   horizontal: true,
+                  dataLabels: {
+                    position: "top",
+                  },
                 },
+              },
+              dataLabels: {
+                enabled: true,
+                offsetX: -6,
+                style: {
+                  fontSize: "12px",
+                  colors: ["#000"],
+                },
+              },
+              tooltip: {
+                shared: true,
+                intersect: false,
               },
               stroke: {
                 width: 0,
@@ -233,9 +310,27 @@ export default {
               },
               legend: {
                 position: "top",
-                horizontalAlign: "left",
-                offsetX: 40,
+                verticalAlign: "top",
+                containerMargin: {
+                  left: 35,
+                  right: 60,
+                },
               },
+              responsive: [
+                {
+                  breakpoint: 1000,
+                  options: {
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                      },
+                    },
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                },
+              ]
             },
           };
           this.chart_jira = bar_options_jira;

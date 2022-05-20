@@ -65,6 +65,9 @@
               <v-card-text class="pa-6 pt-0">
                 <v-row no-gutters v-if="jira_options != []">
                   <div v-for="(opt, index) in jira_options" :key="index">
+                    <div class="jira-title" :title="opt.title">
+                      {{ opt.key }}<span class="question-mark">&#63;</span>
+                    </div>
                     <DonutChart :options="opt.options" :series="opt.series">
                     </DonutChart>
                   </div>
@@ -93,17 +96,27 @@
                   <div v-if="project.visibleJenkins == true">
                     <v-card class="mx-1 mb-1">
                       <v-card-text class="pa-6 pt-0">
-                        <v-row v-if="project.jenkins_options != null">
+                        <v-row no-gutters v-if="project.jenkins_options != null">
+                          <div class="jenkins-title" :title="project.jenkins_options.title">
+                              {{ project.jenkins_options.key
+                              }}<span class="question-mark">&#63;</span>
+                            </div>
                           <DonutChart
                             :options="project.jenkins_options.options"
                             :series="project.jenkins_options.series"
                           >
                           </DonutChart>
                         </v-row>
-                        <v-row v-if="project.jenkins_options_bar != null">
+                        <v-row no-gutters v-if="project.jenkins_options_bar != null">
+                          <div class="jenkins-title" :title="project.jenkins_options_bar.title">
+                              {{ project.jenkins_options_bar.key
+                              }}<span class="question-mark">&#63;</span>
+                            </div>
                           <BarChart
                             :options="project.jenkins_options_bar.options"
                             :series="project.jenkins_options_bar.series"
+                            :width="'110%'"
+                            :height="'150%'"
                           >
                           </BarChart>
                         </v-row>
@@ -140,6 +153,10 @@
                             v-for="(opt, index) in project.github_options"
                             :key="index"
                           >
+                            <div class="github-title" :title="opt.title">
+                              {{ opt.key
+                              }}<span class="question-mark">&#63;</span>
+                            </div>
                             <DonutChart
                               :options="opt.options"
                               :series="opt.series"
@@ -172,7 +189,12 @@
                   <v-row class="overflow-hidden">
                     <v-col class="overflow-hidden">
                       <div v-if="team.series[0].data != []">
-                        <BarChart :options="team.options" :series="team.series">
+                        <BarChart
+                          :options="team.options"
+                          :series="team.series"
+                          :width="'50%'"
+                          :height="'200%'"
+                        >
                         </BarChart>
                       </div>
                     </v-col>
@@ -226,6 +248,7 @@ import BPMNModel from "@/components/BPMNModel.vue";
 import ProdChart from "@/components/ProdChart.vue";
 import NavBar from "@/components/NavBar.vue";
 import axios from "axios";
+import description from "./description.json";
 
 export default {
   name: "DashboardView",
@@ -255,6 +278,7 @@ export default {
       jenkins_options: null,
       jenkins_options_bar: null,
       jira_options: [],
+      description: description,
     };
   },
   created() {
@@ -372,6 +396,8 @@ export default {
             failure_per.push(parseInt(element.failure_per, 10));
           });
           var options = {
+            key: 'Construcciones del pipeline',
+            title: description.jenkins.construcciones,
             series: percentages,
             options: {
               chart: {
@@ -391,13 +417,15 @@ export default {
                 },
               ],
               labels: users,
-              title: {
-                text: "Construcciones del pipeline",
-              },
+              //title: {
+              //  text: "Construcciones del pipeline",
+              //},
             },
           };
           this.projects[index].jenkins_options = options;
           var bar_options = {
+            key: 'Construcciones exitosas vs fallidas',
+            title: description.jenkins.comparacion,
             series: [
               {
                 name: "Construcciones exitosas",
@@ -424,9 +452,9 @@ export default {
                 width: 0,
                 colors: ["#fff"],
               },
-              title: {
-                text: "Construcciones exitosas vs fallidas",
-              },
+              //title: {
+              //  text: "Construcciones exitosas vs fallidas",
+              //},
               xaxis: {
                 categories: users,
               },
@@ -474,13 +502,39 @@ export default {
         .then((response) => {
           var users = [];
           var percentages = [];
+          var title = "";
+          var key_title = "";
           console.log(response.data);
           for (var key in response.data) {
             response.data[key].forEach((e) => {
               users.push(e[0]);
               percentages.push(parseInt(e[1], 10));
             });
+            if (key === "Created issues") {
+              key_title = "Incidencias creadas";
+              title = description.jira.created_issues;
+            } else if (key === "Updated issues") {
+              key_title = "Incidencias actualizadas";
+              title = description.jira.updated_issues;
+            } else if (key === "Story point estimate") {
+              key_title = "Evento: Estimación de puntos de historia";
+              title = description.jira.story_point_estimate;
+            } else if (key === "resolution") {
+              key_title = "Evento: Resolución";
+              title = description.jira.resolution;
+            } else if (key === "status") {
+              key_title = "Evento: Cambio de estado";
+              title = description.jira.status;
+            } else if (key === "Sprint") {
+              key_title = "Evento: Asignación a Sprint";
+              title = description.jira.sprint;
+            } else {
+              key_title = "No asignado";
+              title = "No asignado";
+            }
             var options = {
+              key: key_title,
+              title: title,
               series: percentages,
               options: {
                 chart: {
@@ -508,9 +562,9 @@ export default {
                   },
                 ],
                 labels: users,
-                title: {
-                  text: key,
-                },
+                //title: {
+                //  text: key,
+                //},
               },
             };
             this.jira_options.push(options);
@@ -572,6 +626,8 @@ export default {
             files_added_percentages.push(parseInt(e.files_added_per, 10));
           });
           var options = {
+            key: 'Commits',
+            title: description.github.commits,
             series: commits_percentages,
             options: {
               chart: {
@@ -591,13 +647,15 @@ export default {
                 },
               ],
               labels: users,
-              title: {
-                text: "Commits",
-              },
+              //title: {
+              //  text: "Commits",
+              //},
             },
           };
           this.projects[index].github_options.push(options);
           options = {
+            key: 'Líneas de código agregadas',
+            title: description.github.additions,
             series: additions_percentages,
             options: {
               chart: {
@@ -617,13 +675,15 @@ export default {
                 },
               ],
               labels: users,
-              title: {
-                text: "Additions",
-              },
+              //title: {
+              //  text: "Additions",
+              //},
             },
           };
           this.projects[index].github_options.push(options);
           options = {
+            key: 'Líneas de código eliminadas',
+            title: description.github.deletions,
             series: deletions_percentages,
             options: {
               chart: {
@@ -643,13 +703,15 @@ export default {
                 },
               ],
               labels: users,
-              title: {
-                text: "Deletions",
-              },
+              //title: {
+              //  text: "Deletions",
+              //},
             },
           };
           this.projects[index].github_options.push(options);
           options = {
+            key: 'Archivos agregados',
+            title: description.github.files_added,
             series: files_added_percentages,
             options: {
               chart: {
@@ -669,9 +731,9 @@ export default {
                 },
               ],
               labels: users,
-              title: {
-                text: "Files added",
-              },
+              //title: {
+              //  text: "Files added",
+              //},
             },
           };
           this.projects[index].github_options.push(options);
@@ -740,7 +802,7 @@ export default {
               },
               plotOptions: {
                 bar: {
-                  horizontal: false,
+                  horizontal: true,
                   dataLabels: {
                     position: "top",
                   },
