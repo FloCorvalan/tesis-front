@@ -68,6 +68,7 @@
                     <div class="jira-title" :title="opt.title">
                       {{ opt.key }}<span class="question-mark">&#63;</span>
                     </div>
+                    <div class="total-2">(total: {{ opt.total }} ) </div>
                     <DonutChart :options="opt.options" :series="opt.series">
                     </DonutChart>
                   </div>
@@ -101,6 +102,7 @@
                               {{ project.jenkins_options.key
                               }}<span class="question-mark">&#63;</span>
                             </div>
+                            <div class="total-2">(total: {{ project.jenkins_options.total }} ) </div>
                           <DonutChart
                             :options="project.jenkins_options.options"
                             :series="project.jenkins_options.series"
@@ -155,8 +157,9 @@
                           >
                             <div class="github-title" :title="opt.title">
                               {{ opt.key
-                              }}<span class="question-mark">&#63;</span>
+                              }} <span class="question-mark">&#63;</span>
                             </div>
+                            <div class="total">(total: {{ opt.total }} ) </div>
                             <DonutChart
                               :options="opt.options"
                               :series="opt.series"
@@ -389,13 +392,14 @@ export default {
           var percentages = [];
           var success_per = [];
           var failure_per = [];
-          response.data.forEach((element) => {
+          response.data.developers.forEach((element) => {
             users.push(element.username);
             percentages.push(parseInt(element.total_per, 10));
             success_per.push(parseInt(element.success_per, 10));
             failure_per.push(parseInt(element.failure_per, 10));
           });
           var options = {
+            total: response.data.total_builds,
             key: 'Construcciones del pipeline',
             title: description.jenkins.construcciones,
             series: percentages,
@@ -504,35 +508,44 @@ export default {
           var percentages = [];
           var title = "";
           var key_title = "";
+          var total;
           console.log(response.data);
-          for (var key in response.data) {
-            response.data[key].forEach((e) => {
+          for (var key in response.data.developers) {
+            response.data.developers[key].forEach((e) => {
               users.push(e[0]);
               percentages.push(parseInt(e[1], 10));
             });
             if (key === "Created issues") {
               key_title = "Incidencias creadas";
               title = description.jira.created_issues;
+              total = response.data.totals['total_created']
             } else if (key === "Updated issues") {
               key_title = "Incidencias actualizadas";
               title = description.jira.updated_issues;
+              total = response.data.totals['total_updated']
             } else if (key === "Story point estimate") {
               key_title = "Evento: Estimación de puntos de historia";
               title = description.jira.story_point_estimate;
+              total = response.data.totals[key]
             } else if (key === "resolution") {
               key_title = "Evento: Resolución";
               title = description.jira.resolution;
+              total = response.data.totals[key]
             } else if (key === "status") {
               key_title = "Evento: Cambio de estado";
               title = description.jira.status;
+              total = response.data.totals[key]
             } else if (key === "Sprint") {
               key_title = "Evento: Asignación a Sprint";
               title = description.jira.sprint;
+              total = response.data.totals[key]
             } else {
               key_title = "No asignado";
               title = "No asignado";
+              total = 0
             }
             var options = {
+              total: total,
               key: key_title,
               title: title,
               series: percentages,
@@ -612,13 +625,14 @@ export default {
           { headers }
         )
         .then((response) => {
+          console.log(response)
           var users = [];
           var commits_percentages = [];
           var additions_percentages = [];
           var deletions_percentages = [];
           var files_added_percentages = [];
           console.log(response.data);
-          response.data.forEach((e) => {
+          response.data.developers.forEach((e) => {
             users.push(e.name);
             commits_percentages.push(parseInt(e.commits_per, 10));
             additions_percentages.push(parseInt(e.additions_per, 10));
@@ -626,6 +640,7 @@ export default {
             files_added_percentages.push(parseInt(e.files_added_per, 10));
           });
           var options = {
+            total: response.data.totals.total_commits,
             key: 'Commits',
             title: description.github.commits,
             series: commits_percentages,
@@ -654,6 +669,7 @@ export default {
           };
           this.projects[index].github_options.push(options);
           options = {
+            total: response.data.totals.total_additions,
             key: 'Líneas de código agregadas',
             title: description.github.additions,
             series: additions_percentages,
@@ -682,6 +698,7 @@ export default {
           };
           this.projects[index].github_options.push(options);
           options = {
+            total: response.data.totals.total_deletions,
             key: 'Líneas de código eliminadas',
             title: description.github.deletions,
             series: deletions_percentages,
@@ -710,6 +727,7 @@ export default {
           };
           this.projects[index].github_options.push(options);
           options = {
+            total: response.data.totals.total_files_added,
             key: 'Archivos agregados',
             title: description.github.files_added,
             series: files_added_percentages,
