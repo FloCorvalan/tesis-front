@@ -1,7 +1,7 @@
 <template>
   <ApexChart
     :height="height"
-    width="100%"
+    :width="width2"
     type="line"
     v-if="apexLoading"
     :options="options"
@@ -20,13 +20,19 @@ export default {
     options: [],
     series: [],
     height: String,
+    length: Number,
   },
   data: function () {
     return {
       apexLoading: false,
+      width2: null,
     };
   },
-  created() {},
+  created() {
+    if(length != undefined){
+      this.width2 = (32 * this.length).toString() + 'px'
+    }
+  },
   mounted() {
     setTimeout(() => {
       this.apexLoading = true;

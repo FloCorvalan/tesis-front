@@ -7,6 +7,7 @@
             <div class="overflow-scroll">
               <LineChart
                 :height="'200%'"
+                :length="developers.line_options.options.xaxis.categories.length"
                 :options="developers.line_options.options"
                 :series="developers.line_options.series"
               >
@@ -15,6 +16,7 @@
             <div class="overflow-scroll">
               <LineChart
                 :height="'200%'"
+                :length="developers.line_options_loc.options.xaxis.categories.length"
                 :options="developers.line_options_loc.options"
                 :series="developers.line_options_loc.series"
               >
