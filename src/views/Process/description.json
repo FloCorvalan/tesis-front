@@ -1,7 +1,7 @@
 {
     "jira": {
         "created_issues": "Incidencias que han sido creadas",
-        "updated_issues": "Incidencias que han sido actualizadas. Que se le ha aplicado algún evento",
+        "updated_issues": "Actualizaciones a las incidencias. Actualización: aplicar algún evento a una incidencia",
         "story_point_estimate": "Asignar puntos de historia a una incidencia",
         "resolution": "Cambiar el estado de una incidencia a Finalizado/Done",
         "status": "Cambiar el estado de una incidencia. Estados: Por hacer/To do, En proceso/In progress, Finalizado/Done",

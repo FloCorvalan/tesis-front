@@ -83,7 +83,7 @@ export default {
                   curve: "straight",
                 },
                 title: {
-                  text: "Commits / 2 weeks",
+                  text: "Commits por día",
                   align: "left",
                 },
                 grid: {
@@ -114,7 +114,7 @@ export default {
                   curve: "straight",
                 },
                 title: {
-                  text: "Lines of code / 2 weeks",
+                  text: "Líneas de código por día",
                   align: "left",
                 },
                 grid: {
@@ -190,11 +190,11 @@ export default {
           var bar_options = {
             series: [
               {
-                name: "Estimated story points",
+                name: "Puntos de historia estimados antes del Sprint",
                 data: estimated,
               },
               {
-                name: "Story points completed",
+                name: "Puntos de historia completados al terminar el Sprint",
                 data: completed,
               },
             ],
@@ -254,7 +254,7 @@ export default {
                   },
                 },
               ],
-              title: {
+              /*title: {
                 text: "Team productivity",
                 align: "left",
                 offsetX: 0,
@@ -266,7 +266,7 @@ export default {
                   fontFamily: undefined,
                   color: "#263238",
                 },
-              },
+              },*/
             },
           };
           this.team = bar_options;

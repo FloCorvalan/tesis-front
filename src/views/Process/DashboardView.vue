@@ -520,7 +520,7 @@ export default {
               title = description.jira.created_issues;
               total = response.data.totals['total_created']
             } else if (key === "Updated issues") {
-              key_title = "Incidencias actualizadas";
+              key_title = "Actualizaciones a las incidencias";
               title = description.jira.updated_issues;
               total = response.data.totals['total_updated']
             } else if (key === "Story point estimate") {
