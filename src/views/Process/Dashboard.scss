@@ -208,6 +208,13 @@ svg {
 }
 
 .overflow-scroll {
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
+}
+
+.overflow-scroll-y {
+  min-height: 300px;
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }

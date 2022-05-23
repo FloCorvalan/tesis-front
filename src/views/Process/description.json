@@ -5,7 +5,11 @@
         "story_point_estimate": "Asignar puntos de historia a una incidencia",
         "resolution": "Cambiar el estado de una incidencia a Finalizado/Done",
         "status": "Cambiar el estado de una incidencia. Estados: Por hacer/To do, En proceso/In progress, Finalizado/Done",
-        "sprint": "Asignar una incidencia a un Sprint"
+        "sprint": "Asignar una incidencia a un Sprint",
+        "parent": "Asociar una incidencia a una épica",
+        "rank": "Cambiar el orden de una incidencia",
+        "description": "Agregar una descripción a una incidencia",
+        "version": "Asociar una incidencia a una versión"
     },
     "jenkins": {
         "construcciones": "Instancias de ejecución del pipeline",

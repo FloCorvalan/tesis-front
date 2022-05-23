@@ -133,6 +133,8 @@
                             :series="project.jenkins_options_bar.series"
                             :width="'110%'"
                             :height="'150%'"
+                            :length="project.jenkins_options_bar.options.xaxis.categories.length"
+                            :offset="project.jenkins_options_bar.series.length"
                           >
                           </BarChart>
                         </v-row>
@@ -147,13 +149,16 @@
                             {{ project.jenkins_options_part.key
                             }}<span class="question-mark">&#63;</span>
                           </div>
-                          <BarChart
-                            :options="project.jenkins_options_part.options"
-                            :series="project.jenkins_options_part.series"
-                            :width="'110%'"
-                            :height="'150%'"
-                          >
-                          </BarChart>
+                          <div class="overflow-scroll-y">
+                            <BarChart
+                              :options="project.jenkins_options_part.options"
+                              :series="project.jenkins_options_part.series"
+                              :width="'110%'"
+                              :height="'100%'"
+                              :length="project.jenkins_options_part.series[0].data.length"
+                            >
+                            </BarChart>
+                          </div>
                         </v-row>
                       </v-card-text>
                     </v-card>
@@ -230,6 +235,9 @@
                           :series="team.series"
                           :width="'100%'"
                           :height="'200%'"
+                          :length="team.options.xaxis.categories.length"
+                          :offset="team.series.length"
+                          :type="1"
                         >
                         </BarChart>
                       </div>
@@ -569,16 +577,16 @@ export default {
         )
         .then((response) => {
           console.log(response.data);
-          var data = []
-          var data_inner = {}
+          var data = [];
+          var data_inner = {};
           for (var key in response.data) {
             data_inner = {
               x: key,
               y: response.data[key].count,
-              names: response.data[key].stages_names
-            }
-            data.push(data_inner)
-            data_inner = {}
+              names: response.data[key].stages_names,
+            };
+            data.push(data_inner);
+            data_inner = {};
           }
           var options = {
             key: "Etapas del pipeline",
@@ -595,7 +603,6 @@ export default {
               },
               plotOptions: {
                 bar: {
-                  borderRadius: 4,
                   horizontal: true,
                 },
               },
@@ -603,19 +610,19 @@ export default {
                 enabled: false,
               },
               xaxis: {
-                type: 'category'
+                type: "category",
               },
               tooltip: {
                 custom: function ({ seriesIndex, dataPointIndex, w }) {
-                  var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-                  var template = '<div class="my-tooltip"><ul>'
-                  data.names.forEach(element => {
-                    template += '<li>' + element + '</li>'
+                  var data =
+                    w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                  var template = '<div class="my-tooltip"><ul>';
+                  template += '<li style="font-weight:bold">' + data.y + ' Etapas: </li>'
+                  data.names.forEach((element) => {
+                    template += "<li>" + element + "</li>";
                   });
-                  template += '</ul></div>'
-                  return (
-                    template
-                  );
+                  template += "</ul></div>";
+                  return template;
                 },
               },
             },
@@ -680,7 +687,24 @@ export default {
               key_title = "Evento: Asignación a Sprint";
               title = description.jira.sprint;
               total = response.data.totals[key];
-            } else {
+            } else if (key === "IssueParentAssociation") {
+              key_title = "Evento: Asociaciar a una épica";
+              title = description.jira.parent;
+              total = response.data.totals[key];
+            } else if (key === "Rank") {
+              key_title = "Evento: Ordenar incidencias";
+              title = description.jira.rank;
+              total = response.data.totals[key];
+            } else if (key === "description") {
+              key_title = "Evento: Agregar descripción";
+              title = description.jira.description;
+              total = response.data.totals[key];
+            } else if (key === "Fix Version") {
+              key_title = "Evento: Asociar a una versión";
+              title = description.jira.version;
+              total = response.data.totals[key];
+            }
+            else {
               key_title = "No asignado";
               title = "No asignado";
               total = 0;
