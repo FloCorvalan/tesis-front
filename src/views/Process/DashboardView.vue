@@ -68,7 +68,7 @@
                     <div class="jira-title" :title="opt.title">
                       {{ opt.key }}<span class="question-mark">&#63;</span>
                     </div>
-                    <div class="total-2">(total: {{ opt.total }} ) </div>
+                    <div class="total-2">(total: {{ opt.total }} )</div>
                     <DonutChart :options="opt.options" :series="opt.series">
                     </DonutChart>
                   </div>
@@ -97,26 +97,59 @@
                   <div v-if="project.visibleJenkins == true">
                     <v-card class="mx-1 mb-1">
                       <v-card-text class="pa-6 pt-0">
-                        <v-row no-gutters v-if="project.jenkins_options != null">
-                          <div class="jenkins-title" :title="project.jenkins_options.title">
-                              {{ project.jenkins_options.key
-                              }}<span class="question-mark">&#63;</span>
-                            </div>
-                            <div class="total-2">(total: {{ project.jenkins_options.total }} ) </div>
+                        <v-row
+                          no-gutters
+                          v-if="project.jenkins_options != null"
+                        >
+                          <div
+                            class="jenkins-title"
+                            :title="project.jenkins_options.title"
+                          >
+                            {{ project.jenkins_options.key
+                            }}<span class="question-mark">&#63;</span>
+                          </div>
+                          <div class="total-2">
+                            (total: {{ project.jenkins_options.total }} )
+                          </div>
                           <DonutChart
                             :options="project.jenkins_options.options"
                             :series="project.jenkins_options.series"
                           >
                           </DonutChart>
                         </v-row>
-                        <v-row no-gutters v-if="project.jenkins_options_bar != null">
-                          <div class="jenkins-title" :title="project.jenkins_options_bar.title">
-                              {{ project.jenkins_options_bar.key
-                              }}<span class="question-mark">&#63;</span>
-                            </div>
+                        <v-row
+                          no-gutters
+                          v-if="project.jenkins_options_bar != null"
+                        >
+                          <div
+                            class="jenkins-title"
+                            :title="project.jenkins_options_bar.title"
+                          >
+                            {{ project.jenkins_options_bar.key
+                            }}<span class="question-mark">&#63;</span>
+                          </div>
                           <BarChart
                             :options="project.jenkins_options_bar.options"
                             :series="project.jenkins_options_bar.series"
+                            :width="'110%'"
+                            :height="'150%'"
+                          >
+                          </BarChart>
+                        </v-row>
+                        <v-row
+                          no-gutters
+                          v-if="project.jenkins_options_part != null"
+                        >
+                          <div
+                            class="jenkins-title"
+                            :title="project.jenkins_options_part.title"
+                          >
+                            {{ project.jenkins_options_part.key
+                            }}<span class="question-mark">&#63;</span>
+                          </div>
+                          <BarChart
+                            :options="project.jenkins_options_part.options"
+                            :series="project.jenkins_options_part.series"
                             :width="'110%'"
                             :height="'150%'"
                           >
@@ -156,10 +189,10 @@
                             :key="index"
                           >
                             <div class="github-title" :title="opt.title">
-                              {{ opt.key
-                              }} <span class="question-mark">&#63;</span>
+                              {{ opt.key }}
+                              <span class="question-mark">&#63;</span>
                             </div>
-                            <div class="total">(total: {{ opt.total }} ) </div>
+                            <div class="total">(total: {{ opt.total }} )</div>
                             <DonutChart
                               :options="opt.options"
                               :series="opt.series"
@@ -195,11 +228,17 @@
                         <BarChart
                           :options="team.options"
                           :series="team.series"
-                          :width="'50%'"
+                          :width="'100%'"
                           :height="'200%'"
                         >
                         </BarChart>
                       </div>
+                    </v-col>
+                    <v-col>
+                      <div>Desarrolladores con actividad en GitHub</div>
+                      <v-list v-for="name in participants" :key="name">
+                        <div>{{ name }}</div>
+                      </v-list>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -286,6 +325,7 @@ export default {
   },
   created() {
     //this.getBPMNs();
+    this.getParticipants();
     this.getProjects();
     this.getJiraParticipation(this.team_id);
     this.getJiraProd();
@@ -328,6 +368,7 @@ export default {
               github_id: null,
               jenkins_options: null,
               jenkins_options_bar: null,
+              jenkins_options_part: null,
               github_options: [],
               visibleModel: false,
               visibleJenkins: false,
@@ -355,6 +396,30 @@ export default {
           });
       }
     },
+    getParticipants() {
+      if (this.team_id != "") {
+        var headers = {
+          Authorization: `Bearer: ${this.token}`,
+        };
+        axios
+          .post(
+            process.env.VUE_APP_BASE_URL + "/prod/part-names",
+            {
+              team_id: this.team_id,
+            },
+            { headers }
+          )
+          .then((response) => {
+            this.participants = response.data;
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$store.commit("saveAuthen", false);
+            this.$store.commit("saveToken", null);
+            this.$router.push("/login");
+          });
+      }
+    },
     /////// funcion para cambiar la visibilidad de un projecto de jenkins
     changeVisibleJenkins(project) {
       if (project.visibleJenkins == false) {
@@ -368,6 +433,7 @@ export default {
         var i = 0;
         while (i < this.projects.length) {
           this.getJenkinsProjectParticipation(i);
+          this.getJenkinsProjectStages(i);
           i++;
         }
       }
@@ -400,7 +466,7 @@ export default {
           });
           var options = {
             total: response.data.total_builds,
-            key: 'Construcciones del pipeline',
+            key: "Construcciones del pipeline",
             title: description.jenkins.construcciones,
             series: percentages,
             options: {
@@ -428,7 +494,7 @@ export default {
           };
           this.projects[index].jenkins_options = options;
           var bar_options = {
-            key: 'Construcciones exitosas vs fallidas',
+            key: "Construcciones exitosas vs fallidas",
             title: description.jenkins.comparacion,
             series: [
               {
@@ -465,7 +531,7 @@ export default {
               tooltip: {
                 y: {
                   formatter: function (val) {
-                    return val + "K";
+                    return val + "%";
                   },
                 },
               },
@@ -480,6 +546,81 @@ export default {
             },
           };
           this.projects[index].jenkins_options_bar = bar_options;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        });
+    },
+    getJenkinsProjectStages(index) {
+      var headers = {
+        Authorization: `Bearer: ${this.token}`,
+      };
+      axios
+        .post(
+          process.env.VUE_APP_BASE_URL + "/participation/jenkins/stages",
+          {
+            team_project_id: this.projects[index].id,
+            source_id: this.projects[index].jenkins_id,
+          },
+          { headers }
+        )
+        .then((response) => {
+          console.log(response.data);
+          var data = []
+          var data_inner = {}
+          for (var key in response.data) {
+            data_inner = {
+              x: key,
+              y: response.data[key].count,
+              names: response.data[key].stages_names
+            }
+            data.push(data_inner)
+            data_inner = {}
+          }
+          var options = {
+            key: "Etapas del pipeline",
+            title: description.jenkins.participants,
+            series: [
+              {
+                data: data,
+              },
+            ],
+            options: {
+              chart: {
+                type: "bar",
+                height: 350,
+              },
+              plotOptions: {
+                bar: {
+                  borderRadius: 4,
+                  horizontal: true,
+                },
+              },
+              dataLabels: {
+                enabled: false,
+              },
+              xaxis: {
+                type: 'category'
+              },
+              tooltip: {
+                custom: function ({ seriesIndex, dataPointIndex, w }) {
+                  var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                  var template = '<div class="my-tooltip"><ul>'
+                  data.names.forEach(element => {
+                    template += '<li>' + element + '</li>'
+                  });
+                  template += '</ul></div>'
+                  return (
+                    template
+                  );
+                },
+              },
+            },
+          };
+          this.projects[index].jenkins_options_part = options;
         })
         .catch((error) => {
           console.log(error);
@@ -518,31 +659,31 @@ export default {
             if (key === "Created issues") {
               key_title = "Incidencias creadas";
               title = description.jira.created_issues;
-              total = response.data.totals['total_created']
+              total = response.data.totals["total_created"];
             } else if (key === "Updated issues") {
               key_title = "Actualizaciones a las incidencias";
               title = description.jira.updated_issues;
-              total = response.data.totals['total_updated']
+              total = response.data.totals["total_updated"];
             } else if (key === "Story point estimate") {
               key_title = "Evento: Estimación de puntos de historia";
               title = description.jira.story_point_estimate;
-              total = response.data.totals[key]
+              total = response.data.totals[key];
             } else if (key === "resolution") {
               key_title = "Evento: Resolución";
               title = description.jira.resolution;
-              total = response.data.totals[key]
+              total = response.data.totals[key];
             } else if (key === "status") {
               key_title = "Evento: Cambio de estado";
               title = description.jira.status;
-              total = response.data.totals[key]
+              total = response.data.totals[key];
             } else if (key === "Sprint") {
               key_title = "Evento: Asignación a Sprint";
               title = description.jira.sprint;
-              total = response.data.totals[key]
+              total = response.data.totals[key];
             } else {
               key_title = "No asignado";
               title = "No asignado";
-              total = 0
+              total = 0;
             }
             var options = {
               total: total,
@@ -625,7 +766,7 @@ export default {
           { headers }
         )
         .then((response) => {
-          console.log(response)
+          console.log(response);
           var users = [];
           var commits_percentages = [];
           var additions_percentages = [];
@@ -641,7 +782,7 @@ export default {
           });
           var options = {
             total: response.data.totals.total_commits,
-            key: 'Commits',
+            key: "Commits",
             title: description.github.commits,
             series: commits_percentages,
             options: {
@@ -670,7 +811,7 @@ export default {
           this.projects[index].github_options.push(options);
           options = {
             total: response.data.totals.total_additions,
-            key: 'Líneas de código agregadas',
+            key: "Líneas de código agregadas",
             title: description.github.additions,
             series: additions_percentages,
             options: {
@@ -699,7 +840,7 @@ export default {
           this.projects[index].github_options.push(options);
           options = {
             total: response.data.totals.total_deletions,
-            key: 'Líneas de código eliminadas',
+            key: "Líneas de código eliminadas",
             title: description.github.deletions,
             series: deletions_percentages,
             options: {
@@ -728,7 +869,7 @@ export default {
           this.projects[index].github_options.push(options);
           options = {
             total: response.data.totals.total_files_added,
-            key: 'Archivos agregados',
+            key: "Archivos agregados",
             title: description.github.files_added,
             series: files_added_percentages,
             options: {
@@ -763,7 +904,6 @@ export default {
           this.$router.push("/login");
         });
     },
-    ///////////////////
     modifyText() {
       console.log("HOLAAAAAAAAAAAAA");
     },
@@ -805,11 +945,11 @@ export default {
           var bar_options = {
             series: [
               {
-                name: "Estimated story points",
+                name: "Puntos de historia estimados antes del Sprint",
                 data: estimated,
               },
               {
-                name: "Story points completed",
+                name: "Puntos de historia completados al terminar el Sprint",
                 data: completed,
               },
             ],
@@ -869,7 +1009,7 @@ export default {
                   },
                 },
               ],
-              title: {
+              /*title: {
                 text: "Team productivity",
                 align: "left",
                 offsetX: 0,
@@ -881,7 +1021,7 @@ export default {
                   fontFamily: undefined,
                   color: "#263238",
                 },
-              },
+              },*/
             },
           };
           this.team = bar_options;
@@ -893,6 +1033,7 @@ export default {
           this.$router.push("/login");
         });
     },
+    ///////////////////
   },
   mounted() {
     setTimeout(() => {

@@ -4,18 +4,22 @@
       <v-card-text class="pa-6">
         <v-row class="overflow-hidden">
           <v-col class="overflow-hidden">
-            <LineChart
-              :height="'200%'"
-              :options="developers.line_options.options"
-              :series="developers.line_options.series"
-            >
-            </LineChart>
-            <LineChart
-              :height="'100%'"
-              :options="developers.line_options_loc.options"
-              :series="developers.line_options_loc.series"
-            >
-            </LineChart>
+            <div class="overflow-scroll">
+              <LineChart
+                :height="'200%'"
+                :options="developers.line_options.options"
+                :series="developers.line_options.series"
+              >
+              </LineChart>
+            </div>
+            <div class="overflow-scroll">
+              <LineChart
+                :height="'200%'"
+                :options="developers.line_options_loc.options"
+                :series="developers.line_options_loc.series"
+              >
+              </LineChart>
+            </div>
           </v-col>
         </v-row>
       </v-card-text>
@@ -57,13 +61,17 @@ export default {
     },
     getGithubProd() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .post(process.env.VUE_APP_BASE_URL + "/prod/github", {
-          team_id: this.team_id,
-          team_project_id: this.team_project_id,
-        }, {headers})
+        .post(
+          process.env.VUE_APP_BASE_URL + "/prod/github",
+          {
+            team_id: this.team_id,
+            team_project_id: this.team_project_id,
+          },
+          { headers }
+        )
         .then((response) => {
           var developers = {
             line_options: {
@@ -152,13 +160,13 @@ export default {
             };
           });
           this.developers = developers;
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     getDevIndex(developers, name) {
       var i = 0;
@@ -171,13 +179,17 @@ export default {
     },
     getJiraProd() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .get(process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod", {
-          team_id: this.team_id,
-          team_project_id: this.team_project_id,
-        }, {headers})
+        .get(
+          process.env.VUE_APP_JIRA_BASE_URL + "/jira/prod",
+          {
+            team_id: this.team_id,
+            team_project_id: this.team_project_id,
+          },
+          { headers }
+        )
         .then((response) => {
           var names = [];
           var estimated = [];

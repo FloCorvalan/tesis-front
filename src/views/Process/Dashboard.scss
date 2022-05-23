@@ -206,3 +206,8 @@ svg {
   display: flex;
   justify-content: left;
 }
+
+.overflow-scroll {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}

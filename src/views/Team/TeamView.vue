@@ -7,7 +7,7 @@
         ><div class="card-title">Nombre de equipo: {{ team_name }}</div>
         <v-spacer></v-spacer>
         <div
-          v-if="developers.length != 0 && projects.length != 0 && jira != null"
+          v-if="projects.length != 0 && jira != null"
         >
           <v-btn class="dash-btn" v-on:click="getDashboard()"
             >Ver dashboard</v-btn
@@ -18,7 +18,7 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <div>
+        <!--div>
           <h3 class="disp-left">Desarrolladores/as</h3>
           <ul class="ul" v-for="dev in developers" :key="dev.id">
             <li>
@@ -53,7 +53,7 @@
               <DeveloperModalNew v-show="modalDevNewVis" :team_id="team_id" @close="closeDevNewModal" />
             </v-app>
           </div>
-        </div>
+        </div-->
         <div>
           <h3 class="disp-left">Proyectos</h3>
           <ul class="ul" v-for="project in projects" :key="project.id">
@@ -147,8 +147,8 @@
 
 <script>
 import NavBar from "@/components/NavBar.vue";
-import DeveloperModal from "@/components/Modal/DeveloperModal.vue";
-import DeveloperModalNew from "@/components/Modal/DeveloperModalNew.vue";
+//import DeveloperModal from "@/components/Modal/DeveloperModal.vue";
+//import DeveloperModalNew from "@/components/Modal/DeveloperModalNew.vue";
 import ProjectModal from "@/components/Modal/ProjectModal.vue";
 import JiraSourceModal from "@/components/Modal/JiraSourceModal.vue";
 import axios from "axios";
@@ -157,8 +157,8 @@ export default {
   name: "TeamView",
   components: {
     NavBar,
-    DeveloperModal,
-    DeveloperModalNew,
+    //DeveloperModal,
+    //DeveloperModalNew,
     ProjectModal,
     JiraSourceModal, 
   },
@@ -177,7 +177,7 @@ export default {
     };
   },
   created() {
-    this.getDevelopers();
+    //this.getDevelopers();
     this.getProjects();
     this.getJira();
   },

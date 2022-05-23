@@ -38,20 +38,19 @@
                                 v-model="email"
                                 :rules="emailRules"
                                 value=""
-                                label="Email Address"
+                                label="Email"
                                 required
                               ></v-text-field>
                               <v-text-field
                                 v-model="password"
-                                :rules="passRules"
+                                :rules="passRulesLogin"
                                 type="password"
-                                label="Password"
+                                label="Contraseña"
                                 required
                               ></v-text-field>
                             </v-col>
                             <v-col class="d-flex justify-space-between">
                               <v-btn
-                                class="text-capitalize"
                                 large
                                 :disabled="
                                   password.length === 0 || email.length === 0
@@ -59,7 +58,7 @@
                                 color="primary"
                                 @click="login"
                               >
-                                Login</v-btn
+                                Iniciar sesión</v-btn
                               >
                             </v-col>
                           </v-form>
@@ -76,21 +75,22 @@
                             <v-col class="padding-top">
                               <v-text-field
                                 v-model="createFullName"
-                                label="Full Name"
+                                :rules="usernameRules"
+                                label="Nombre de usuario"
                                 required
                               ></v-text-field>
                               <v-text-field
                                 v-model="createEmail"
                                 :rules="emailRules"
-                                label="Email Address"
+                                label="Email"
                                 required
                               ></v-text-field>
                               <v-text-field
                                 v-model="createPassword"
                                 :rules="passRules"
                                 type="password"
-                                label="Password"
-                                hint="At least 6 characters"
+                                label="Contraseña"
+                                hint="Al menos 6 caracteres"
                                 required
                               ></v-text-field>
                             </v-col>
@@ -106,7 +106,7 @@
                                 color="primary"
                                 @click="signup"
                               >
-                                Create your account</v-btn
+                                Crea tu cuenta</v-btn
                               >
                             </v-col>
                           </v-form>
@@ -133,16 +133,22 @@ export default {
     return {
       email: "",
       emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+/.test(v) || "E-mail must be valid",
+        (v) => !!v || "Se requiere un email",
+        (v) => /.+@.+/.test(v) || "El email debe ser válido",
       ],
       createFullName: "",
       createEmail: "",
       createPassword: "",
       password: "",
       passRules: [
-        (v) => !!v || "Password is required",
-        (v) => v.length >= 6 || "Min 6 characters",
+        (v) => !!v || "Se requiere una contraseña",
+        (v) => v.length >= 6 || "Mínimo 6 caracteres",
+      ],
+      passRulesLogin: [
+        (v) => !!v || "Se requiere contraseña"
+      ],
+      usernameRules: [
+        (v) => !!v || "Se requiere un nombre de usuario"
       ],
     };
   },

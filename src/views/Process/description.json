@@ -9,7 +9,8 @@
     },
     "jenkins": {
         "construcciones": "Instancias de ejecución del pipeline",
-        "comparacion": "Comparación entre las construcciones que fueron exitosas (la ejecución del pipeline terminó correctamente) y las que fueron fallidas (el pipeline no terminó de ejecutarse porque ocurrió algún error)"
+        "comparacion": "Comparación entre las construcciones que fueron exitosas (la ejecución del pipeline terminó correctamente) y las que fueron fallidas (el pipeline no terminó de ejecutarse porque ocurrió algún error)",
+        "participants": "Cantidad de etapas del pipeline y el nombre de estas"
     },
     "github": {
         "commits": "Porcentaje de commits realizados",
