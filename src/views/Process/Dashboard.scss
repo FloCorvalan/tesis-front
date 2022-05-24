@@ -2,6 +2,7 @@
 
 .dashboard-page {
   .page-title {
+    font-family: 'Fira Sans Condensed';
     padding-bottom: 20px;
     color: #05006b;
     @include media-breakpoint-up(sm) {
@@ -83,9 +84,9 @@ foreignObject{
 }
 
 .project-name {
-  padding-top: 3%;
-  padding-bottom: 3%;
-  padding-left: 3%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 1%;
   cursor: pointer;
   display: flex;
   justify-content: left;
@@ -97,9 +98,7 @@ foreignObject{
 }
 
 .project-name-2 {
-  padding-top: 3%;
-  padding-bottom: 3%;
-  padding-left: 3%;
+  padding-top: 1%;
   cursor: pointer;
   display: flex;
   justify-content: left;
@@ -128,8 +127,9 @@ foreignObject{
 .tool-name {
   padding-top: 5%;
   padding-bottom: 5%;
-  //background-color: #3358ff;
+  background-color: rgba($color: #00aaffff, $alpha: 0.4);
   //color: white;
+
 }
 
 ul {
@@ -163,11 +163,15 @@ svg {
 }
 
 .title-color {
-  background-color: #bfd7ff; //#4a63d5;
-  color: #05006b;
+  //background-color: #3358ff; //#4a63d5;
+  //background: rgb(79,67,255);
+  //background: linear-gradient(90deg, rgba(79,67,255,1) 0%, rgba(59,201,255,1) 100%);
+  //color: white;
   //border: solid;
   //border-width: 1px;
   //border-color: #05006b;
+  background-color: rgba($color: #09348bff, $alpha: 0.9);
+  color: white;
 }
 
 .jira-title {
@@ -227,8 +231,12 @@ svg {
 }
 
 .back-color {
-  background: rgb(182,254,244);
-  background: linear-gradient(90deg, rgba(182,254,244,1) 0%, rgba(128,137,254,1) 100%);
+  //background: #134E5E;  /* fallback for old browsers */
+  //background: -webkit-linear-gradient(to right, #71B280, #134E5E);  /* Chrome 10-25, Safari 5.1-6 */
+  //background: linear-gradient(to right, #71B280, #134E5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: rgb(255,255,255);
+  background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(208,255,255,0.5) 100%);
+  
 }
 
 .mx-1.mb-1.card-color {
@@ -241,7 +249,7 @@ svg {
   border-color: #05006b;
 }
 
-.padding-card.card-border {
+.card-border.v-card {
   border: solid;
   border-width: 1px;
   border-color: #05006b;
@@ -255,4 +263,25 @@ svg {
   border: solid;
   border-width: 1px;
   border-color: #05006b;
+}
+
+///
+.card-prod-title {
+  font-size: large;
+}
+
+.card-prod-content {
+  display: flex;
+  justify-content: left;
+  padding-left: 10%;
+}
+
+///
+.section-title-font-size {
+  font-family: 'B612';
+  font-size: large;
+}
+
+.card-act-prod.v-card {
+  background-color: rgba($color: #00aaffff, $alpha: 0.1);
 }

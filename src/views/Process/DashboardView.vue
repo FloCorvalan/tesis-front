@@ -9,12 +9,10 @@
         <v-row>
           <!-- AQUI EMPIEZA -->
           <v-col cols="12">
-            <v-card class="mx-1 mb-1 card-border margin-bottom">
+            <v-card class="mx-1 mb-1 card-border">
               <v-card-title class="pa-6 pb-0 title-color">
                 <v-row no-gutters>
-                  <h3>
-                    Modelos de proceso BPMN equipo {{ team_name }}
-                  </h3>
+                  <h3 class="section-title-font-size">Modelos de proceso BPMN equipo {{ team_name }}</h3>
                 </v-row>
               </v-card-title>
               <v-card-text class="pa-6">
@@ -50,7 +48,7 @@
           <v-col cols="12">
             <v-card>
               <v-card-title class="title-color card-border">
-                <h3>
+                <h3 class="section-title-font-size">
                   Participación de los desarrolladores equipo {{ team_name }}
                 </h3>
               </v-card-title>
@@ -78,7 +76,7 @@
           </v-col>
           <!-- JENKINS -->
           <v-col lg="4" sm="6" cols="12">
-            <v-card class="padding-card card-border">
+            <v-card class="card-border">
               <div class="tool-name">
                 <h3>Jenkins</h3>
               </div>
@@ -175,7 +173,7 @@
           </v-col>
           <!-- GITHUB -->
           <v-col lg="4" sm="6" cols="12">
-            <v-card class="padding-card card-border">
+            <v-card class="card-border">
               <div class="tool-name">
                 <h3>GitHub</h3>
               </div>
@@ -223,13 +221,13 @@
             <v-card class="mx-1 mb-1 card-border">
               <v-card-title class="pa-6 pb-0 title-color">
                 <v-row no-gutters>
-                  <h3>Productividad equipo {{ team_name }}</h3>
+                  <h3 class="section-title-font-size">Productividad equipo {{ team_name }}</h3>
                 </v-row>
               </v-card-title>
               <v-card class="mx-1 mb-1">
                 <v-card-title class="pa-6 pb-0">
                   <v-row no-gutters>
-                    <p>Productividad grupal</p>
+                    <p class="title-prod">Productividad grupal</p>
                   </v-row>
                 </v-card-title>
                 <v-card-text class="pa-6">
@@ -249,10 +247,22 @@
                       </div>
                     </v-col>
                     <v-col>
-                      <div>Desarrolladores con actividad en GitHub</div>
-                      <v-list v-for="name in participants" :key="name">
-                        <div>{{ name }}</div>
-                      </v-list>
+                      <v-card class="card-act-prod">
+                        <v-card-title class="card-prod-title"
+                          >Desarrolladores con actividad en GitHub</v-card-title
+                        >
+                        <v-card-text>
+                          <ul>
+                            <v-list
+                              v-for="name in participants"
+                              :key="name"
+                              class="card-prod-content"
+                            >
+                              <div>{{ name }}</div>
+                            </v-list>
+                          </ul>
+                        </v-card-text>
+                      </v-card>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -260,7 +270,7 @@
               <v-card class="mx-1 mb-1">
                 <v-card-title class="pa-6 pb-0">
                   <v-row no-gutters>
-                    <p>Productividad individual</p>
+                    <p class="title-prod">Productividad individual</p>
                   </v-row>
                 </v-card-title>
                 <v-card-text class="pa-6">
