@@ -11,7 +11,12 @@
     </div>
     <div class="disp-center">
       <div v-if="chart_jira != null">
-        <BarChart :options="chart_jira.options" :series="chart_jira.series" :width="'50%'" :height="'100%'">
+        <BarChart
+          :options="chart_jira.options"
+          :series="chart_jira.series"
+          :width="'50%'"
+          :height="'100%'"
+        >
         </BarChart>
       </div>
       <div v-if="chart_jenkins != null">
@@ -24,7 +29,12 @@
         </BarChart>
       </div>
       <div v-if="chart_github != null">
-        <BarChart :options="chart_github.options" :series="chart_github.series" :width="'50%'" :height="'100%'">
+        <BarChart
+          :options="chart_github.options"
+          :series="chart_github.series"
+          :width="'50%'"
+          :height="'100%'"
+        >
         </BarChart>
       </div>
     </div>
@@ -198,7 +208,7 @@ export default {
                     },
                   },
                 },
-              ]
+              ],
             },
           };
           var bar_options_github = {
@@ -264,7 +274,7 @@ export default {
                     },
                   },
                 },
-              ]
+              ],
             },
           };
           var bar_options_jenkins = {
@@ -330,7 +340,7 @@ export default {
                     },
                   },
                 },
-              ]
+              ],
             },
           };
           this.chart_jira = bar_options_jira;

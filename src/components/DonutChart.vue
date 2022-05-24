@@ -1,7 +1,7 @@
 <template>
   <ApexChart
-    height="100%"
-    width="100%"
+    height="120%"
+    width="120%"
     type="donut"
     v-if="apexLoading"
     :options="options"

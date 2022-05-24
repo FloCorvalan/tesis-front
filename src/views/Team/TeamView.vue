@@ -1,4 +1,4 @@
-<template>
+<template class="back-color">
   <div>
     <NavBar></NavBar>
     <div class="card">

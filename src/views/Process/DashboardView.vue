@@ -9,10 +9,10 @@
         <v-row>
           <!-- AQUI EMPIEZA -->
           <v-col cols="12">
-            <v-card class="mx-1 mb-1">
-              <v-card-title class="pa-6 pb-0">
+            <v-card class="mx-1 mb-1 card-border margin-bottom">
+              <v-card-title class="pa-6 pb-0 title-color">
                 <v-row no-gutters>
-                  <h3 class="title-color">
+                  <h3>
                     Modelos de proceso BPMN equipo {{ team_name }}
                   </h3>
                 </v-row>
@@ -49,7 +49,7 @@
           </v-col>
           <v-col cols="12">
             <v-card>
-              <v-card-title>
+              <v-card-title class="title-color card-border">
                 <h3>
                   Participación de los desarrolladores equipo {{ team_name }}
                 </h3>
@@ -58,7 +58,7 @@
           </v-col>
           <!-- JIRA -->
           <v-col lg="4" sm="6" cols="12">
-            <v-card class="mx-1 mb-1 card-color">
+            <v-card class="mx-1 mb-1 card-border">
               <div class="tool-name">
                 <h3>Jira</h3>
               </div>
@@ -78,7 +78,7 @@
           </v-col>
           <!-- JENKINS -->
           <v-col lg="4" sm="6" cols="12">
-            <v-card class="padding-card">
+            <v-card class="padding-card card-border">
               <div class="tool-name">
                 <h3>Jenkins</h3>
               </div>
@@ -133,7 +133,10 @@
                             :series="project.jenkins_options_bar.series"
                             :width="'110%'"
                             :height="'150%'"
-                            :length="project.jenkins_options_bar.options.xaxis.categories.length"
+                            :length="
+                              project.jenkins_options_bar.options.xaxis
+                                .categories.length
+                            "
                             :offset="project.jenkins_options_bar.series.length"
                           >
                           </BarChart>
@@ -155,7 +158,10 @@
                               :series="project.jenkins_options_part.series"
                               :width="'110%'"
                               :height="'100%'"
-                              :length="project.jenkins_options_part.series[0].data.length"
+                              :length="
+                                project.jenkins_options_part.series[0].data
+                                  .length
+                              "
                             >
                             </BarChart>
                           </div>
@@ -169,7 +175,7 @@
           </v-col>
           <!-- GITHUB -->
           <v-col lg="4" sm="6" cols="12">
-            <v-card class="padding-card">
+            <v-card class="padding-card card-border">
               <div class="tool-name">
                 <h3>GitHub</h3>
               </div>
@@ -214,8 +220,8 @@
           </v-col>
           <!-- PRODUCTIVITY -->
           <v-col cols="12">
-            <v-card class="mx-1 mb-1">
-              <v-card-title class="pa-6 pb-0">
+            <v-card class="mx-1 mb-1 card-border">
+              <v-card-title class="pa-6 pb-0 title-color">
                 <v-row no-gutters>
                   <h3>Productividad equipo {{ team_name }}</h3>
                 </v-row>
@@ -617,7 +623,8 @@ export default {
                   var data =
                     w.globals.initialSeries[seriesIndex].data[dataPointIndex];
                   var template = '<div class="my-tooltip"><ul>';
-                  template += '<li style="font-weight:bold">' + data.y + ' Etapas: </li>'
+                  template +=
+                    '<li style="font-weight:bold">' + data.y + " Etapas: </li>";
                   data.names.forEach((element) => {
                     template += "<li>" + element + "</li>";
                   });
@@ -703,8 +710,7 @@ export default {
               key_title = "Evento: Asociar a una versión";
               title = description.jira.version;
               total = response.data.totals[key];
-            }
-            else {
+            } else {
               key_title = "No asignado";
               title = "No asignado";
               total = 0;
@@ -717,6 +723,12 @@ export default {
               options: {
                 chart: {
                   type: "donut",
+                },
+                dataLabels: {
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#FFF"],
+                  },
                 },
                 stroke: {
                   show: true,

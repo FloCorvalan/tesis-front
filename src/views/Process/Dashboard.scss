@@ -3,6 +3,7 @@
 .dashboard-page {
   .page-title {
     padding-bottom: 20px;
+    color: #05006b;
     @include media-breakpoint-up(sm) {
       padding-bottom: 0;
     }
@@ -92,7 +93,7 @@ foreignObject{
 }
 
 .project-name:hover {
-  color: #FB8500;
+  color: #1b9aaa;
 }
 
 .project-name-2 {
@@ -106,7 +107,7 @@ foreignObject{
 }
 
 .project-name-2:hover {
-  color: #FB8500;
+  color: #1b9aaa;
 }
 
 .project-name-3 {
@@ -121,12 +122,14 @@ foreignObject{
 }
 
 .project-name-3:hover {
-  color: #FB8500;
+  color: #1b9aaa;
 }
 
 .tool-name {
   padding-top: 5%;
   padding-bottom: 5%;
+  //background-color: #3358ff;
+  //color: white;
 }
 
 ul {
@@ -160,7 +163,11 @@ svg {
 }
 
 .title-color {
-  color: #2c3e50;
+  background-color: #bfd7ff; //#4a63d5;
+  color: #05006b;
+  //border: solid;
+  //border-width: 1px;
+  //border-color: #05006b;
 }
 
 .jira-title {
@@ -217,4 +224,35 @@ svg {
   max-height: 300px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.back-color {
+  background: rgb(182,254,244);
+  background: linear-gradient(90deg, rgba(182,254,244,1) 0%, rgba(128,137,254,1) 100%);
+}
+
+.mx-1.mb-1.card-color {
+  background-color: rgba($color: white, $alpha: 1.0)
+}
+
+.mx-1.mb-1.card-border {
+  border: solid;
+  border-width: 1px;
+  border-color: #05006b;
+}
+
+.padding-card.card-border {
+  border: solid;
+  border-width: 1px;
+  border-color: #05006b;
+}
+
+.margin-bottom {
+  margin-bottom: 5%;
+}
+
+.card-border {
+  border: solid;
+  border-width: 1px;
+  border-color: #05006b;
 }

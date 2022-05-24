@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-app-bar color="#023047">
+    <v-app-bar color="#05006b">
       <v-app-bar-nav-icon @click="drawer = true" color="#FFFFFF"></v-app-bar-nav-icon>
 
       <v-toolbar-title class="title">Toad System</v-toolbar-title>
       <v-spacer></v-spacer>
       <!--v-btn class="mr-2" color="#023047"><v-icon color="#FFFFFF">mdi-account</v-icon></v-btn-->
-      <v-btn class="mr-2" color="#023047" @click="logOut()"><p style="color:#FFFFFF">Log Out</p></v-btn>
+      <v-btn class="mr-2" color="#3358ff" @click="logOut()"><p style="color:#FFFFFF;font-weight:bold;">Log Out</p></v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" absolute temporary>
