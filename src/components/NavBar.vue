@@ -6,7 +6,7 @@
       <v-toolbar-title class="title">Toad System</v-toolbar-title>
       <v-spacer></v-spacer>
       <!--v-btn class="mr-2" color="#023047"><v-icon color="#FFFFFF">mdi-account</v-icon></v-btn-->
-      <v-btn class="mr-2" color="#09348bff" @click="logOut()"><p style="color:#FFFFFF;">Log Out</p></v-btn>
+      <v-btn class="mr-2" color="#1c2e86" @click="logOut()"><p style="color:#FFFFFF;font-family: 'Fira Sans Condensed';font-weight:bold">Log Out</p></v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -64,5 +64,10 @@ export default {
     color: white;
     font-weight: bold;
     font-family: 'Fira Sans Condensed';
+}
+
+.navbar-color {
+  background: rgb(28,46,134);
+  background: linear-gradient(124deg, rgba(28,46,134,1) 29%, rgba(45,144,255,1) 74%, rgba(14,203,255,1) 100%);
 }
 </style>>

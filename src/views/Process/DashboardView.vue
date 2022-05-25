@@ -25,7 +25,7 @@
                           class="project-name-2"
                           v-on:click="changeVisibleModel(project)"
                         >
-                          <h3>Proyecto {{ project.name }}</h3>
+                          <h3>Proyecto: {{ project.name }}</h3>
                         </div>
                       </li>
                     </ul>
@@ -86,7 +86,7 @@
                     class="project-name-3"
                     v-on:click="changeVisibleJenkins(project)"
                   >
-                    Proyecto {{ project.name }}
+                    Proyecto: {{ project.name }}
                   </div>
                 </li>
               </ul>
@@ -183,7 +183,7 @@
                     class="project-name-3"
                     v-on:click="changeVisibleGithub(project)"
                   >
-                    Proyecto {{ project.name }}
+                    Proyecto: {{ project.name }}
                   </div>
                 </li>
               </ul>
@@ -282,7 +282,7 @@
                             class="project-name"
                             v-on:click="changeVisibleProdInd(project)"
                           >
-                            <h3>Proyecto {{ project.name }}</h3>
+                            <h3>Proyecto: {{ project.name }}</h3>
                           </div>
                         </li>
                       </ul>

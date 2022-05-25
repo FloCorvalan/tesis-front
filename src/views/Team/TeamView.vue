@@ -3,8 +3,8 @@
     <NavBar></NavBar>
     <div class="card">
     <v-card>
-      <v-card-title
-        ><div class="card-title">Nombre de equipo: {{ team_name }}</div>
+      <v-card-title class="card-title"
+        >Nombre de equipo: {{ team_name }}
         <v-spacer></v-spacer>
         <div
           v-if="projects.length != 0 && jira != null"
@@ -59,38 +59,38 @@
           <ul class="ul" v-for="project in projects" :key="project.id">
             <li>
               <div class="item" v-on:click="changeVisProject(project)">
-                {{ project.name }}
+                Proyecto: {{ project.name }}
               </div>
               <div v-if="project.vis == true">
               <div>
                 <div class="item-2">Fuentes de información</div>
                 <v-list>
-                  <v-list-item class="list-item">Jenkins:</v-list-item>
+                  <v-list-item class="list-item"><div class="bold">Jenkins:</div> </v-list-item>
                   <v-list-item class="list-item">
                     <div v-if="project.jenkins != undefined">
                       <v-list>
                         <v-list-item class="list-item">
-                          Usuario: {{ project.jenkins.user }}
+                          <div class="underline">Usuario:</div> &nbsp; {{ project.jenkins.user }}
                         </v-list-item>
                         <v-list-item class="list-item">
-                          Nombre del pipeline: {{ project.jenkins.name }}
+                          <div class="underline">Nombre del pipeline:</div> &nbsp; {{ project.jenkins.name }}
                         </v-list-item>
                         <v-list-item class="list-item">
-                          IP:puerto: {{ project.jenkins.ip_port }}
+                          <div class="underline">IP:puerto:</div> &nbsp; {{ project.jenkins.ip_port }}
                         </v-list-item>
                       </v-list>
                     </div>
                     <div v-else>No existe</div>
                   </v-list-item>
-                  <v-list-item class="list-item">GitHub:</v-list-item>
+                  <v-list-item class="list-item"><div class="bold">GitHub:</div></v-list-item>
                   <v-list-item class="list-item">
                     <div v-if="project.github != undefined">
                       <v-list>
                         <v-list-item class="list-item">
-                          Usuario: {{ project.github.user }}
+                          <div class="underline">Nombre del repositorio:</div> &nbsp; {{ project.github.name }}
                         </v-list-item>
                         <v-list-item class="list-item">
-                          Nombre del repositorio: {{ project.github.name }}
+                          <div class="underline">Nombre de usuario del dueño del repositorio:</div> &nbsp; {{ project.github.user }}
                         </v-list-item>
                       </v-list>
                     </div>
@@ -100,14 +100,14 @@
               </div>
               <div>
                 <v-list-item class="list-item">
-                  TAG (para asociar con Jira): {{ project.tag }}
+                  <div class="bold">TAG (para asociar con Jira):</div> &nbsp; {{ project.tag }}
                 </v-list-item>
               </div>
               </div>
             </li>
           </ul>
           <div class="add-btn">
-            <v-btn v-on:click="showProjectModal()">Agregar projecto</v-btn>
+            <v-btn class="add-btn-inner" v-on:click="showProjectModal()">Agregar projecto</v-btn>
             <v-app v-if="modalProjectVis">
               <ProjectModal v-show="modalProjectVis" :team_id="team_id" @close="closeProjectModal" />
             </v-app>
@@ -118,13 +118,13 @@
           <div v-if="jira != null">
             <v-list>
               <v-list-item class="list-item"
-                >Usuario: {{ jira.user }}</v-list-item
+                ><div class="bold">Usuario:</div> &nbsp; {{ jira.user }}</v-list-item
               >
               <v-list-item class="list-item"
-                >Key del proyecto: {{ jira.name }}</v-list-item
+                ><div class="bold">Key del proyecto:</div> &nbsp; {{ jira.name }}</v-list-item
               >
               <v-list-item class="list-item"
-                >URL: {{ jira.ip_port }}</v-list-item
+                ><div class="bold">URL:</div> &nbsp; {{ jira.ip_port }}</v-list-item
               >
             </v-list>
           </div>
@@ -132,7 +132,7 @@
             <v-list-item class="list-item">No existe</v-list-item>
           </div>
           <div class="add-btn" v-if="jira == null">
-            <v-btn v-on:click="showJiraModal()">Agregar fuente de información Jira</v-btn>
+            <v-btn class="add-btn-inner" v-on:click="showJiraModal()">Agregar fuente de información Jira</v-btn>
             <v-app v-if="modalJiraVis">
               <JiraSourceModal v-show="modalJiraVis" :team_id="team_id" @close="closeJiraModal" />
             </v-app>

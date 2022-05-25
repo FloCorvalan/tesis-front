@@ -2,7 +2,7 @@
 
 .dashboard-page {
   .page-title {
-    font-family: 'Fira Sans Condensed';
+    font-family: 'B612';
     padding-bottom: 20px;
     color: #05006b;
     @include media-breakpoint-up(sm) {
@@ -118,6 +118,7 @@ foreignObject{
   justify-content: left;
   color: #2c3e50;
   font-weight: bold;
+  font-family: 'B612';
 }
 
 .project-name-3:hover {
@@ -127,8 +128,8 @@ foreignObject{
 .tool-name {
   padding-top: 5%;
   padding-bottom: 5%;
-  background-color: rgba($color: #00aaffff, $alpha: 0.4);
-  //color: white;
+  background-color: rgba($color: #7da7d9, $alpha: 1.0);
+  color: white;
 
 }
 
@@ -170,7 +171,7 @@ svg {
   //border: solid;
   //border-width: 1px;
   //border-color: #05006b;
-  background-color: rgba($color: #09348bff, $alpha: 0.9);
+  background-color: rgba($color: #2a7ada, $alpha: 1.0);
   color: white;
 }
 
@@ -234,8 +235,9 @@ svg {
   //background: #134E5E;  /* fallback for old browsers */
   //background: -webkit-linear-gradient(to right, #71B280, #134E5E);  /* Chrome 10-25, Safari 5.1-6 */
   //background: linear-gradient(to right, #71B280, #134E5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  background: rgb(255,255,255);
-  background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(208,255,255,0.5) 100%);
+  //background: rgb(255,255,255);
+  //background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(208,255,255,0.2) 100%);
+  background-color: #e5f0ff;
   
 }
 
@@ -246,13 +248,13 @@ svg {
 .mx-1.mb-1.card-border {
   border: solid;
   border-width: 1px;
-  border-color: #05006b;
+  border-color: #7da7d9;
 }
 
 .card-border.v-card {
   border: solid;
   border-width: 1px;
-  border-color: #05006b;
+  border-color: #7da7d9;
 }
 
 .margin-bottom {
@@ -262,12 +264,13 @@ svg {
 .card-border {
   border: solid;
   border-width: 1px;
-  border-color: #05006b;
+  border-color: #7da7d9;
 }
 
 ///
 .card-prod-title {
   font-size: large;
+  font-family: 'B612';
 }
 
 .card-prod-content {
@@ -279,9 +282,23 @@ svg {
 ///
 .section-title-font-size {
   font-family: 'B612';
-  font-size: large;
+  font-size: 1.3rem;
 }
 
 .card-act-prod.v-card {
-  background-color: rgba($color: #00aaffff, $alpha: 0.1);
+  background-color: rgba($color: #7da7d9, $alpha: 0.2);
+}
+
+.title-prod {
+  font-family: 'B612';
+  font-weight: bold;
+}
+
+h3 {
+  font-family: 'B612';
+}
+
+.navbar-color {
+  background: rgb(28,46,134);
+  background: linear-gradient(124deg, rgba(28,46,134,1) 29%, rgba(45,144,255,1) 74%, rgba(14,203,255,1) 100%);
 }

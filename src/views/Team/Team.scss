@@ -18,12 +18,17 @@
 }
 
 .item {
-    font-size: medium;
+    font-size: large;
     float: none;
     padding-bottom: 2%;
     cursor: pointer;
     display: flex;
     justify-content: left;
+    color: black;
+}
+
+.item:hover {
+    color: #1b9aaa;
 }
 
 .item-2 {
@@ -39,7 +44,10 @@
     padding-bottom: 2%;
 }
 
-.v-btn.v-size--default {
+
+button.add-btn-inner.v-btn.v-btn--is-elevated {
+    background-color: #2a7ada;
+    color: white;
     font-size: x-small;
 }
 
@@ -54,13 +62,35 @@
 .disp-left {
     display: flex;
     justify-content: left;
-    margin-bottom: 3%;
+    margin-bottom: 1%;
+    color: black;
+    font-family: 'Fira Sans Condensed';
+    font-size: x-large;
+    font-weight: bold;
 }
 
 
 .dash-btn.v-btn.v-size--default {
-    font-size: large;
-    background-color: #FB8500;
+    font-size: 1.3rem;
+    background-color: rgba($color: #1c2e86, $alpha: 1.0);
     font-weight: bold;
+    font-family: 'Fira Sans Condensed';
     color: white;
+}
+
+.card-title {
+    font-weight: 300;
+    margin-bottom: 3%;
+    font-family: 'B612';
+    font-size: x-large;
+    color: white;
+    background-color: rgba($color: #2a7ada, $alpha: 1.0);
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
 }

@@ -12,16 +12,24 @@ ul {
 }
 
 .card-title {
-    font-weight: 550;
-    padding-bottom: 2%;
-    font-size: 1.9vw;
+    font-weight: 300;
+    margin-bottom: 3%;
+    font-family: 'B612';
+    font-size: x-large;
+    color: white;
+    background-color: rgba($color: #2a7ada, $alpha: 1.0);
 }
 
 .item {
     font-size: medium;
-    float: none;
+    //float: none;
     padding-bottom: 2%;
     cursor: pointer;
+    color: black;
+}
+
+.item:hover {
+    color: #1b9aaa;
 }
 
 .add-btn {
@@ -29,4 +37,9 @@ ul {
     justify-content: left;
     margin-left: 3%;
     padding-bottom: 2%;
+}
+
+button.add-btn-inner.v-btn.v-btn--is-elevated {
+    background-color: rgba($color: #2a7ada, $alpha: 1.0);
+    color: white;
 }

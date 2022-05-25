@@ -2,10 +2,10 @@
   <div>
     <NavBar></NavBar>
     <v-card class="card">
-      <v-card-title
-        ><div class="card-title">
+      <v-card-title class="card-title"
+        >
           Equipos de desarrollo a cargo
-        </div></v-card-title
+        </v-card-title
       >
       <v-card-text>
         <ul v-for="team in teams" :key="team">
@@ -15,7 +15,7 @@
         </ul>
       </v-card-text>
       <div class="add-btn">
-        <v-btn v-on:click="showTeamModal()">Agregar equipo de desarrollo</v-btn>
+        <v-btn class="add-btn-inner" v-on:click="showTeamModal()">Agregar equipo de desarrollo</v-btn>
         <v-app v-if="modalTeamVis">
           <TeamModal
             v-show="modalTeamVis"
