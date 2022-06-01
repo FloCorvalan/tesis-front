@@ -142,7 +142,7 @@ export default {
         body.github_token != null
       ) {
         var headers = {
-        "Authorization": `Bearer: ${this.authtoken}`
+        "Authorization": `Bearer: ${this.token}`
       };
         axios
           .post(process.env.VUE_APP_BASE_URL + "/team-project/add", body, {headers})

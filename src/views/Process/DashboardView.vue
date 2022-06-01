@@ -744,7 +744,7 @@ export default {
                   show: true,
                   curve: "smooth",
                   lineCap: "butt",
-                  colors: undefined,
+                  colors: ["#FFF"],
                   width: 2,
                   dashArray: 0,
                 },

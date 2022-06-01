@@ -56,7 +56,7 @@ export default {
         body.name != null
       ) {
         var headers = {
-        "Authorization": `Bearer: ${this.authtoken}`
+        "Authorization": `Bearer: ${this.token}`
       };
         axios
           .post(process.env.VUE_APP_BASE_URL + "/team/", body, {headers})
