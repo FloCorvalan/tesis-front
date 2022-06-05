@@ -30,7 +30,7 @@ export default {
   },
   created() {
     if(length != undefined){
-      this.width2 = (32 * this.length).toString() + 'px'
+      this.width2 = (32 * this.length + 200).toString() + 'px'
     }
   },
   mounted() {
