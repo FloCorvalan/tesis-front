@@ -160,6 +160,7 @@
                                 project.jenkins_options_part.series[0].data
                                   .length
                               "
+                              :offset="project.jenkins_options_part.series.length + 0.5"
                             >
                             </BarChart>
                           </div>
@@ -857,7 +858,7 @@ export default {
           this.projects[index].github_options.push(options);
           options = {
             total: response.data.totals.total_additions,
-            key: "Líneas de código agregadas",
+            key: "Líneas de código agregadas o modificadas",
             title: description.github.additions,
             series: additions_percentages,
             options: {

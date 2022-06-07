@@ -124,7 +124,7 @@ export default {
                   curve: "straight",
                 },
                 title: {
-                  text: "Líneas de código por día",
+                  text: "Líneas de código agregadas o modificadas por día",
                   align: "left",
                 },
                 grid: {

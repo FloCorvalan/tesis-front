@@ -18,7 +18,7 @@
     },
     "github": {
         "commits": "Porcentaje de commits realizados",
-        "additions": "Porcentaje de líneas de código agregadas",
+        "additions": "Porcentaje de líneas de código agregadas o modificadas",
         "deletions": "Porcentaje de líneas de código eliminadas",
         "files_added": "Porcentaje de archivos agregados"
     },
