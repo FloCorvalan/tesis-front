@@ -2,23 +2,21 @@
   <div>
     <NavBar></NavBar>
     <div class="card">
-    <v-card>
-      <v-card-title class="card-title"
-        >Nombre de equipo: {{ team_name }}
-        <v-spacer></v-spacer>
-        <div
-          v-if="projects.length != 0 && jira != null"
-        >
-          <v-btn class="dash-btn" v-on:click="getDashboard()"
-            >Ver dashboard</v-btn
-          >
-        </div>
-        <div v-else>
-          <v-btn class="dash-btn" disabled>Ver dashboard</v-btn>
-        </div>
-      </v-card-title>
-      <v-card-text>
-        <!--div>
+      <v-card>
+        <v-card-title class="card-title"
+          >Nombre de equipo: {{ team_name }}
+          <v-spacer></v-spacer>
+          <div v-if="projects.length != 0 && jira != null">
+            <v-btn class="dash-btn" v-on:click="getDashboard()"
+              >Ver dashboard</v-btn
+            >
+          </div>
+          <div v-else>
+            <v-btn class="dash-btn" disabled>Ver dashboard</v-btn>
+          </div>
+        </v-card-title>
+        <v-card-text>
+          <!--div>
           <h3 class="disp-left">Desarrolladores/as</h3>
           <ul class="ul" v-for="dev in developers" :key="dev.id">
             <li>
@@ -54,92 +52,128 @@
             </v-app>
           </div>
         </div-->
-        <div>
-          <h3 class="disp-left">Proyectos</h3>
-          <ul class="ul" v-for="project in projects" :key="project.id">
-            <li>
-              <div class="item" v-on:click="changeVisProject(project)">
-                Proyecto: {{ project.name }}
-              </div>
-              <div v-if="project.vis == true">
-              <div>
-                <div class="item-2">Fuentes de información</div>
-                <v-list>
-                  <v-list-item class="list-item"><div class="bold">Jenkins:</div> </v-list-item>
-                  <v-list-item class="list-item">
-                    <div v-if="project.jenkins != undefined">
+          <div>
+            <h3 class="disp-left">Proyectos</h3>
+            <div v-if="projects.length != 0">
+              <ul class="ul" v-for="project in projects" :key="project.id">
+                <li>
+                  <div class="item" v-on:click="changeVisProject(project)">
+                    Proyecto: {{ project.name }}
+                  </div>
+                  <div v-if="project.vis == true">
+                    <div>
+                      <div class="item-2">Fuentes de información</div>
                       <v-list>
-                        <v-list-item class="list-item">
-                          <div class="underline">Usuario:</div> &nbsp; {{ project.jenkins.user }}
+                        <v-list-item class="list-item"
+                          ><div class="bold">Jenkins:</div>
                         </v-list-item>
                         <v-list-item class="list-item">
-                          <div class="underline">Nombre del pipeline:</div> &nbsp; {{ project.jenkins.name }}
+                          <div v-if="project.jenkins != undefined">
+                            <v-list>
+                              <v-list-item class="list-item">
+                                <div class="underline">Usuario:</div>
+                                &nbsp; {{ project.jenkins.user }}
+                              </v-list-item>
+                              <v-list-item class="list-item">
+                                <div class="underline">
+                                  Nombre del pipeline:
+                                </div>
+                                &nbsp; {{ project.jenkins.name }}
+                              </v-list-item>
+                              <v-list-item class="list-item">
+                                <div class="underline">IP:puerto:</div>
+                                &nbsp; {{ project.jenkins.ip_port }}
+                              </v-list-item>
+                            </v-list>
+                          </div>
+                          <div v-else>No existe</div>
                         </v-list-item>
+                        <v-list-item class="list-item"
+                          ><div class="bold">GitHub:</div></v-list-item
+                        >
                         <v-list-item class="list-item">
-                          <div class="underline">IP:puerto:</div> &nbsp; {{ project.jenkins.ip_port }}
+                          <div v-if="project.github != undefined">
+                            <v-list>
+                              <v-list-item class="list-item">
+                                <div class="underline">
+                                  Nombre del repositorio:
+                                </div>
+                                &nbsp; {{ project.github.name }}
+                              </v-list-item>
+                              <v-list-item class="list-item">
+                                <div class="underline">
+                                  Nombre de usuario del dueño del repositorio:
+                                </div>
+                                &nbsp; {{ project.github.user }}
+                              </v-list-item>
+                            </v-list>
+                          </div>
+                          <div v-else>No existe</div>
                         </v-list-item>
                       </v-list>
                     </div>
-                    <div v-else>No existe</div>
-                  </v-list-item>
-                  <v-list-item class="list-item"><div class="bold">GitHub:</div></v-list-item>
-                  <v-list-item class="list-item">
-                    <div v-if="project.github != undefined">
-                      <v-list>
-                        <v-list-item class="list-item">
-                          <div class="underline">Nombre del repositorio:</div> &nbsp; {{ project.github.name }}
-                        </v-list-item>
-                        <v-list-item class="list-item">
-                          <div class="underline">Nombre de usuario del dueño del repositorio:</div> &nbsp; {{ project.github.user }}
-                        </v-list-item>
-                      </v-list>
+                    <div>
+                      <v-list-item class="list-item">
+                        <div class="bold">TAG (para asociar con Jira):</div>
+                        &nbsp; {{ project.tag }}
+                      </v-list-item>
                     </div>
-                    <div v-else>No existe</div>
-                  </v-list-item>
-                </v-list>
-              </div>
-              <div>
-                <v-list-item class="list-item">
-                  <div class="bold">TAG (para asociar con Jira):</div> &nbsp; {{ project.tag }}
-                </v-list-item>
-              </div>
-              </div>
-            </li>
-          </ul>
-          <div class="add-btn">
-            <v-btn class="add-btn-inner" v-on:click="showProjectModal()">Agregar projecto</v-btn>
-            <v-app v-if="modalProjectVis">
-              <ProjectModal v-show="modalProjectVis" :team_id="team_id" @close="closeProjectModal" />
-            </v-app>
-          </div>
-        </div>
-        <div>
-          <h3 class="disp-left">Fuente de información Jira</h3>
-          <div v-if="jira != null">
-            <v-list>
-              <v-list-item class="list-item"
-                ><div class="bold">Usuario:</div> &nbsp; {{ jira.user }}</v-list-item
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div v-else>
+              <v-list-item class="list-item">No existen proyectos</v-list-item>
+            </div>
+            <div class="add-btn">
+              <v-btn class="add-btn-inner" v-on:click="showProjectModal()"
+                >Agregar projecto</v-btn
               >
-              <v-list-item class="list-item"
-                ><div class="bold">Key del proyecto:</div> &nbsp; {{ jira.name }}</v-list-item
+              <v-app v-if="modalProjectVis">
+                <ProjectModal
+                  v-show="modalProjectVis"
+                  :team_id="team_id"
+                  @close="closeProjectModal"
+                />
+              </v-app>
+            </div>
+          </div>
+          <div>
+            <h3 class="disp-left">Fuente de información Jira</h3>
+            <div v-if="jira != null">
+              <v-list>
+                <v-list-item class="list-item"
+                  ><div class="bold">Email del dueño del proyecto:</div>
+                  &nbsp; {{ jira.user }}</v-list-item
+                >
+                <v-list-item class="list-item"
+                  ><div class="bold">Key del proyecto:</div>
+                  &nbsp; {{ jira.name }}</v-list-item
+                >
+                <v-list-item class="list-item"
+                  ><div class="bold">URL del dueño del proyecto:</div>
+                  &nbsp; {{ jira.ip_port }}</v-list-item
+                >
+              </v-list>
+            </div>
+            <div v-else>
+              <v-list-item class="list-item">No existe</v-list-item>
+            </div>
+            <div class="add-btn" v-if="jira == null">
+              <v-btn class="add-btn-inner" v-on:click="showJiraModal()"
+                >Agregar fuente de información Jira</v-btn
               >
-              <v-list-item class="list-item"
-                ><div class="bold">URL:</div> &nbsp; {{ jira.ip_port }}</v-list-item
-              >
-            </v-list>
+              <v-app v-if="modalJiraVis">
+                <JiraSourceModal
+                  v-show="modalJiraVis"
+                  :team_id="team_id"
+                  @close="closeJiraModal"
+                />
+              </v-app>
+            </div>
           </div>
-          <div v-else>
-            <v-list-item class="list-item">No existe</v-list-item>
-          </div>
-          <div class="add-btn" v-if="jira == null">
-            <v-btn class="add-btn-inner" v-on:click="showJiraModal()">Agregar fuente de información Jira</v-btn>
-            <v-app v-if="modalJiraVis">
-              <JiraSourceModal v-show="modalJiraVis" :team_id="team_id" @close="closeJiraModal" />
-            </v-app>
-          </div>
-        </div>
-      </v-card-text>
-    </v-card>
+        </v-card-text>
+      </v-card>
     </div>
   </div>
 </template>
@@ -160,7 +194,7 @@ export default {
     //DeveloperModal,
     //DeveloperModalNew,
     ProjectModal,
-    JiraSourceModal, 
+    JiraSourceModal,
   },
   data() {
     return {
@@ -172,7 +206,7 @@ export default {
       projects: [],
       modalDevNewVis: false,
       modalDevVis: false,
-      modalProjectVis: false, 
+      modalProjectVis: false,
       modalJiraVis: false,
     };
   },
@@ -220,13 +254,14 @@ export default {
     changeVisProject(project) {
       if (project.vis == false) {
         var headers = {
-        "Authorization": `Bearer: ${this.token}`
-      };
+          Authorization: `Bearer: ${this.token}`,
+        };
         axios
           .get(
             process.env.VUE_APP_BASE_URL +
               "/source/by-team-project/" +
-              project._id.$oid, {headers}
+              project._id.$oid,
+            { headers }
           )
           .then((response) => {
             var jenkins = response.data.jenkins;
@@ -240,24 +275,25 @@ export default {
             project.jenkins = jenkins;
             project.github = github;
             project.vis = true;
-          }).catch((error) => {
-          console.log(error)
-          this.$store.commit("saveAuthen", false);
-          this.$store.commit("saveToken", null);
-          this.$router.push("/login");
-        }
-        );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$store.commit("saveAuthen", false);
+            this.$store.commit("saveToken", null);
+            this.$router.push("/login");
+          });
       } else {
         project.vis = false;
       }
     },
     getDevelopers() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
         .get(
-          process.env.VUE_APP_BASE_URL + "/developer/by-team/" + this.team_id, {headers}
+          process.env.VUE_APP_BASE_URL + "/developer/by-team/" + this.team_id,
+          { headers }
         )
         .then((response) => {
           //this.developers = response.data;
@@ -268,21 +304,24 @@ export default {
             this.developers.push(e);
           });
           console.log(this.developers);
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     getProjects() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
         .get(
-          process.env.VUE_APP_BASE_URL + "/team-project/by-team/" + this.team_id, {headers}
+          process.env.VUE_APP_BASE_URL +
+            "/team-project/by-team/" +
+            this.team_id,
+          { headers }
         )
         .then((response) => {
           this.projects = [];
@@ -293,29 +332,32 @@ export default {
             var e = element;
             this.projects.push(e);
           });
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     getJira() {
       var headers = {
-        "Authorization": `Bearer: ${this.token}`
+        Authorization: `Bearer: ${this.token}`,
       };
       axios
-        .get(process.env.VUE_APP_BASE_URL + "/source/get-jira/" + this.team_id, {headers})
+        .get(
+          process.env.VUE_APP_BASE_URL + "/source/get-jira/" + this.team_id,
+          { headers }
+        )
         .then((response) => {
           this.jira = response.data;
-        }).catch((error) => {
-          console.log(error)
+        })
+        .catch((error) => {
+          console.log(error);
           this.$store.commit("saveAuthen", false);
           this.$store.commit("saveToken", null);
           this.$router.push("/login");
-        }
-        );
+        });
     },
     getDashboard() {
       this.$router.push("/dashboard");
