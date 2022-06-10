@@ -40,6 +40,8 @@ export default {
     }
     else if(this.offset != undefined){
       this.height2 = (65 * this.length + 50 * this.offset).toString() + 'px'
+    }else if(this.length == 1){
+      this.height2= (100 * this.length).toString() + 'px'
     }
     else{
       console.log(this.length)

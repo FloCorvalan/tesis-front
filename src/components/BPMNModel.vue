@@ -9,7 +9,17 @@
         <p v-html="svgDiagram"></p>
       </panZoom>
     </div>
-    <div class="disp-center">
+    <div v-if="listo" class="add-btn-2">
+      <v-btn class="add-btn-inner" v-on:click="selectIdealModel()"
+        >Seleccionar como modelo ideal</v-btn
+      >
+    </div>
+    <div class="disp-center" v-if="chart_jira != null && chart_jenkins != null && chart_github != null">
+      <v-row no-gutters>
+        <h3 class="section-title-font-size-2">
+          Cantidad de veces que fueron realizadas las actividades
+        </h3>
+      </v-row>
       <div v-if="chart_jira != null">
         <BarChart
           :options="chart_jira.options"
@@ -36,6 +46,37 @@
           :height="'100%'"
         >
         </BarChart>
+      </div>
+      <div v-if="chart_fitness != null">
+        <v-row no-gutters>
+        <h3 class="section-title-font-size-2">
+          Ajuste de las instancias del proceso con el modelo ideal
+        </h3>
+      </v-row>
+        <div class="jenkins-title" :title="chart_fitness.title">
+          {{ chart_fitness.key }}<span class="question-mark">&#63;</span>
+        </div>
+        <BarChart
+          :options="chart_fitness.options"
+          :series="chart_fitness.series"
+          :width="'50%'"
+          :height="'100%'"
+          :length="chart_fitness.options.xaxis.categories.length"
+        >
+        </BarChart>
+      </div>
+      <div v-if="chart_fitness != null">
+        <div
+          class="jenkins-title"
+          title="Modelo de proceso generado mediante el sistema que fue seleccionado como el modelo ideal por el líder del proyecto"
+        >
+          Modelo de proceso ideal registrado<span class="question-mark"
+            >&#63;</span
+          >
+        </div>
+        <panZoom>
+          <p v-html="svgDiagramIdeal"></p>
+        </panZoom>
       </div>
     </div>
   </div>
@@ -64,15 +105,18 @@ export default {
     team_project_id: String,
     jenkins_id: String,
     github_id: String,
+    leader_id: String,
   },
   data() {
     return {
       apexLoading: false,
       listo: false,
       svgDiagram: null,
+      svgDiagramIdeal: null,
       chart_jira: null,
       chart_github: null,
       chart_jenkins: null,
+      chart_fitness: null,
       token: JSON.parse(localStorage.getItem("token")),
     };
   },
@@ -346,7 +390,161 @@ export default {
           this.chart_jira = bar_options_jira;
           this.chart_github = bar_options_github;
           this.chart_jenkins = bar_options_jenkins;
+          this.getFitness();
           console.log(this.chart_jira);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        });
+    },
+    getFitness() {
+      var headers = {
+        Authorization: `Bearer: ${this.token}`,
+      };
+      axios
+        .post(
+          process.env.VUE_APP_BASE_URL + "/process-model/get-fitness",
+          {
+            team_project_id: this.team_project_id,
+            leader_id: this.leader_id,
+          },
+          { headers }
+        )
+        .then((r) => {
+          console.log(r.data);
+          if (r.data.status == true) {
+            var traces = [];
+            var values = [];
+            for (var key in r.data.result) {
+              traces.push(key);
+              values.push(r.data.result[key]);
+              console.log(r.data.result[key]);
+            }
+            var bar_options = {
+              title:
+                "Porcentaje del comportamiento observado en la instancia del proceso que se puede reproducir a través del modelo de proceso ideal",
+              key: "Ajuste de cada instancia del proceso con el modelo de proceso ideal",
+              series: [
+                {
+                  data: values,
+                },
+              ],
+              options: {
+                chart: {
+                  type: "bar",
+                  height: 350,
+                  stackType: "100%",
+                },
+                plotOptions: {
+                  bar: {
+                    horizontal: true,
+                    dataLabels: {
+                      position: "top",
+                    },
+                    columnWidth: "35%",
+                  },
+                },
+                dataLabels: {
+                  enabled: true,
+                  offsetX: -6,
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
+                tooltip: {
+                  shared: true,
+                  intersect: false,
+                },
+                stroke: {
+                  width: 0,
+                  colors: ["#fff"],
+                },
+                xaxis: {
+                  categories: traces,
+                  forceNiceScale: false,
+                  max: 100,
+                  labels: {
+                    formatter: (value) => value.toFixed(0) + "%",
+                  },
+                },
+                legend: {
+                  position: "top",
+                  verticalAlign: "top",
+                  containerMargin: {
+                    left: 35,
+                    right: 60,
+                  },
+                },
+                responsive: [
+                  {
+                    breakpoint: 1000,
+                    options: {
+                      plotOptions: {
+                        bar: {
+                          horizontal: false,
+                        },
+                      },
+                      legend: {
+                        position: "top",
+                      },
+                    },
+                  },
+                ],
+              },
+            };
+            this.chart_fitness = bar_options;
+            this.getIdealModel();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        });
+    },
+    getIdealModel() {
+      var headers = {
+        Authorization: `Bearer: ${this.token}`,
+      };
+      axios
+        .post(
+          process.env.VUE_APP_BASE_URL + "/process-model/get-ideal-model",
+          {
+            leader_id: this.leader_id,
+          },
+          { headers }
+        )
+        .then((r) => {
+          //console.log(r)
+          this.svgDiagramIdeal = r.data;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$store.commit("saveAuthen", false);
+          this.$store.commit("saveToken", null);
+          this.$router.push("/login");
+        });
+    },
+    selectIdealModel() {
+      var headers = {
+        Authorization: `Bearer: ${this.token}`,
+      };
+      axios
+        .post(
+          process.env.VUE_APP_BASE_URL + "/process-model/save-ideal-model",
+          {
+            team_project_id: this.team_project_id,
+            leader_id: this.leader_id,
+          },
+          { headers }
+        )
+        .then(() => {
+          this.getFitness();
         })
         .catch((error) => {
           console.log(error);

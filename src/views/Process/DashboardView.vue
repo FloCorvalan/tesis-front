@@ -36,6 +36,7 @@
                           :team_project_id="project.id"
                           :github_id="project.github_id"
                           :jenkins_id="project.jenkins_id"
+                          :leader_id="leader_id"
                         >
                         </BPMNModel>
                       </li>
@@ -340,6 +341,7 @@ export default {
       team_id: JSON.parse(localStorage.getItem("teamId")),
       //team_name: "PROBANDO",
       team_name: JSON.parse(localStorage.getItem("teamName")),
+      leader_id: JSON.parse(localStorage.getItem("leaderId")),
       team: null,
       projects: [],
       jenkins_options: null,
