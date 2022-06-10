@@ -293,6 +293,15 @@ svg {
   color: black;
 }
 
+.section-title-font-size-3 {
+  font-family: 'B612';
+  font-size: 1rem;
+  margin-bottom: 3%;
+  color: black;
+  white-space: nowrap;
+  cursor: default;
+}
+
 .card-act-prod.v-card {
   background-color: rgba($color: #7da7d9, $alpha: 0.2);
 }
