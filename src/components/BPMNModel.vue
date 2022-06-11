@@ -14,7 +14,10 @@
         >Seleccionar como modelo ideal</v-btn
       >
     </div>
-    <div class="disp-center" v-if="chart_jira != null && chart_jenkins != null && chart_github != null">
+    <div
+      class="disp-center"
+      v-if="chart_jira != null && chart_jenkins != null && chart_github != null"
+    >
       <v-row no-gutters>
         <h3 class="section-title-font-size-2">
           Cantidad de veces que fueron realizadas las actividades
@@ -49,15 +52,21 @@
       </div>
       <div v-if="chart_fitness != null">
         <v-row no-gutters>
-        <h3 class="section-title-font-size-2">
-          Ajuste de las instancias del proceso con el modelo ideal
-        </h3>
-      </v-row>
-      <v-row no-gutters>
-        <h3 class="section-title-font-size-3" title="Porcentaje promedio del comportamiento observado en las instancias del proceso que se puede reproducir con el modelo de proceso ideal">
-          Promedio de ajuste: {{ chart_fitness.avg }}%<span class="question-mark">&#63;</span>
-        </h3>
-      </v-row>
+          <h3 class="section-title-font-size-2">
+            Ajuste de las instancias del proceso con el modelo ideal
+          </h3>
+        </v-row>
+        <v-row no-gutters>
+          <h3
+            class="section-title-font-size-3"
+            title="Porcentaje promedio del comportamiento observado en las instancias del proceso que se puede reproducir con el modelo de proceso ideal"
+          >
+            Promedio de ajuste: {{ chart_fitness.avg }}%<span
+              class="question-mark"
+              >&#63;</span
+            >
+          </h3>
+        </v-row>
         <div class="jenkins-title" :title="chart_fitness.title">
           {{ chart_fitness.key }}<span class="question-mark">&#63;</span>
         </div>
@@ -537,27 +546,30 @@ export default {
         });
     },
     selectIdealModel() {
-      var headers = {
-        Authorization: `Bearer: ${this.token}`,
-      };
-      axios
-        .post(
-          process.env.VUE_APP_BASE_URL + "/process-model/save-ideal-model",
-          {
-            team_project_id: this.team_project_id,
-            leader_id: this.leader_id,
-          },
-          { headers }
-        )
-        .then(() => {
-          this.getFitness();
-        })
-        .catch((error) => {
-          console.log(error);
-          this.$store.commit("saveAuthen", false);
-          this.$store.commit("saveToken", null);
-          this.$router.push("/login");
-        });
+      var message = "¿Está seguro de seleccionar este modelo de proceso como su modelo de proceso ideal?"
+      if (window.confirm(message)) {
+        var headers = {
+          Authorization: `Bearer: ${this.token}`,
+        };
+        axios
+          .post(
+            process.env.VUE_APP_BASE_URL + "/process-model/save-ideal-model",
+            {
+              team_project_id: this.team_project_id,
+              leader_id: this.leader_id,
+            },
+            { headers }
+          )
+          .then(() => {
+            this.getFitness();
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$store.commit("saveAuthen", false);
+            this.$store.commit("saveToken", null);
+            this.$router.push("/login");
+          });
+      }
     },
     ////////////////////////////////////////////////
     getColors() {
