@@ -330,9 +330,6 @@ export default {
   data() {
     return {
       apexLoading: false,
-      value: this.getRandomInt(10, 90),
-      value2: this.getRandomInt(10, 90),
-      mainApexAreaSelect: "Daily",
 
       //aqui empieza
       //team_id: "6241fad36d714f635bafbc9f",
@@ -661,11 +658,8 @@ export default {
         Authorization: `Bearer: ${this.token}`,
       };
       axios
-        //////////////////////////////////////////////////////////////////
-        ///////////// CAMBIAR DESPUEEEEEEESSSSSSSSSSSSSS /////////////////
-        //////////////////////////////////////////////////////////////////
         .post(
-          process.env.VUE_APP_BASE_URL + "/jira/participation",
+          process.env.VUE_APP_BASE_URL + "/participation/jira",
           {
             team_id: t_id,
           },
@@ -953,22 +947,6 @@ export default {
           this.$router.push("/login");
         });
     },
-    modifyText() {
-      console.log("HOLAAAAAAAAAAAAA");
-    },
-    generatePieSeries() {
-      let series = [];
-
-      for (let i = 0; i < 4; i++) {
-        let y = Math.floor(Math.random() * (500 - 100 + 100)) + 100;
-        series.push(y);
-      }
-      return series;
-    },
-    getRandomInt(min, max) {
-      let rand = min - 0.5 + Math.random() * (max - min + 1);
-      return Math.round(rand);
-    },
     getJiraProd() {
       var headers = {
         Authorization: `Bearer: ${this.token}`,
@@ -1085,9 +1063,6 @@ export default {
     ///////////////////
   },
   mounted() {
-    setTimeout(() => {
-      this.apexLoading = true;
-    });
   },
 };
 </script>

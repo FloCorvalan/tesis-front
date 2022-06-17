@@ -53,7 +53,7 @@
       <div v-if="chart_fitness != null">
         <v-row no-gutters>
           <h3 class="section-title-font-size-2">
-            Ajuste de las instancias del proceso con el modelo ideal
+            Nivel de cumplimeinto de las instancias del proceso respecto al modelo ideal
           </h3>
         </v-row>
         <v-row no-gutters>
@@ -61,7 +61,7 @@
             class="section-title-font-size-3"
             title="Porcentaje promedio del comportamiento observado en las instancias del proceso que se puede reproducir con el modelo de proceso ideal"
           >
-            Promedio de ajuste: {{ chart_fitness.avg }}%<span
+            Promedio de nivel de cumplimiento: {{ chart_fitness.avg }}%<span
               class="question-mark"
               >&#63;</span
             >
@@ -441,7 +441,7 @@ export default {
               avg: r.data.avg,
               title:
                 "Porcentaje del comportamiento observado en la instancia del proceso que se puede reproducir a través del modelo de proceso ideal",
-              key: "Ajuste de cada instancia del proceso con el modelo de proceso ideal",
+              key: "Nivel de cumplimiento de cada instancia del proceso respecto al modelo de proceso ideal",
               series: [
                 {
                   data: values,
