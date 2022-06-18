@@ -345,6 +345,7 @@ export default {
       jenkins_options_bar: null,
       jira_options: [],
       description: description,
+      participants: []
     };
   },
   created() {
