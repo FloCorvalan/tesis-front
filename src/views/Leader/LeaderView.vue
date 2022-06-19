@@ -8,7 +8,7 @@
         </v-card-title
       >
       <v-card-text>
-        <ul v-for="team in teams" :key="team">
+        <ul class="ul" v-for="team in teams" :key="team">
           <li class="item" v-on:click="getTeamView(team)">
             {{ team.name }}
           </li>
