@@ -1,16 +1,20 @@
-# etapa de compilación
-FROM node:17.9.0-alpine as build-stage
+# Set the working directory
 WORKDIR /app
+
+# Copy the package.json and package-lock.json
 COPY package*.json ./
+
+# install project dependencies
 RUN npm install
+
+# Copy the project files
 COPY . .
+
+# Build the project
 RUN npm run build
 
-# etapa de producción
-FROM nginx:1.13.12-alpine as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-# Add nginx config
-COPY nginx.conf /temp/prod.conf
-RUN envsubst /app < /temp/prod.conf > /etc/nginx/conf.d/default.conf
-EXPOSE 81
-CMD ["nginx", "-g", "daemon off;"]
+# Expose a port
+EXPOSE 3000
+
+# Executables
+CMD [ "serve", "-s", "dist" ]
