@@ -1,3 +1,6 @@
+# etapa de compilación
+FROM node:17.9.0-alpine
+
 # Set the working directory
 WORKDIR /app
 
