@@ -1,6 +1,9 @@
 # etapa de compilación
 FROM node:17.9.0-alpine
 
+#Install serve package
+RUN npm i -g serve
+
 # Set the working directory
 WORKDIR /app
 
