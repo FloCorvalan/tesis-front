@@ -12,6 +12,7 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 # Add nginx config
 COPY nginx.conf /temp/prod.conf
 COPY .env .env
+RUN pwd
 RUN ls
 RUN source .env && envsubst < /temp/prod.conf
 RUN envsubst /app < /temp/prod.conf > /etc/nginx/conf.d/default.conf
