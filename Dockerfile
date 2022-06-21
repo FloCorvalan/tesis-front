@@ -12,5 +12,5 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 # Add nginx config
 COPY nginx.conf /temp/prod.conf
 RUN envsubst /app < /temp/prod.conf > /etc/nginx/conf.d/default.conf
-EXPOSE 81
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
