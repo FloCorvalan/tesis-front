@@ -606,7 +606,7 @@ export default {
             data_inner = {};
           }
           var options = {
-            key: "Etapas del pipeline",
+            key: "Cantidad de etapas (horizontal) en cada ejecución del pipeline (vertical)",
             title: description.jenkins.participants,
             series: [
               {
