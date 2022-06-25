@@ -117,8 +117,8 @@ export default {
     leader_id: String,
   },
   render(createElement) {
-    this.svg_ready = true;
     return [
+      this.svg_ready = true,
       createElement(
         "div",
         {
