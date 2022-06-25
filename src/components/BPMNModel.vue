@@ -6,7 +6,7 @@
     <!--div v-else id="canvas"></div-->
     <div id="svgContainer" v-if="listo">
       <panZoom>
-        <p v-html="svgDiagram"></p>
+        {{ svgDiagram }}
       </panZoom>
     </div>
     <div v-if="listo" class="add-btn-2">
@@ -53,7 +53,8 @@
       <div v-if="chart_fitness != null">
         <v-row no-gutters>
           <h3 class="section-title-font-size-2">
-            Nivel de cumplimeinto de las instancias del proceso respecto al modelo ideal
+            Nivel de cumplimeinto de las instancias del proceso respecto al
+            modelo ideal
           </h3>
         </v-row>
         <v-row no-gutters>
@@ -89,7 +90,7 @@
           >
         </div>
         <panZoom>
-          <p v-html="svgDiagramIdeal"></p>
+          {{ svgDiagramIdeal }}
         </panZoom>
       </div>
     </div>
@@ -112,6 +113,28 @@ export default {
     jenkins_id: String,
     github_id: String,
     leader_id: String,
+  },
+  render(createElement) {
+    return [
+      createElement(
+        "div",
+        {
+          domProps: {
+            innerText: this.svgDiagram,
+          },
+        },
+        this.svgDiagram // Child node
+      ),
+      createElement(
+        "div",
+        {
+          domProps: {
+            innerText: this.svgDiagramIdeal,
+          },
+        },
+        this.svgDiagramIdeal // Child node
+      ),
+    ];
   },
   data() {
     return {
@@ -538,7 +561,8 @@ export default {
         });
     },
     selectIdealModel() {
-      var message = "¿Está seguro de seleccionar este modelo de proceso como su modelo de proceso ideal?"
+      var message =
+        "¿Está seguro de seleccionar este modelo de proceso como su modelo de proceso ideal?";
       if (window.confirm(message)) {
         var headers = {
           Authorization: `Bearer: ${this.token}`,

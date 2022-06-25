@@ -25,10 +25,10 @@
               <div class="login-wrapper pt-md-4 pt-0">
                 <v-tabs grow>
                   <v-tabs-slider></v-tabs-slider>
-                  <v-tab :href="`#tab-login`"> LOGIN </v-tab>
-                  <v-tab :href="`#tab-newUser`"> CREAR CUENTA </v-tab>
+                  <v-tab href="#tab-login"> LOGIN </v-tab>
+                  <v-tab href="#tab-newUser"> CREAR CUENTA </v-tab>
 
-                  <v-tab-item :value="'tab-login'">
+                  <v-tab-item value="tab-login">
                     <v-form>
                       <v-container>
                         <v-row>
@@ -67,7 +67,7 @@
                     </v-form>
                   </v-tab-item>
 
-                  <v-tab-item :value="'tab-newUser'">
+                  <v-tab-item value="tab-newUser">
                     <v-form>
                       <v-container>
                         <v-row>
@@ -134,7 +134,7 @@ export default {
       email: "",
       emailRules: [
         (v) => !!v || "Se requiere un email",
-        (v) => /.+@.+/.test(v) || "El email debe ser válido",
+        (v) => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || "El email debe ser válido",
       ],
       createFullName: "",
       createEmail: "",
