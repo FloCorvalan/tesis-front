@@ -115,11 +115,10 @@ export default {
     jenkins_id: String,
     github_id: String,
     leader_id: String,
-    svg_ready: false, 
   },
   render(createElement) {
+    this.svg_ready = true;
     return [
-      this.svg_ready = true,
       createElement(
         "div",
         {
@@ -150,6 +149,7 @@ export default {
       chart_github: null,
       chart_jenkins: null,
       chart_fitness: null,
+      svg_ready: false, 
       token: JSON.parse(localStorage.getItem("token")),
     };
   },
