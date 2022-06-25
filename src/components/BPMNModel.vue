@@ -4,9 +4,9 @@
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
     <!--div v-else id="canvas"></div-->
-    <div id="svgContainer" v-if="svg_ready">
+    <div id="svgContainer" v-if="listo">
       <panZoom>
-        {{ svgDiagram }}
+        <object type="image/svg+xml" :src="svgDiagram" />
       </panZoom>
     </div>
     <div v-if="listo" class="add-btn-2">
@@ -89,9 +89,9 @@
             >&#63;</span
           >
         </div>
-        <div v-if="svg_ready">
+        <div >
           <panZoom>
-            {{ svgDiagramIdeal }}
+            <object type="image/svg+xml" :src="svgDiagramIdeal" />
           </panZoom>
         </div>
       </div>
@@ -116,29 +116,6 @@ export default {
     github_id: String,
     leader_id: String,
   },
-  render(createElement) {
-    return [
-      this.svg_ready = true,
-      createElement(
-        "div",
-        {
-          domProps: {
-            innerText: this.svgDiagram,
-          },
-        },
-        this.svgDiagram // Child node
-      ),
-      createElement(
-        "div",
-        {
-          domProps: {
-            innerText: this.svgDiagramIdeal,
-          },
-        },
-        this.svgDiagramIdeal // Child node
-      ),
-    ];
-  },
   data() {
     return {
       apexLoading: false,
@@ -149,7 +126,6 @@ export default {
       chart_github: null,
       chart_jenkins: null,
       chart_fitness: null,
-      svg_ready: false, 
       token: JSON.parse(localStorage.getItem("token")),
     };
   },
