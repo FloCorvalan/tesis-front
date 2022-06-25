@@ -4,7 +4,7 @@
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
     <!--div v-else id="canvas"></div-->
-    <div id="svgContainer" v-if="listo">
+    <div id="svgContainer" v-if="svg_ready">
       <panZoom>
         {{ svgDiagram }}
       </panZoom>
@@ -89,9 +89,11 @@
             >&#63;</span
           >
         </div>
-        <panZoom>
-          {{ svgDiagramIdeal }}
-        </panZoom>
+        <div v-if="svg_ready">
+          <panZoom>
+            {{ svgDiagramIdeal }}
+          </panZoom>
+        </div>
       </div>
     </div>
   </div>
@@ -113,8 +115,10 @@ export default {
     jenkins_id: String,
     github_id: String,
     leader_id: String,
+    svg_ready: false, 
   },
   render(createElement) {
+    this.svg_ready = true;
     return [
       createElement(
         "div",
