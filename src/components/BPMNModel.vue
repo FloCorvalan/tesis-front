@@ -118,8 +118,8 @@ export default {
     svg_ready: false, 
   },
   render(createElement) {
-    this.svg_ready = true;
     return [
+      this.svg_ready = true,
       createElement(
         "div",
         {
