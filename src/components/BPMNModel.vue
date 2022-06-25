@@ -6,7 +6,7 @@
     <!--div v-else id="canvas"></div-->
     <div id="svgContainer" v-if="listo">
       <panZoom>
-        <object type="image/svg+xml" :src="svgDiagram" />
+        <p v-html="svgDiagram"></p>
       </panZoom>
     </div>
     <div v-if="listo" class="add-btn-2">
@@ -91,7 +91,7 @@
         </div>
         <div >
           <panZoom>
-            <object type="image/svg+xml" :src="svgDiagramIdeal" />
+            <p v-html="svgDiagramIdeal"></p>
           </panZoom>
         </div>
       </div>
