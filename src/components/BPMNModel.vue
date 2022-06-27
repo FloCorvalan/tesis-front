@@ -53,7 +53,7 @@
       <div v-if="chart_fitness != null">
         <v-row no-gutters>
           <h3 class="section-title-font-size-2">
-            Nivel de cumplimeinto de las instancias del proceso respecto al
+            Nivel de cumplimiento de las instancias del proceso respecto al
             modelo ideal
           </h3>
         </v-row>
