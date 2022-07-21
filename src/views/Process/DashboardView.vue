@@ -498,6 +498,12 @@ export default {
               chart: {
                 type: "donut",
               },
+              dataLabels: {
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
               responsive: [
                 {
                   breakpoint: 480,
@@ -735,7 +741,7 @@ export default {
                 dataLabels: {
                   style: {
                     fontSize: "12px",
-                    colors: ["#FFF"],
+                    colors: ["#000"],
                   },
                 },
                 stroke: {
@@ -833,6 +839,12 @@ export default {
               chart: {
                 type: "donut",
               },
+              dataLabels: {
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
               responsive: [
                 {
                   breakpoint: 480,
@@ -862,6 +874,12 @@ export default {
               chart: {
                 type: "donut",
               },
+              dataLabels: {
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
               responsive: [
                 {
                   breakpoint: 480,
@@ -891,6 +909,12 @@ export default {
               chart: {
                 type: "donut",
               },
+              dataLabels: {
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
               responsive: [
                 {
                   breakpoint: 480,
@@ -920,6 +944,12 @@ export default {
               chart: {
                 type: "donut",
               },
+              dataLabels: {
+                  style: {
+                    fontSize: "12px",
+                    colors: ["#000"],
+                  },
+                },
               responsive: [
                 {
                   breakpoint: 480,
